@@ -1,0 +1,671 @@
+"use client";
+
+import type { FitAddon } from "@xterm/addon-fit";
+import { useCallback, useEffect, useRef, useState } from "react";
+import type { IDisposable, ITerminalAddon, Terminal } from "xterm";
+import { api } from "@/trpc/react";
+import type { TerminalPaneProps, TerminalStatus } from "./types";
+import { xtermTheme } from "./xterm-theme";
+
+/**
+ * Terminal session pane with ttyd lifecycle management.
+ */
+export function TerminalPane({
+  sessionId,
+  active,
+  resetToken,
+  workspaceSuffix,
+  className,
+  wsUrl: _wsUrl,
+  errorMessage,
+  onStatusChange,
+  onErrorMessage,
+  onContainerName,
+  onWsUrl,
+  onSessionEnded,
+  onLog,
+}: TerminalPaneProps) {
+  const [terminalHost, setTerminalHost] = useState<HTMLDivElement | null>(null);
+  const [isTerminalReady, setIsTerminalReady] = useState(false);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const terminalRef = useRef<Terminal | null>(null);
+  const fitAddonRef = useRef<FitAddon | null>(null);
+  const socketRef = useRef<WebSocket | null>(null);
+  const terminalDisposablesRef = useRef<IDisposable[]>([]);
+  const textEncoderRef = useRef<TextEncoder | null>(null);
+  const textDecoderRef = useRef<TextDecoder | null>(null);
+  const connectionIdRef = useRef(0);
+  const terminalReadyRef = useRef<Promise<void> | null>(null);
+  const terminalReadyResolveRef = useRef<(() => void) | null>(null);
+  const statusRef = useRef<TerminalStatus>("idle");
+  const errorRef = useRef<string | null>(null);
+  const sessionEndedRef = useRef(false);
+  const resetTokenRef = useRef(resetToken);
+  const startSessionRef = useRef<
+    ((options?: { reset?: boolean }) => Promise<void>) | null
+  >(null);
+  const startSessionMutation = api.terminal.startSession.useMutation();
+
+  const log = useCallback(
+    (message: string) => {
+      onLog(`[${new Date().toISOString()}] ${message}`);
+    },
+    [onLog],
+  );
+
+  const setStatus = useCallback(
+    (next: TerminalStatus) => {
+      statusRef.current = next;
+      onStatusChange(next);
+    },
+    [onStatusChange],
+  );
+
+  const setError = useCallback(
+    (message: string | null) => {
+      errorRef.current = message;
+      onErrorMessage(message);
+    },
+    [onErrorMessage],
+  );
+
+  if (!terminalReadyRef.current) {
+    terminalReadyRef.current = new Promise((resolve) => {
+      terminalReadyResolveRef.current = resolve;
+    });
+  }
+
+  const setTerminalNode = useCallback((node: HTMLDivElement | null) => {
+    containerRef.current = node;
+    setTerminalHost(node);
+  }, []);
+
+  useEffect(() => {
+    if (!terminalHost) return;
+    let isMounted = true;
+    let removeResizeListener: (() => void) | null = null;
+    let removeWheelListener: (() => void) | null = null;
+
+    const setupTerminal = async () => {
+      const [
+        { Terminal },
+        { FitAddon },
+        { ClipboardAddon },
+        { ImageAddon },
+        { LigaturesAddon },
+        { Unicode11Addon },
+        { WebFontsAddon },
+        { WebLinksAddon },
+        { WebglAddon },
+      ] = await Promise.all([
+        import("xterm"),
+        import("@xterm/addon-fit"),
+        import("@xterm/addon-clipboard"),
+        import("@xterm/addon-image"),
+        import("@xterm/addon-ligatures"),
+        import("@xterm/addon-unicode11"),
+        import("@xterm/addon-web-fonts"),
+        import("@xterm/addon-web-links"),
+        import("@xterm/addon-webgl"),
+      ]);
+
+      if (!isMounted || !terminalHost) return;
+
+      if (document?.fonts?.load) {
+        await Promise.all([
+          document.fonts.load('14px "MesloLGS NF"'),
+          document.fonts.load('bold 14px "MesloLGS NF"'),
+          document.fonts.load('italic 14px "MesloLGS NF"'),
+          document.fonts.load('bold italic 14px "MesloLGS NF"'),
+        ]);
+        await document.fonts.ready;
+      }
+
+      const terminal = new Terminal({
+        allowTransparency: false,
+        cursorBlink: true,
+        cursorStyle: "block",
+        fontFamily:
+          '"MesloLGS NF", var(--font-oc-mono), "Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
+        fontSize: 14,
+        fontWeight: 400,
+        fontWeightBold: 700,
+        drawBoldTextInBrightColors: false,
+        macOptionIsMeta: true,
+        scrollback: 10000,
+        disableStdin: true,
+        theme: xtermTheme,
+        allowProposedApi: true,
+        convertEol: true,
+      });
+      const fitAddon = new FitAddon();
+      const clipboardAddon = new ClipboardAddon();
+      const imageAddon = new ImageAddon();
+      const unicode11Addon = new Unicode11Addon();
+      const webFontsAddon = new WebFontsAddon(true);
+      const webLinksAddon = new WebLinksAddon();
+      const loadedAddons: Array<{ dispose?: () => void }> = [];
+
+      terminal.open(terminalHost);
+
+      const safeLoadAddon = (addon: ITerminalAddon, label: string) => {
+        try {
+          terminal.loadAddon(addon);
+          loadedAddons.push(addon);
+        } catch (error) {
+          console.warn(`[terminal] addon ${label} failed`, error);
+        }
+      };
+
+      safeLoadAddon(fitAddon, "fit");
+      safeLoadAddon(clipboardAddon, "clipboard");
+      safeLoadAddon(imageAddon, "image");
+      safeLoadAddon(unicode11Addon, "unicode11");
+      safeLoadAddon(webFontsAddon, "web-fonts");
+      safeLoadAddon(webFontsAddon, "web-fonts");
+      safeLoadAddon(webLinksAddon, "web-links");
+
+      if (typeof window !== "undefined" && "FontFace" in window) {
+        console.log("loading ligatures addon");
+        try {
+          const ligaturesAddon = new LigaturesAddon();
+          safeLoadAddon(ligaturesAddon, "ligatures");
+        } catch (error) {
+          console.error("[terminal] addon ligatures failed", error);
+        }
+      }
+
+      try {
+        const webglAddon = new WebglAddon();
+        safeLoadAddon(webglAddon, "webgl");
+      } catch (error) {
+        console.error("[terminal] addon webgl failed", error);
+      }
+
+      fitAddon.fit();
+      const handleWheel = (event: WheelEvent) => {
+        const activeTerminal = terminalRef.current;
+        if (!activeTerminal) return;
+        if (activeTerminal.buffer.active.type !== "normal") return;
+        if (event.ctrlKey || event.metaKey) return;
+        if (event.deltaY === 0) return;
+        event.preventDefault();
+        event.stopPropagation();
+        const base = event.deltaMode === 1 ? 1 : 40;
+        const magnitude = Math.max(
+          1,
+          Math.round(Math.abs(event.deltaY) / base),
+        );
+        const direction = event.deltaY > 0 ? 1 : -1;
+        activeTerminal.scrollLines(direction * magnitude);
+      };
+      terminalHost.addEventListener("wheel", handleWheel, { passive: false });
+      removeWheelListener = () => {
+        terminalHost.removeEventListener("wheel", handleWheel);
+      };
+      webFontsAddon.loadFonts(["MesloLGS NF"]).catch(() => {});
+      if (terminal.unicode.versions.includes("11")) {
+        terminal.unicode.activeVersion = "11";
+      }
+
+      terminalRef.current = terminal;
+      fitAddonRef.current = fitAddon;
+
+      setIsTerminalReady(true);
+      terminalReadyResolveRef.current?.();
+      terminalReadyResolveRef.current = null;
+
+      const handleResize = () => fitAddon.fit();
+      window.addEventListener("resize", handleResize);
+      removeResizeListener = () => {
+        window.removeEventListener("resize", handleResize);
+      };
+
+      const cleanup = () => {
+        socketRef.current?.close();
+        terminalDisposablesRef.current.forEach((disposable) => {
+          disposable.dispose();
+        });
+        terminalDisposablesRef.current = [];
+        loadedAddons.forEach((addon) => {
+          try {
+            addon.dispose?.();
+          } catch (error) {
+            console.warn("[terminal] addon dispose failed", error);
+          }
+        });
+        fitAddonRef.current?.dispose();
+        terminal.dispose();
+      };
+
+      return cleanup;
+    };
+
+    let cleanup: (() => void) | undefined;
+
+    setupTerminal()
+      .then((dispose) => {
+        cleanup = dispose;
+      })
+      .catch(() => {
+        setStatus("error");
+        setError("Failed to load terminal in browser.");
+      });
+
+    return () => {
+      isMounted = false;
+      removeResizeListener?.();
+      removeWheelListener?.();
+      cleanup?.();
+    };
+  }, [setError, setStatus, terminalHost]);
+
+  useEffect(() => {
+    if (!fitAddonRef.current) return;
+    const timer = window.setTimeout(() => {
+      fitAddonRef.current?.fit();
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (!terminalRef.current) return;
+    if (!active) {
+      terminalRef.current.options.disableStdin = true;
+      return;
+    }
+    terminalRef.current.options.disableStdin = false;
+    terminalRef.current.focus();
+    fitAddonRef.current?.fit();
+    const timer = window.setTimeout(() => {
+      fitAddonRef.current?.fit();
+    }, 50);
+    return () => window.clearTimeout(timer);
+  }, [active]);
+
+  /**
+   * Starts or resets the ttyd container and connects the websocket.
+   */
+  const startSession = useCallback(
+    async (options?: { reset?: boolean }) => {
+      if (!sessionId) return;
+      sessionEndedRef.current = false;
+      onSessionEnded(false, null);
+      setStatus("starting");
+      setError(null);
+
+      try {
+        const connectionId = ++connectionIdRef.current;
+        log(
+          `startSession: id=${connectionId} reset=${
+            options?.reset ? "1" : "0"
+          }`,
+        );
+        if (!terminalRef.current && terminalReadyRef.current) {
+          log("startSession: waiting for terminal");
+          await Promise.race([
+            terminalReadyRef.current,
+            new Promise<void>((_, reject) =>
+              window.setTimeout(
+                () => reject(new Error("Terminal is not ready.")),
+                10000,
+              ),
+            ),
+          ]);
+          log("startSession: terminal ready");
+        }
+        const data = await startSessionMutation.mutateAsync({
+          sessionId,
+          reset: options?.reset,
+          workspaceSuffix,
+        });
+        log(`startSession: backend ok ${JSON.stringify(data)}`);
+        const protocol = window.location.protocol === "https:" ? "wss" : "ws";
+        const host = window.location.hostname;
+        const nextWsUrl = `${protocol}://${host}:${data.port}${data.wsPath}`;
+        log(`ws: url ${nextWsUrl}`);
+
+        onContainerName(data.containerName);
+        onWsUrl(nextWsUrl);
+        setStatus("connecting");
+
+        terminalDisposablesRef.current.forEach((disposable) => {
+          disposable.dispose();
+        });
+        terminalDisposablesRef.current = [];
+        if (socketRef.current) {
+          log("startSession: closing previous socket");
+          socketRef.current.onopen = null;
+          socketRef.current.onclose = null;
+          socketRef.current.onerror = null;
+          socketRef.current.onmessage = null;
+          socketRef.current.close();
+        }
+
+        if (!textEncoderRef.current) {
+          textEncoderRef.current = new TextEncoder();
+        }
+        if (!textDecoderRef.current) {
+          textDecoderRef.current = new TextDecoder();
+        }
+        const encoder = textEncoderRef.current;
+        const decoder = textDecoderRef.current;
+
+        const connectSocket = async (url: string) => {
+          const maxAttempts = 5;
+          for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+            log(`ws: attempt ${attempt + 1}/${maxAttempts} ${url}`);
+            const socket = new WebSocket(url, ["tty"]);
+            socket.binaryType = "arraybuffer";
+            const opened = await new Promise<boolean>((resolve) => {
+              const timeout = window.setTimeout(
+                () => {
+                  log("ws: open timeout");
+                  socket.close();
+                  resolve(false);
+                },
+                1500 + attempt * 500,
+              );
+              socket.onopen = () => {
+                window.clearTimeout(timeout);
+                log("ws: open");
+                resolve(true);
+              };
+              socket.onerror = () => {
+                window.clearTimeout(timeout);
+                log("ws: error during open");
+                resolve(false);
+              };
+            });
+            if (opened) {
+              return socket;
+            }
+            await new Promise((resolve) =>
+              window.setTimeout(resolve, 400 * (attempt + 1)),
+            );
+          }
+          throw new Error("Failed to connect to ttyd.");
+        };
+
+        const mouseInputPatterns = [
+          "\\u001b\\[<\\d+;\\d+;\\d+;?\\d*[mM]",
+          "\\u001b\\[\\d+;\\d+;\\d+[mM]",
+          "\\u001b\\[M.{3}",
+        ].map((pattern) => new RegExp(pattern, "g"));
+        const filterMouseInput = (input: string) =>
+          mouseInputPatterns.reduce(
+            (next, pattern) => next.replace(pattern, ""),
+            input,
+          );
+
+        const sendInput = (payload: string | Uint8Array) => {
+          const activeSocket = socketRef.current;
+          if (!activeSocket || activeSocket.readyState !== WebSocket.OPEN)
+            return;
+
+          if (typeof payload === "string") {
+            const filtered = filterMouseInput(payload);
+            if (filtered.length === 0) {
+              return;
+            }
+            const buffer = new Uint8Array(3 * payload.length + 1);
+            buffer[0] = "0".charCodeAt(0);
+            const result = encoder.encodeInto(filtered, buffer.subarray(1));
+            const written =
+              typeof result.written === "number"
+                ? result.written
+                : filtered.length;
+            activeSocket.send(buffer.subarray(0, written + 1));
+            return;
+          }
+
+          const buffer = new Uint8Array(payload.length + 1);
+          buffer[0] = "0".charCodeAt(0);
+          buffer.set(payload, 1);
+          activeSocket.send(buffer);
+        };
+
+        const sendResize = (cols: number, rows: number) => {
+          const activeSocket = socketRef.current;
+          if (!activeSocket || activeSocket.readyState !== WebSocket.OPEN)
+            return;
+          const message = `1${JSON.stringify({ columns: cols, rows })}`;
+          activeSocket.send(encoder.encode(message));
+        };
+
+        const ensureTerminalSize = async () => {
+          if (!terminalRef.current) return null;
+          for (let attempt = 0; attempt < 10; attempt += 1) {
+            fitAddonRef.current?.fit();
+            const { cols, rows } = terminalRef.current;
+            if (cols >= 20 && rows >= 5) {
+              return { cols, rows };
+            }
+            await new Promise((resolve) => window.setTimeout(resolve, 100));
+          }
+          return {
+            cols: terminalRef.current.cols,
+            rows: terminalRef.current.rows,
+          };
+        };
+
+        setStatus("connecting");
+        const socket = await connectSocket(nextWsUrl);
+        if (connectionIdRef.current !== connectionId) {
+          log("ws: stale connection, closing");
+          socket.close();
+          return;
+        }
+        socketRef.current = socket;
+
+        if (terminalRef.current) {
+          terminalRef.current.reset();
+          terminalRef.current.writeln("Connecting to ttyd...");
+          terminalRef.current.focus();
+          terminalRef.current.options.disableStdin = false;
+          terminalDisposablesRef.current = [
+            terminalRef.current.onData((data) => sendInput(data)),
+            terminalRef.current.onResize(({ cols, rows }) =>
+              sendResize(cols, rows),
+            ),
+          ];
+        }
+
+        socket.onerror = () => {
+          if (connectionIdRef.current !== connectionId) return;
+          log("ws: error");
+          setStatus("error");
+          setError("Failed to connect to ttyd. Check the container.");
+        };
+
+        socket.onclose = () => {
+          if (connectionIdRef.current !== connectionId) return;
+          log("ws: close");
+          if (statusRef.current === "connected") {
+            setStatus("idle");
+          } else {
+            setStatus("error");
+          }
+          if (!sessionEndedRef.current && !errorRef.current) {
+            setError("Connection closed before opening.");
+          }
+        };
+
+        const handleMessage = (
+          messageType: string,
+          payload: Uint8Array | string,
+        ) => {
+          if (connectionIdRef.current !== connectionId) return;
+          if (messageType !== "0") {
+            log(`ws: message type=${messageType}`);
+          }
+          switch (messageType) {
+            case "0":
+              {
+                const text =
+                  typeof payload === "string"
+                    ? payload
+                    : decoder.decode(payload);
+                const lowerText = text.toLowerCase();
+                if (
+                  lowerText.includes("screen is terminating") ||
+                  lowerText.includes("session terminated") ||
+                  lowerText.includes("[exited]") ||
+                  lowerText.includes("no server running")
+                ) {
+                  log("ws: terminal session termination detected");
+                  sessionEndedRef.current = true;
+                  onSessionEnded(
+                    true,
+                    "Session ended. Start again to continue.",
+                  );
+                  socket.close();
+                  return;
+                }
+                terminalRef.current?.write(payload);
+              }
+              break;
+            case "1":
+              document.title =
+                typeof payload === "string" ? payload : decoder.decode(payload);
+              break;
+            case "2":
+              break;
+            default:
+              break;
+          }
+        };
+
+        socket.onmessage = (event) => {
+          if (typeof event.data === "string") {
+            const messageType = event.data.charAt(0);
+            const payload = event.data.slice(1);
+            handleMessage(messageType, payload);
+            return;
+          }
+
+          if (!(event.data instanceof ArrayBuffer)) return;
+          const view = new Uint8Array(event.data);
+          if (view.length === 0) return;
+          const messageType = String.fromCharCode(view[0]);
+          const payload = view.subarray(1);
+          handleMessage(messageType, payload);
+        };
+
+        setStatus("connected");
+        if (terminalRef.current) {
+          const size = await ensureTerminalSize();
+          const cols = size?.cols ?? terminalRef.current.cols;
+          const rows = size?.rows ?? terminalRef.current.rows;
+          log(`ws: terminal size cols=${cols} rows=${rows}`);
+          const handshake = JSON.stringify({
+            AuthToken: "",
+            columns: cols,
+            rows,
+          });
+          log(`ws: handshake ${handshake}`);
+          socket.send(encoder.encode(handshake));
+          terminalRef.current.focus();
+          sendResize(cols, rows);
+          log("ws: resize sent");
+          window.setTimeout(() => {
+            const refreshCols = terminalRef.current?.cols ?? cols;
+            const refreshRows = terminalRef.current?.rows ?? rows;
+            sendResize(refreshCols, refreshRows);
+            log(`ws: resize refresh cols=${refreshCols} rows=${refreshRows}`);
+          }, 200);
+        }
+      } catch (error) {
+        const message =
+          error instanceof Error ? error.message : "Unexpected error.";
+        log(`startSession: error ${message}`);
+        setStatus("error");
+        setError(message);
+      }
+    },
+    [
+      log,
+      onContainerName,
+      onSessionEnded,
+      onWsUrl,
+      sessionId,
+      setError,
+      setStatus,
+      startSessionMutation,
+      workspaceSuffix,
+    ],
+  );
+
+  useEffect(() => {
+    startSessionRef.current = startSession;
+  }, [startSession]);
+
+  useEffect(() => {
+    if (!sessionId) {
+      socketRef.current?.close();
+      socketRef.current = null;
+      sessionEndedRef.current = false;
+      setStatus("idle");
+      setError(null);
+      onContainerName(null);
+      onWsUrl(null);
+      onSessionEnded(false, null);
+      return;
+    }
+    void startSessionRef.current?.();
+  }, [
+    onContainerName,
+    onSessionEnded,
+    onWsUrl,
+    sessionId,
+    setError,
+    setStatus,
+  ]);
+
+  useEffect(() => {
+    if (!sessionId) return;
+    if (resetTokenRef.current === resetToken) return;
+    resetTokenRef.current = resetToken;
+    void startSessionRef.current?.({ reset: true });
+  }, [resetToken, sessionId]);
+
+  return (
+    <div
+      className={`relative flex h-full w-full min-h-0 flex-1 flex-col overflow-hidden p-4 ${
+        className ?? ""
+      }`}
+    >
+      <div
+        ref={setTerminalNode}
+        className="h-full min-h-0 w-full flex-1"
+        role="application"
+        aria-label="Terminal"
+        onMouseEnter={() => {
+          if (terminalRef.current) {
+            terminalRef.current.options.disableStdin = false;
+            terminalRef.current.focus();
+          }
+        }}
+        onPointerDown={() => {
+          if (terminalRef.current) {
+            terminalRef.current.options.disableStdin = false;
+            terminalRef.current.focus();
+          }
+        }}
+      />
+      {!isTerminalReady ? (
+        <div className="absolute inset-0 flex h-full w-full flex-col items-center justify-center gap-3 bg-(--oc-panel-strong)/90 text-slate-300">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-slate-500/60 border-t-emerald-400" />
+          <p className="text-xs uppercase tracking-[0.25em] text-slate-400">
+            Loading terminal
+          </p>
+        </div>
+      ) : null}
+      {errorMessage ? (
+        <p className="absolute bottom-4 left-4 rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-xs text-rose-200">
+          {errorMessage}
+        </p>
+      ) : null}
+    </div>
+  );
+}

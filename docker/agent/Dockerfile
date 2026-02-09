@@ -1,0 +1,84 @@
+FROM opencommander/core:latest
+
+ARG USERNAME=commander
+ARG CLAUDE_CODE_VERSION=stable
+ARG TZ
+ARG GIT_DELTA_VERSION=0.18.2
+
+# Ensure UTF-8 + 256-color defaults for TUIs (screen doesn't support truecolor well)
+ENV LANG=C.UTF-8
+ENV LANGUAGE=en_US:en  
+ENV LC_ALL=C.UTF-8
+ENV TERM=xterm-256color
+ENV TZ="$TZ"
+ENV POWERLEVEL9K_DISABLE_GITSTATUS=true
+
+RUN chown -R commander:commander "$HOME/.npm" 
+
+### ENTRYPOINT ###
+COPY entrypoint.sh /opt/entrypoint.sh
+RUN chmod +x /opt/entrypoint.sh
+
+# Persist bash history.
+RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" \
+    && mkdir /commandhistory \
+    && touch /commandhistory/.bash_history \
+    && chown -R $USERNAME:$USERNAME /commandhistory
+
+USER $USERNAME
+ENV HOME=/home/$USERNAME
+WORKDIR $HOME
+
+# Hide tmux status bar by default
+RUN printf "%s\n" "set -g status off" > $HOME/.tmux.conf && \
+    chown $USERNAME:$USERNAME $HOME/.tmux.conf
+
+# Set the default shell to zsh rather than sh
+ENV SHELL=/bin/zsh
+
+# Set the default editor and visual
+ENV EDITOR=nano
+ENV VISUAL=nano
+
+RUN echo '. "$HOME/.cargo/env"' >> $HOME/.zshrc
+RUN echo '. $NVM_DIR/nvm.sh' >> $HOME/.zshrc
+
+# Default powerline10k theme
+ARG ZSH_IN_DOCKER_VERSION=1.2.1
+RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/v${ZSH_IN_DOCKER_VERSION}/zsh-in-docker.sh)" -- \
+    -p git \
+    -a "export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" \
+    -p https://github.com/zsh-users/zsh-autosuggestions \
+    -p https://github.com/zsh-users/zsh-completions \
+    -p https://github.com/zsh-users/zsh-history-substring-search \
+    -p https://github.com/zsh-users/zsh-syntax-highlighting \
+    -p 'history-substring-search' \
+    -x
+
+##########
+# Claude #
+##########
+RUN echo "Installing Claude..."
+RUN curl -fsSL https://claude.ai/install.sh | bash -s ${CLAUDE_CODE_VERSION}
+RUN echo 'export PATH="$HOME/.local/bin:$PATH"' >> $HOME/.zshrc
+
+#########
+# CODEX #
+#########
+RUN echo "Installing Codex..."
+RUN bash "$NVM_DIR/install.sh" && \
+    bash -lc "source $NVM_DIR/nvm.sh && nvm install 20 && nvm use 20 && npm i -g @openai/codex"
+
+############
+# OPENCODE #
+############
+RUN echo "Installing OpenCode..."
+RUN curl -fsSL https://opencode.ai/install | bash
+
+#########
+# CURSOR #
+#########
+RUN echo "Installing Cursor..."
+RUN curl https://cursor.com/install -fsS | bash
+
+WORKDIR /workspace

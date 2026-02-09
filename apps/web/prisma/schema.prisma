@@ -1,0 +1,145 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+generator json {
+  provider  = "prisma-json-types-generator"
+}
+
+model User {
+  id            String    @id
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime? @updatedAt @map("updated_at")
+  name          String
+  email         String    @unique
+  emailVerified Boolean   @map("email_verified")
+  image         String?   @map("image")
+  bio           String?   @map("bio")
+
+  // images → direct URL uploads
+  avatarImageUrl String? @map("avatar_image_url")
+  coverImageUrl  String? @map("cover_image_url")
+
+  // images → UploadThing keys
+  avatarImageUTKey String? @map("avatar_image_ut_key")
+  coverImageUTKey  String? @map("cover_image_ut_key")
+
+  timezone String? @default("Etc/GMT")
+
+  preferences UserPreferences?
+
+  sessions Session[]
+  accounts Account[]
+
+  // better-auth-admin
+  role       String    @default("user")
+  banReason  String?   @map("ban_reason")
+  banExpires DateTime? @map("ban_expires")
+  banned     Boolean   @default(false)
+
+  // better-auth-username
+  username        String?
+  displayUsername String? @map("display_username")
+
+  terminalSessions TerminalSession[]
+
+  @@unique([username])
+  @@map("users")
+}
+
+model Session {
+  id             String    @id
+  expiresAt      DateTime  @map("expires_at")
+  token          String    @unique
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime? @updatedAt @map("updated_at")
+  ipAddress      String?   @map("ip_address")
+  userAgent      String?   @map("user_agent")
+  userId         String    @map("user_id")
+  user           User      @relation(fields: [userId], references: [id])
+  impersonatedBy String?   @map("impersonated_by")
+
+  @@map("sessions")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String    @map("account_id")
+  providerId            String    @map("provider_id")
+  userId                String    @map("user_id")
+  user                  User      @relation(fields: [userId], references: [id])
+  accessToken           String?   @map("access_token")
+  refreshToken          String?   @map("refresh_token")
+  idToken               String?
+  accessTokenExpiresAt  DateTime? @map("access_token_expires_at")
+  refreshTokenExpiresAt DateTime? @map("refresh_token_expires_at")
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime? @updatedAt @map("updated_at")
+
+  @@map("accounts")
+}
+
+model Verification {
+  id         String    @id
+  identifier String
+  value      String
+  expiresAt  DateTime  @map("expires_at")
+  createdAt  DateTime? @default(now()) @map("created_at")
+  updatedAt  DateTime? @updatedAt @map("updated_at")
+
+  @@map("verifications")
+}
+
+// #######################
+// # TERMINAL MANAGEMENT #
+// #######################
+enum TerminalSessionStatus {
+  pending
+  starting
+  running
+  stopped
+}
+
+model TerminalSession {
+  id        String                @id @default(cuid())
+  name      String
+  userId    String                @map("user_id")
+  user      User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status    TerminalSessionStatus @default(pending)
+  createdAt DateTime              @default(now()) @map("created_at")
+  updatedAt DateTime              @updatedAt @map("updated_at")
+
+  port          Int?    @map("port")
+  wsPath        String? @map("ws_path")
+  containerName String? @map("container_name")
+
+  @@index([userId])
+  @@index([userId, status])
+  @@map("terminal_sessions")
+}
+
+enum AgentProvider {
+  opencode
+  claude
+  codex
+  cursor
+}
+
+model UserPreferences {
+  id        String   @id @default(cuid())
+  userId    String   @unique @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// [UserPreferencesAgents]
+  agents    Json?    @default("{}")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("user_preferences")
+}

@@ -1,0 +1,48 @@
+{
+  "name": "open-commander",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "cd apps/web && dotenvx run -f ../../.env -- bun run dev",
+    "typecheck": "cd apps/web && bun run typecheck",
+    "------------------------- TESTING -------------------------": "",
+    "test": "cd apps/web && bun run test",
+    "------------------------- LINTING -------------------------": "",
+    "check": "biome check .",
+    "check:fix": "biome check --write .",
+    "------------------------- DATABASE -------------------------": "",
+    "db:generate": "cd apps/web && dotenvx run -f ../../.env -- bun run db:generate",
+    "db:studio": "cd apps/web && dotenvx run -f ../../.env -- bun run db:studio",
+    "db:migrate": "cd apps/web && dotenvx run -f ../../.env -- bun run db:migrate",
+    "db:push": "cd apps/web && dotenvx run -f ../../.env -- bun run db:push",
+    "db:seed": "cd apps/web && dotenvx run -f ../../.env -- bun run db:seed",
+    "db:reset": "cd apps/web && dotenvx run -f ../../.env -- bun run db:reset"
+  },
+  "packageManager": "bun@1.3.3",
+  "engines": {
+    "node": ">=22.9.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.3.8",
+    "@types/bun": "latest",
+    "prisma-json-types-generator": "^4.1.1"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@better-fetch/fetch": "^1.1.21",
+    "@dotenvx/dotenvx": "^1.52.0",
+    "@tanstack/react-query": "^5.90.20",
+    "@trpc/client": "^11.9.0",
+    "@trpc/react-query": "^11.9.0",
+    "@trpc/server": "^11.9.0",
+    "agentation": "^1.3.2",
+    "superjson": "^2.2.6"
+  }
+}
