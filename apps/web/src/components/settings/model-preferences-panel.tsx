@@ -76,6 +76,12 @@ export function ModelPreferencesPanel() {
   const agentsRef = useRef<AgentPreferencesMap>(agents);
   const itemRefs = useRef(new Map<AgentId, HTMLDivElement>());
 
+  /** Display order from server data (for card preview). */
+  const serverOrder = useMemo(
+    () => orderFromAgents(preferencesQuery.data ?? defaultAgentsState()),
+    [preferencesQuery.data],
+  );
+
   const order = useMemo(() => orderFromAgents(agents), [agents]);
   const previewOrder = dragState?.previewOrder ?? order;
 
@@ -208,27 +214,60 @@ export function ModelPreferencesPanel() {
 
   return (
     <>
-      <button
-        type="button"
-        className="w-full cursor-pointer text-left"
-        aria-label="Edit agent preferences"
-        onClick={() => setModalOpen(true)}
-      >
-        <Card className="transition hover:border-emerald-400/50 hover:bg-white/5">
-          <CardHeader className="flex-row items-center justify-between">
-            <CardTitle className="text-sm uppercase tracking-[0.3em] text-slate-400">
-              Agent preferences
-            </CardTitle>
-            <Badge variant="muted">{order.length} agents</Badge>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-slate-300">
-              Set the priority order for agent suggestions. Drag to reorder or
-              use the arrows in the modal.
-            </p>
-          </CardContent>
-        </Card>
-      </button>
+      <Card className="h-full border-white/10 bg-(--oc-panel-strong) shadow-lg">
+        <CardHeader className="flex-row items-center justify-between">
+          <CardTitle className="text-sm uppercase tracking-[0.3em] text-slate-400">
+            Agent order
+          </CardTitle>
+          <div className="flex items-center gap-2">
+            <Badge variant="muted">{serverOrder.length} agents</Badge>
+            <Button
+              type="button"
+              className="bg-emerald-500/90 text-white hover:bg-emerald-500"
+              onClick={() => setModalOpen(true)}
+            >
+              Edit
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-2">
+          {serverOrder.map((agentId, index) => {
+            const logoSrc = AGENT_LOGO[agentId];
+            const entry = preferencesQuery.data?.[agentId];
+            const active = entry?.active ?? true;
+            return (
+              <div
+                key={agentId}
+                className={`flex items-center gap-3 rounded-2xl border border-white/10 bg-(--oc-panel) p-3 ${
+                  !active ? "opacity-50" : ""
+                }`}
+              >
+                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/10 text-xs font-medium text-slate-400">
+                  {index + 1}
+                </span>
+                <Image
+                  src={logoSrc}
+                  alt=""
+                  width={28}
+                  height={28}
+                  className="h-7 w-7 shrink-0 rounded-full object-contain"
+                  aria-hidden
+                />
+                <span
+                  className={`text-sm font-medium ${!active ? "text-slate-400" : "text-white"}`}
+                >
+                  {AGENT_LABELS[agentId]}
+                </span>
+                {!active && (
+                  <Badge variant="muted" className="ml-auto text-xs">
+                    Disabled
+                  </Badge>
+                )}
+              </div>
+            );
+          })}
+        </CardContent>
+      </Card>
 
       {modalOpen && (
         <div

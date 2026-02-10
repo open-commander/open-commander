@@ -199,6 +199,75 @@ exports.Prisma.UserPreferencesScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.TaskScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  body: 'body',
+  status: 'status',
+  source: 'source',
+  agentId: 'agentId',
+  mountPoint: 'mountPoint',
+  userId: 'userId',
+  attachments: 'attachments',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TaskExecutionScalarFieldEnum = {
+  id: 'id',
+  taskId: 'taskId',
+  status: 'status',
+  agentId: 'agentId',
+  jobId: 'jobId',
+  containerName: 'containerName',
+  completed: 'completed',
+  needsInput: 'needsInput',
+  inputRequest: 'inputRequest',
+  result: 'result',
+  errorMessage: 'errorMessage',
+  logs: 'logs',
+  memoryUsage: 'memoryUsage',
+  tokenCount: 'tokenCount',
+  context: 'context',
+  startedAt: 'startedAt',
+  finishedAt: 'finishedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ApiClientScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ApiSecretScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  keyHash: 'keyHash',
+  keyPrefix: 'keyPrefix',
+  clientId: 'clientId',
+  lastUsedAt: 'lastUsedAt',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.ApiCallLogScalarFieldEnum = {
+  id: 'id',
+  clientId: 'clientId',
+  endpoint: 'endpoint',
+  method: 'method',
+  statusCode: 'statusCode',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  requestBody: 'requestBody',
+  responseMs: 'responseMs',
+  errorMessage: 'errorMessage',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -231,13 +300,45 @@ exports.TerminalSessionStatus = exports.$Enums.TerminalSessionStatus = {
   stopped: 'stopped'
 };
 
+exports.TaskStatus = exports.$Enums.TaskStatus = {
+  todo: 'todo',
+  doing: 'doing',
+  done: 'done',
+  canceled: 'canceled'
+};
+
+exports.TaskSource = exports.$Enums.TaskSource = {
+  web: 'web',
+  api: 'api'
+};
+
+exports.AgentProvider = exports.$Enums.AgentProvider = {
+  opencode: 'opencode',
+  claude: 'claude',
+  codex: 'codex',
+  cursor: 'cursor'
+};
+
+exports.TaskExecutionStatus = exports.$Enums.TaskExecutionStatus = {
+  pending: 'pending',
+  running: 'running',
+  completed: 'completed',
+  failed: 'failed',
+  needs_input: 'needs_input'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Session: 'Session',
   Account: 'Account',
   Verification: 'Verification',
   TerminalSession: 'TerminalSession',
-  UserPreferences: 'UserPreferences'
+  UserPreferences: 'UserPreferences',
+  Task: 'Task',
+  TaskExecution: 'TaskExecution',
+  ApiClient: 'ApiClient',
+  ApiSecret: 'ApiSecret',
+  ApiCallLog: 'ApiCallLog'
 };
 
 /**

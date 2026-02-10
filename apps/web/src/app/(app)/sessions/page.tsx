@@ -33,6 +33,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { usePageTitle } from "@/hooks/use-page-title";
 import { api } from "@/trpc/react";
 
 const STORAGE_SELECTED_KEY = "open-commander.sessions.selected";
@@ -88,6 +89,9 @@ export default function TerminalDashboardPage() {
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(
     null,
   );
+
+  usePageTitle("Agent Sessions");
+
   const sessionPanelRef = useRef<HTMLDivElement | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isToolbarHovered, setIsToolbarHovered] = useState(false);

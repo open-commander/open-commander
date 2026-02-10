@@ -2,10 +2,12 @@
 
 import { Loader2, Network } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { ApiClientsPanel } from "@/components/settings/api-clients-panel";
 import { ModelPreferencesPanel } from "@/components/settings/model-preferences-panel";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { usePageTitle } from "@/hooks/use-page-title";
 import { api } from "@/trpc/react";
 
 type EgressEditModalProps = {
@@ -113,6 +115,8 @@ function EgressEditModal({
  * Settings page with agent preferences and egress allowlists.
  */
 export default function SettingsPage() {
+  usePageTitle("Settings");
+
   const [dnsModalOpen, setDnsModalOpen] = useState(false);
   const [ipsModalOpen, setIpsModalOpen] = useState(false);
   const [dnsContent, setDnsContent] = useState("");
@@ -154,9 +158,9 @@ export default function SettingsPage() {
   );
 
   return (
-    <div className="grid gap-4 z-10 lg:grid-cols-2">
+    <div className="grid gap-4 z-10 lg:grid-cols-2 lg:auto-rows-fr">
       <ModelPreferencesPanel />
-      <Card className="border-white/10 bg-(--oc-panel-strong) shadow-lg">
+      <Card className="h-full border-white/10 bg-(--oc-panel-strong) shadow-lg">
         <CardHeader className="flex-row items-center justify-between">
           <CardTitle className="text-sm uppercase tracking-[0.3em] text-slate-400">
             Egress controls
@@ -248,6 +252,7 @@ export default function SettingsPage() {
         onClose={() => setIpsModalOpen(false)}
         onSave={() => saveIpsMutation.mutate({ content: ipsContent })}
       />
+      <ApiClientsPanel />
     </div>
   );
 }

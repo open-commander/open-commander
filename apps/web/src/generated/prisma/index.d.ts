@@ -226,6 +226,31 @@ export type TerminalSession = $Result.DefaultSelection<Prisma.$TerminalSessionPa
  * 
  */
 export type UserPreferences = $Result.DefaultSelection<Prisma.$UserPreferencesPayload>
+/**
+ * Model Task
+ * 
+ */
+export type Task = $Result.DefaultSelection<Prisma.$TaskPayload>
+/**
+ * Model TaskExecution
+ * 
+ */
+export type TaskExecution = $Result.DefaultSelection<Prisma.$TaskExecutionPayload>
+/**
+ * Model ApiClient
+ * 
+ */
+export type ApiClient = $Result.DefaultSelection<Prisma.$ApiClientPayload>
+/**
+ * Model ApiSecret
+ * 
+ */
+export type ApiSecret = $Result.DefaultSelection<Prisma.$ApiSecretPayload>
+/**
+ * Model ApiCallLog
+ * 
+ */
+export type ApiCallLog = $Result.DefaultSelection<Prisma.$ApiCallLogPayload>
 
 /**
  * Enums
@@ -250,6 +275,35 @@ export const AgentProvider: {
 
 export type AgentProvider = (typeof AgentProvider)[keyof typeof AgentProvider]
 
+
+export const TaskStatus: {
+  todo: 'todo',
+  doing: 'doing',
+  done: 'done',
+  canceled: 'canceled'
+};
+
+export type TaskStatus = (typeof TaskStatus)[keyof typeof TaskStatus]
+
+
+export const TaskSource: {
+  web: 'web',
+  api: 'api'
+};
+
+export type TaskSource = (typeof TaskSource)[keyof typeof TaskSource]
+
+
+export const TaskExecutionStatus: {
+  pending: 'pending',
+  running: 'running',
+  completed: 'completed',
+  failed: 'failed',
+  needs_input: 'needs_input'
+};
+
+export type TaskExecutionStatus = (typeof TaskExecutionStatus)[keyof typeof TaskExecutionStatus]
+
 }
 
 export type TerminalSessionStatus = $Enums.TerminalSessionStatus
@@ -259,6 +313,18 @@ export const TerminalSessionStatus: typeof $Enums.TerminalSessionStatus
 export type AgentProvider = $Enums.AgentProvider
 
 export const AgentProvider: typeof $Enums.AgentProvider
+
+export type TaskStatus = $Enums.TaskStatus
+
+export const TaskStatus: typeof $Enums.TaskStatus
+
+export type TaskSource = $Enums.TaskSource
+
+export const TaskSource: typeof $Enums.TaskSource
+
+export type TaskExecutionStatus = $Enums.TaskExecutionStatus
+
+export const TaskExecutionStatus: typeof $Enums.TaskExecutionStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -436,6 +502,56 @@ export class PrismaClient<
     * ```
     */
   get userPreferences(): Prisma.UserPreferencesDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.task`: Exposes CRUD operations for the **Task** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Tasks
+    * const tasks = await prisma.task.findMany()
+    * ```
+    */
+  get task(): Prisma.TaskDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.taskExecution`: Exposes CRUD operations for the **TaskExecution** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TaskExecutions
+    * const taskExecutions = await prisma.taskExecution.findMany()
+    * ```
+    */
+  get taskExecution(): Prisma.TaskExecutionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.apiClient`: Exposes CRUD operations for the **ApiClient** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ApiClients
+    * const apiClients = await prisma.apiClient.findMany()
+    * ```
+    */
+  get apiClient(): Prisma.ApiClientDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.apiSecret`: Exposes CRUD operations for the **ApiSecret** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ApiSecrets
+    * const apiSecrets = await prisma.apiSecret.findMany()
+    * ```
+    */
+  get apiSecret(): Prisma.ApiSecretDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.apiCallLog`: Exposes CRUD operations for the **ApiCallLog** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ApiCallLogs
+    * const apiCallLogs = await prisma.apiCallLog.findMany()
+    * ```
+    */
+  get apiCallLog(): Prisma.ApiCallLogDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -875,7 +991,12 @@ export namespace Prisma {
     Account: 'Account',
     Verification: 'Verification',
     TerminalSession: 'TerminalSession',
-    UserPreferences: 'UserPreferences'
+    UserPreferences: 'UserPreferences',
+    Task: 'Task',
+    TaskExecution: 'TaskExecution',
+    ApiClient: 'ApiClient',
+    ApiSecret: 'ApiSecret',
+    ApiCallLog: 'ApiCallLog'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -891,7 +1012,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "session" | "account" | "verification" | "terminalSession" | "userPreferences"
+      modelProps: "user" | "session" | "account" | "verification" | "terminalSession" | "userPreferences" | "task" | "taskExecution" | "apiClient" | "apiSecret" | "apiCallLog"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1339,6 +1460,376 @@ export namespace Prisma {
           }
         }
       }
+      Task: {
+        payload: Prisma.$TaskPayload<ExtArgs>
+        fields: Prisma.TaskFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TaskFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TaskFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskPayload>
+          }
+          findFirst: {
+            args: Prisma.TaskFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TaskFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskPayload>
+          }
+          findMany: {
+            args: Prisma.TaskFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskPayload>[]
+          }
+          create: {
+            args: Prisma.TaskCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskPayload>
+          }
+          createMany: {
+            args: Prisma.TaskCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TaskCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskPayload>[]
+          }
+          delete: {
+            args: Prisma.TaskDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskPayload>
+          }
+          update: {
+            args: Prisma.TaskUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskPayload>
+          }
+          deleteMany: {
+            args: Prisma.TaskDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TaskUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.TaskUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskPayload>[]
+          }
+          upsert: {
+            args: Prisma.TaskUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskPayload>
+          }
+          aggregate: {
+            args: Prisma.TaskAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTask>
+          }
+          groupBy: {
+            args: Prisma.TaskGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TaskGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TaskCountArgs<ExtArgs>
+            result: $Utils.Optional<TaskCountAggregateOutputType> | number
+          }
+        }
+      }
+      TaskExecution: {
+        payload: Prisma.$TaskExecutionPayload<ExtArgs>
+        fields: Prisma.TaskExecutionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TaskExecutionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskExecutionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TaskExecutionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskExecutionPayload>
+          }
+          findFirst: {
+            args: Prisma.TaskExecutionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskExecutionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TaskExecutionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskExecutionPayload>
+          }
+          findMany: {
+            args: Prisma.TaskExecutionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskExecutionPayload>[]
+          }
+          create: {
+            args: Prisma.TaskExecutionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskExecutionPayload>
+          }
+          createMany: {
+            args: Prisma.TaskExecutionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TaskExecutionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskExecutionPayload>[]
+          }
+          delete: {
+            args: Prisma.TaskExecutionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskExecutionPayload>
+          }
+          update: {
+            args: Prisma.TaskExecutionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskExecutionPayload>
+          }
+          deleteMany: {
+            args: Prisma.TaskExecutionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TaskExecutionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.TaskExecutionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskExecutionPayload>[]
+          }
+          upsert: {
+            args: Prisma.TaskExecutionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TaskExecutionPayload>
+          }
+          aggregate: {
+            args: Prisma.TaskExecutionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTaskExecution>
+          }
+          groupBy: {
+            args: Prisma.TaskExecutionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TaskExecutionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TaskExecutionCountArgs<ExtArgs>
+            result: $Utils.Optional<TaskExecutionCountAggregateOutputType> | number
+          }
+        }
+      }
+      ApiClient: {
+        payload: Prisma.$ApiClientPayload<ExtArgs>
+        fields: Prisma.ApiClientFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ApiClientFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiClientPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ApiClientFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiClientPayload>
+          }
+          findFirst: {
+            args: Prisma.ApiClientFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiClientPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ApiClientFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiClientPayload>
+          }
+          findMany: {
+            args: Prisma.ApiClientFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiClientPayload>[]
+          }
+          create: {
+            args: Prisma.ApiClientCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiClientPayload>
+          }
+          createMany: {
+            args: Prisma.ApiClientCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ApiClientCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiClientPayload>[]
+          }
+          delete: {
+            args: Prisma.ApiClientDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiClientPayload>
+          }
+          update: {
+            args: Prisma.ApiClientUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiClientPayload>
+          }
+          deleteMany: {
+            args: Prisma.ApiClientDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ApiClientUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ApiClientUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiClientPayload>[]
+          }
+          upsert: {
+            args: Prisma.ApiClientUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiClientPayload>
+          }
+          aggregate: {
+            args: Prisma.ApiClientAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateApiClient>
+          }
+          groupBy: {
+            args: Prisma.ApiClientGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ApiClientGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ApiClientCountArgs<ExtArgs>
+            result: $Utils.Optional<ApiClientCountAggregateOutputType> | number
+          }
+        }
+      }
+      ApiSecret: {
+        payload: Prisma.$ApiSecretPayload<ExtArgs>
+        fields: Prisma.ApiSecretFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ApiSecretFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiSecretPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ApiSecretFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiSecretPayload>
+          }
+          findFirst: {
+            args: Prisma.ApiSecretFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiSecretPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ApiSecretFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiSecretPayload>
+          }
+          findMany: {
+            args: Prisma.ApiSecretFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiSecretPayload>[]
+          }
+          create: {
+            args: Prisma.ApiSecretCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiSecretPayload>
+          }
+          createMany: {
+            args: Prisma.ApiSecretCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ApiSecretCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiSecretPayload>[]
+          }
+          delete: {
+            args: Prisma.ApiSecretDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiSecretPayload>
+          }
+          update: {
+            args: Prisma.ApiSecretUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiSecretPayload>
+          }
+          deleteMany: {
+            args: Prisma.ApiSecretDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ApiSecretUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ApiSecretUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiSecretPayload>[]
+          }
+          upsert: {
+            args: Prisma.ApiSecretUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiSecretPayload>
+          }
+          aggregate: {
+            args: Prisma.ApiSecretAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateApiSecret>
+          }
+          groupBy: {
+            args: Prisma.ApiSecretGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ApiSecretGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ApiSecretCountArgs<ExtArgs>
+            result: $Utils.Optional<ApiSecretCountAggregateOutputType> | number
+          }
+        }
+      }
+      ApiCallLog: {
+        payload: Prisma.$ApiCallLogPayload<ExtArgs>
+        fields: Prisma.ApiCallLogFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ApiCallLogFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiCallLogPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ApiCallLogFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiCallLogPayload>
+          }
+          findFirst: {
+            args: Prisma.ApiCallLogFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiCallLogPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ApiCallLogFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiCallLogPayload>
+          }
+          findMany: {
+            args: Prisma.ApiCallLogFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiCallLogPayload>[]
+          }
+          create: {
+            args: Prisma.ApiCallLogCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiCallLogPayload>
+          }
+          createMany: {
+            args: Prisma.ApiCallLogCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ApiCallLogCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiCallLogPayload>[]
+          }
+          delete: {
+            args: Prisma.ApiCallLogDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiCallLogPayload>
+          }
+          update: {
+            args: Prisma.ApiCallLogUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiCallLogPayload>
+          }
+          deleteMany: {
+            args: Prisma.ApiCallLogDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ApiCallLogUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ApiCallLogUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiCallLogPayload>[]
+          }
+          upsert: {
+            args: Prisma.ApiCallLogUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiCallLogPayload>
+          }
+          aggregate: {
+            args: Prisma.ApiCallLogAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateApiCallLog>
+          }
+          groupBy: {
+            args: Prisma.ApiCallLogGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ApiCallLogGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ApiCallLogCountArgs<ExtArgs>
+            result: $Utils.Optional<ApiCallLogCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1453,6 +1944,11 @@ export namespace Prisma {
     verification?: VerificationOmit
     terminalSession?: TerminalSessionOmit
     userPreferences?: UserPreferencesOmit
+    task?: TaskOmit
+    taskExecution?: TaskExecutionOmit
+    apiClient?: ApiClientOmit
+    apiSecret?: ApiSecretOmit
+    apiCallLog?: ApiCallLogOmit
   }
 
   /* Types for Logging */
@@ -1536,12 +2032,16 @@ export namespace Prisma {
     sessions: number
     accounts: number
     terminalSessions: number
+    tasks: number
+    apiClients: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sessions?: boolean | UserCountOutputTypeCountSessionsArgs
     accounts?: boolean | UserCountOutputTypeCountAccountsArgs
     terminalSessions?: boolean | UserCountOutputTypeCountTerminalSessionsArgs
+    tasks?: boolean | UserCountOutputTypeCountTasksArgs
+    apiClients?: boolean | UserCountOutputTypeCountApiClientsArgs
   }
 
   // Custom InputTypes
@@ -1574,6 +2074,91 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountTerminalSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TerminalSessionWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountTasksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TaskWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountApiClientsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ApiClientWhereInput
+  }
+
+
+  /**
+   * Count Type TaskCountOutputType
+   */
+
+  export type TaskCountOutputType = {
+    executions: number
+  }
+
+  export type TaskCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    executions?: boolean | TaskCountOutputTypeCountExecutionsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * TaskCountOutputType without action
+   */
+  export type TaskCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskCountOutputType
+     */
+    select?: TaskCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * TaskCountOutputType without action
+   */
+  export type TaskCountOutputTypeCountExecutionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TaskExecutionWhereInput
+  }
+
+
+  /**
+   * Count Type ApiClientCountOutputType
+   */
+
+  export type ApiClientCountOutputType = {
+    secrets: number
+    callLogs: number
+  }
+
+  export type ApiClientCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    secrets?: boolean | ApiClientCountOutputTypeCountSecretsArgs
+    callLogs?: boolean | ApiClientCountOutputTypeCountCallLogsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ApiClientCountOutputType without action
+   */
+  export type ApiClientCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiClientCountOutputType
+     */
+    select?: ApiClientCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ApiClientCountOutputType without action
+   */
+  export type ApiClientCountOutputTypeCountSecretsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ApiSecretWhereInput
+  }
+
+  /**
+   * ApiClientCountOutputType without action
+   */
+  export type ApiClientCountOutputTypeCountCallLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ApiCallLogWhereInput
   }
 
 
@@ -1861,6 +2446,8 @@ export namespace Prisma {
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     accounts?: boolean | User$accountsArgs<ExtArgs>
     terminalSessions?: boolean | User$terminalSessionsArgs<ExtArgs>
+    tasks?: boolean | User$tasksArgs<ExtArgs>
+    apiClients?: boolean | User$apiClientsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1936,6 +2523,8 @@ export namespace Prisma {
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     accounts?: boolean | User$accountsArgs<ExtArgs>
     terminalSessions?: boolean | User$terminalSessionsArgs<ExtArgs>
+    tasks?: boolean | User$tasksArgs<ExtArgs>
+    apiClients?: boolean | User$apiClientsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -1948,6 +2537,8 @@ export namespace Prisma {
       sessions: Prisma.$SessionPayload<ExtArgs>[]
       accounts: Prisma.$AccountPayload<ExtArgs>[]
       terminalSessions: Prisma.$TerminalSessionPayload<ExtArgs>[]
+      tasks: Prisma.$TaskPayload<ExtArgs>[]
+      apiClients: Prisma.$ApiClientPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2367,6 +2958,8 @@ export namespace Prisma {
     sessions<T extends User$sessionsArgs<ExtArgs> = {}>(args?: Subset<T, User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     accounts<T extends User$accountsArgs<ExtArgs> = {}>(args?: Subset<T, User$accountsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     terminalSessions<T extends User$terminalSessionsArgs<ExtArgs> = {}>(args?: Subset<T, User$terminalSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TerminalSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    tasks<T extends User$tasksArgs<ExtArgs> = {}>(args?: Subset<T, User$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    apiClients<T extends User$apiClientsArgs<ExtArgs> = {}>(args?: Subset<T, User$apiClientsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApiClientPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2891,6 +3484,54 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: TerminalSessionScalarFieldEnum | TerminalSessionScalarFieldEnum[]
+  }
+
+  /**
+   * User.tasks
+   */
+  export type User$tasksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Task
+     */
+    select?: TaskSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Task
+     */
+    omit?: TaskOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskInclude<ExtArgs> | null
+    where?: TaskWhereInput
+    orderBy?: TaskOrderByWithRelationInput | TaskOrderByWithRelationInput[]
+    cursor?: TaskWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TaskScalarFieldEnum | TaskScalarFieldEnum[]
+  }
+
+  /**
+   * User.apiClients
+   */
+  export type User$apiClientsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiClient
+     */
+    select?: ApiClientSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiClient
+     */
+    omit?: ApiClientOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApiClientInclude<ExtArgs> | null
+    where?: ApiClientWhereInput
+    orderBy?: ApiClientOrderByWithRelationInput | ApiClientOrderByWithRelationInput[]
+    cursor?: ApiClientWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ApiClientScalarFieldEnum | ApiClientScalarFieldEnum[]
   }
 
   /**
@@ -8394,6 +9035,5829 @@ export namespace Prisma {
 
 
   /**
+   * Model Task
+   */
+
+  export type AggregateTask = {
+    _count: TaskCountAggregateOutputType | null
+    _min: TaskMinAggregateOutputType | null
+    _max: TaskMaxAggregateOutputType | null
+  }
+
+  export type TaskMinAggregateOutputType = {
+    id: string | null
+    title: string | null
+    body: string | null
+    status: $Enums.TaskStatus | null
+    source: $Enums.TaskSource | null
+    agentId: $Enums.AgentProvider | null
+    mountPoint: string | null
+    userId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TaskMaxAggregateOutputType = {
+    id: string | null
+    title: string | null
+    body: string | null
+    status: $Enums.TaskStatus | null
+    source: $Enums.TaskSource | null
+    agentId: $Enums.AgentProvider | null
+    mountPoint: string | null
+    userId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TaskCountAggregateOutputType = {
+    id: number
+    title: number
+    body: number
+    status: number
+    source: number
+    agentId: number
+    mountPoint: number
+    userId: number
+    attachments: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type TaskMinAggregateInputType = {
+    id?: true
+    title?: true
+    body?: true
+    status?: true
+    source?: true
+    agentId?: true
+    mountPoint?: true
+    userId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TaskMaxAggregateInputType = {
+    id?: true
+    title?: true
+    body?: true
+    status?: true
+    source?: true
+    agentId?: true
+    mountPoint?: true
+    userId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TaskCountAggregateInputType = {
+    id?: true
+    title?: true
+    body?: true
+    status?: true
+    source?: true
+    agentId?: true
+    mountPoint?: true
+    userId?: true
+    attachments?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type TaskAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Task to aggregate.
+     */
+    where?: TaskWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Tasks to fetch.
+     */
+    orderBy?: TaskOrderByWithRelationInput | TaskOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TaskWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Tasks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Tasks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Tasks
+    **/
+    _count?: true | TaskCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TaskMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TaskMaxAggregateInputType
+  }
+
+  export type GetTaskAggregateType<T extends TaskAggregateArgs> = {
+        [P in keyof T & keyof AggregateTask]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTask[P]>
+      : GetScalarType<T[P], AggregateTask[P]>
+  }
+
+
+
+
+  export type TaskGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TaskWhereInput
+    orderBy?: TaskOrderByWithAggregationInput | TaskOrderByWithAggregationInput[]
+    by: TaskScalarFieldEnum[] | TaskScalarFieldEnum
+    having?: TaskScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TaskCountAggregateInputType | true
+    _min?: TaskMinAggregateInputType
+    _max?: TaskMaxAggregateInputType
+  }
+
+  export type TaskGroupByOutputType = {
+    id: string
+    title: string | null
+    body: string
+    status: $Enums.TaskStatus
+    source: $Enums.TaskSource
+    agentId: $Enums.AgentProvider | null
+    mountPoint: string | null
+    userId: string
+    attachments:unknown | null
+    createdAt: Date
+    updatedAt: Date
+    _count: TaskCountAggregateOutputType | null
+    _min: TaskMinAggregateOutputType | null
+    _max: TaskMaxAggregateOutputType | null
+  }
+
+  type GetTaskGroupByPayload<T extends TaskGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TaskGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TaskGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TaskGroupByOutputType[P]>
+            : GetScalarType<T[P], TaskGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TaskSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    body?: boolean
+    status?: boolean
+    source?: boolean
+    agentId?: boolean
+    mountPoint?: boolean
+    userId?: boolean
+    attachments?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    executions?: boolean | Task$executionsArgs<ExtArgs>
+    _count?: boolean | TaskCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["task"]>
+
+  export type TaskSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    body?: boolean
+    status?: boolean
+    source?: boolean
+    agentId?: boolean
+    mountPoint?: boolean
+    userId?: boolean
+    attachments?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["task"]>
+
+  export type TaskSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    body?: boolean
+    status?: boolean
+    source?: boolean
+    agentId?: boolean
+    mountPoint?: boolean
+    userId?: boolean
+    attachments?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["task"]>
+
+  export type TaskSelectScalar = {
+    id?: boolean
+    title?: boolean
+    body?: boolean
+    status?: boolean
+    source?: boolean
+    agentId?: boolean
+    mountPoint?: boolean
+    userId?: boolean
+    attachments?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type TaskOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "body" | "status" | "source" | "agentId" | "mountPoint" | "userId" | "attachments" | "createdAt" | "updatedAt", ExtArgs["result"]["task"]>
+  export type TaskInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    executions?: boolean | Task$executionsArgs<ExtArgs>
+    _count?: boolean | TaskCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type TaskIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type TaskIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $TaskPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Task"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      executions: Prisma.$TaskExecutionPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      title: string | null
+      body: string
+      status: $Enums.TaskStatus
+      source: $Enums.TaskSource
+      agentId: $Enums.AgentProvider | null
+      mountPoint: string | null
+      userId: string
+      attachments:unknown | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["task"]>
+    composites: {}
+  }
+
+  type TaskGetPayload<S extends boolean | null | undefined | TaskDefaultArgs> = $Result.GetResult<Prisma.$TaskPayload, S>
+
+  type TaskCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TaskFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TaskCountAggregateInputType | true
+    }
+
+  export interface TaskDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Task'], meta: { name: 'Task' } }
+    /**
+     * Find zero or one Task that matches the filter.
+     * @param {TaskFindUniqueArgs} args - Arguments to find a Task
+     * @example
+     * // Get one Task
+     * const task = await prisma.task.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TaskFindUniqueArgs>(args: SelectSubset<T, TaskFindUniqueArgs<ExtArgs>>): Prisma__TaskClient<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Task that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TaskFindUniqueOrThrowArgs} args - Arguments to find a Task
+     * @example
+     * // Get one Task
+     * const task = await prisma.task.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TaskFindUniqueOrThrowArgs>(args: SelectSubset<T, TaskFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TaskClient<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Task that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaskFindFirstArgs} args - Arguments to find a Task
+     * @example
+     * // Get one Task
+     * const task = await prisma.task.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TaskFindFirstArgs>(args?: SelectSubset<T, TaskFindFirstArgs<ExtArgs>>): Prisma__TaskClient<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Task that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaskFindFirstOrThrowArgs} args - Arguments to find a Task
+     * @example
+     * // Get one Task
+     * const task = await prisma.task.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TaskFindFirstOrThrowArgs>(args?: SelectSubset<T, TaskFindFirstOrThrowArgs<ExtArgs>>): Prisma__TaskClient<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Tasks that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaskFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Tasks
+     * const tasks = await prisma.task.findMany()
+     * 
+     * // Get first 10 Tasks
+     * const tasks = await prisma.task.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const taskWithIdOnly = await prisma.task.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TaskFindManyArgs>(args?: SelectSubset<T, TaskFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Task.
+     * @param {TaskCreateArgs} args - Arguments to create a Task.
+     * @example
+     * // Create one Task
+     * const Task = await prisma.task.create({
+     *   data: {
+     *     // ... data to create a Task
+     *   }
+     * })
+     * 
+     */
+    create<T extends TaskCreateArgs>(args: SelectSubset<T, TaskCreateArgs<ExtArgs>>): Prisma__TaskClient<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Tasks.
+     * @param {TaskCreateManyArgs} args - Arguments to create many Tasks.
+     * @example
+     * // Create many Tasks
+     * const task = await prisma.task.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TaskCreateManyArgs>(args?: SelectSubset<T, TaskCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Tasks and returns the data saved in the database.
+     * @param {TaskCreateManyAndReturnArgs} args - Arguments to create many Tasks.
+     * @example
+     * // Create many Tasks
+     * const task = await prisma.task.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Tasks and only return the `id`
+     * const taskWithIdOnly = await prisma.task.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TaskCreateManyAndReturnArgs>(args?: SelectSubset<T, TaskCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Task.
+     * @param {TaskDeleteArgs} args - Arguments to delete one Task.
+     * @example
+     * // Delete one Task
+     * const Task = await prisma.task.delete({
+     *   where: {
+     *     // ... filter to delete one Task
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TaskDeleteArgs>(args: SelectSubset<T, TaskDeleteArgs<ExtArgs>>): Prisma__TaskClient<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Task.
+     * @param {TaskUpdateArgs} args - Arguments to update one Task.
+     * @example
+     * // Update one Task
+     * const task = await prisma.task.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TaskUpdateArgs>(args: SelectSubset<T, TaskUpdateArgs<ExtArgs>>): Prisma__TaskClient<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Tasks.
+     * @param {TaskDeleteManyArgs} args - Arguments to filter Tasks to delete.
+     * @example
+     * // Delete a few Tasks
+     * const { count } = await prisma.task.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TaskDeleteManyArgs>(args?: SelectSubset<T, TaskDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Tasks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaskUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Tasks
+     * const task = await prisma.task.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TaskUpdateManyArgs>(args: SelectSubset<T, TaskUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Tasks and returns the data updated in the database.
+     * @param {TaskUpdateManyAndReturnArgs} args - Arguments to update many Tasks.
+     * @example
+     * // Update many Tasks
+     * const task = await prisma.task.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Tasks and only return the `id`
+     * const taskWithIdOnly = await prisma.task.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends TaskUpdateManyAndReturnArgs>(args: SelectSubset<T, TaskUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Task.
+     * @param {TaskUpsertArgs} args - Arguments to update or create a Task.
+     * @example
+     * // Update or create a Task
+     * const task = await prisma.task.upsert({
+     *   create: {
+     *     // ... data to create a Task
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Task we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TaskUpsertArgs>(args: SelectSubset<T, TaskUpsertArgs<ExtArgs>>): Prisma__TaskClient<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Tasks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaskCountArgs} args - Arguments to filter Tasks to count.
+     * @example
+     * // Count the number of Tasks
+     * const count = await prisma.task.count({
+     *   where: {
+     *     // ... the filter for the Tasks we want to count
+     *   }
+     * })
+    **/
+    count<T extends TaskCountArgs>(
+      args?: Subset<T, TaskCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TaskCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Task.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaskAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TaskAggregateArgs>(args: Subset<T, TaskAggregateArgs>): Prisma.PrismaPromise<GetTaskAggregateType<T>>
+
+    /**
+     * Group by Task.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaskGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TaskGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TaskGroupByArgs['orderBy'] }
+        : { orderBy?: TaskGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TaskGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTaskGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Task model
+   */
+  readonly fields: TaskFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Task.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TaskClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    executions<T extends Task$executionsArgs<ExtArgs> = {}>(args?: Subset<T, Task$executionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskExecutionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Task model
+   */
+  interface TaskFieldRefs {
+    readonly id: FieldRef<"Task", 'String'>
+    readonly title: FieldRef<"Task", 'String'>
+    readonly body: FieldRef<"Task", 'String'>
+    readonly status: FieldRef<"Task", 'TaskStatus'>
+    readonly source: FieldRef<"Task", 'TaskSource'>
+    readonly agentId: FieldRef<"Task", 'AgentProvider'>
+    readonly mountPoint: FieldRef<"Task", 'String'>
+    readonly userId: FieldRef<"Task", 'String'>
+    readonly attachments: FieldRef<"Task", 'Json'>
+    readonly createdAt: FieldRef<"Task", 'DateTime'>
+    readonly updatedAt: FieldRef<"Task", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Task findUnique
+   */
+  export type TaskFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Task
+     */
+    select?: TaskSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Task
+     */
+    omit?: TaskOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskInclude<ExtArgs> | null
+    /**
+     * Filter, which Task to fetch.
+     */
+    where: TaskWhereUniqueInput
+  }
+
+  /**
+   * Task findUniqueOrThrow
+   */
+  export type TaskFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Task
+     */
+    select?: TaskSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Task
+     */
+    omit?: TaskOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskInclude<ExtArgs> | null
+    /**
+     * Filter, which Task to fetch.
+     */
+    where: TaskWhereUniqueInput
+  }
+
+  /**
+   * Task findFirst
+   */
+  export type TaskFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Task
+     */
+    select?: TaskSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Task
+     */
+    omit?: TaskOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskInclude<ExtArgs> | null
+    /**
+     * Filter, which Task to fetch.
+     */
+    where?: TaskWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Tasks to fetch.
+     */
+    orderBy?: TaskOrderByWithRelationInput | TaskOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Tasks.
+     */
+    cursor?: TaskWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Tasks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Tasks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Tasks.
+     */
+    distinct?: TaskScalarFieldEnum | TaskScalarFieldEnum[]
+  }
+
+  /**
+   * Task findFirstOrThrow
+   */
+  export type TaskFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Task
+     */
+    select?: TaskSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Task
+     */
+    omit?: TaskOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskInclude<ExtArgs> | null
+    /**
+     * Filter, which Task to fetch.
+     */
+    where?: TaskWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Tasks to fetch.
+     */
+    orderBy?: TaskOrderByWithRelationInput | TaskOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Tasks.
+     */
+    cursor?: TaskWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Tasks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Tasks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Tasks.
+     */
+    distinct?: TaskScalarFieldEnum | TaskScalarFieldEnum[]
+  }
+
+  /**
+   * Task findMany
+   */
+  export type TaskFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Task
+     */
+    select?: TaskSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Task
+     */
+    omit?: TaskOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskInclude<ExtArgs> | null
+    /**
+     * Filter, which Tasks to fetch.
+     */
+    where?: TaskWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Tasks to fetch.
+     */
+    orderBy?: TaskOrderByWithRelationInput | TaskOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Tasks.
+     */
+    cursor?: TaskWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Tasks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Tasks.
+     */
+    skip?: number
+    distinct?: TaskScalarFieldEnum | TaskScalarFieldEnum[]
+  }
+
+  /**
+   * Task create
+   */
+  export type TaskCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Task
+     */
+    select?: TaskSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Task
+     */
+    omit?: TaskOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Task.
+     */
+    data: XOR<TaskCreateInput, TaskUncheckedCreateInput>
+  }
+
+  /**
+   * Task createMany
+   */
+  export type TaskCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Tasks.
+     */
+    data: TaskCreateManyInput | TaskCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Task createManyAndReturn
+   */
+  export type TaskCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Task
+     */
+    select?: TaskSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Task
+     */
+    omit?: TaskOmit<ExtArgs> | null
+    /**
+     * The data used to create many Tasks.
+     */
+    data: TaskCreateManyInput | TaskCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Task update
+   */
+  export type TaskUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Task
+     */
+    select?: TaskSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Task
+     */
+    omit?: TaskOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Task.
+     */
+    data: XOR<TaskUpdateInput, TaskUncheckedUpdateInput>
+    /**
+     * Choose, which Task to update.
+     */
+    where: TaskWhereUniqueInput
+  }
+
+  /**
+   * Task updateMany
+   */
+  export type TaskUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Tasks.
+     */
+    data: XOR<TaskUpdateManyMutationInput, TaskUncheckedUpdateManyInput>
+    /**
+     * Filter which Tasks to update
+     */
+    where?: TaskWhereInput
+    /**
+     * Limit how many Tasks to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Task updateManyAndReturn
+   */
+  export type TaskUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Task
+     */
+    select?: TaskSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Task
+     */
+    omit?: TaskOmit<ExtArgs> | null
+    /**
+     * The data used to update Tasks.
+     */
+    data: XOR<TaskUpdateManyMutationInput, TaskUncheckedUpdateManyInput>
+    /**
+     * Filter which Tasks to update
+     */
+    where?: TaskWhereInput
+    /**
+     * Limit how many Tasks to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Task upsert
+   */
+  export type TaskUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Task
+     */
+    select?: TaskSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Task
+     */
+    omit?: TaskOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Task to update in case it exists.
+     */
+    where: TaskWhereUniqueInput
+    /**
+     * In case the Task found by the `where` argument doesn't exist, create a new Task with this data.
+     */
+    create: XOR<TaskCreateInput, TaskUncheckedCreateInput>
+    /**
+     * In case the Task was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TaskUpdateInput, TaskUncheckedUpdateInput>
+  }
+
+  /**
+   * Task delete
+   */
+  export type TaskDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Task
+     */
+    select?: TaskSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Task
+     */
+    omit?: TaskOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskInclude<ExtArgs> | null
+    /**
+     * Filter which Task to delete.
+     */
+    where: TaskWhereUniqueInput
+  }
+
+  /**
+   * Task deleteMany
+   */
+  export type TaskDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Tasks to delete
+     */
+    where?: TaskWhereInput
+    /**
+     * Limit how many Tasks to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Task.executions
+   */
+  export type Task$executionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskExecution
+     */
+    select?: TaskExecutionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaskExecution
+     */
+    omit?: TaskExecutionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskExecutionInclude<ExtArgs> | null
+    where?: TaskExecutionWhereInput
+    orderBy?: TaskExecutionOrderByWithRelationInput | TaskExecutionOrderByWithRelationInput[]
+    cursor?: TaskExecutionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TaskExecutionScalarFieldEnum | TaskExecutionScalarFieldEnum[]
+  }
+
+  /**
+   * Task without action
+   */
+  export type TaskDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Task
+     */
+    select?: TaskSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Task
+     */
+    omit?: TaskOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model TaskExecution
+   */
+
+  export type AggregateTaskExecution = {
+    _count: TaskExecutionCountAggregateOutputType | null
+    _avg: TaskExecutionAvgAggregateOutputType | null
+    _sum: TaskExecutionSumAggregateOutputType | null
+    _min: TaskExecutionMinAggregateOutputType | null
+    _max: TaskExecutionMaxAggregateOutputType | null
+  }
+
+  export type TaskExecutionAvgAggregateOutputType = {
+    memoryUsage: number | null
+    tokenCount: number | null
+  }
+
+  export type TaskExecutionSumAggregateOutputType = {
+    memoryUsage: number | null
+    tokenCount: number | null
+  }
+
+  export type TaskExecutionMinAggregateOutputType = {
+    id: string | null
+    taskId: string | null
+    status: $Enums.TaskExecutionStatus | null
+    agentId: $Enums.AgentProvider | null
+    jobId: string | null
+    containerName: string | null
+    completed: boolean | null
+    needsInput: boolean | null
+    inputRequest: string | null
+    result: string | null
+    errorMessage: string | null
+    logs: string | null
+    memoryUsage: number | null
+    tokenCount: number | null
+    startedAt: Date | null
+    finishedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TaskExecutionMaxAggregateOutputType = {
+    id: string | null
+    taskId: string | null
+    status: $Enums.TaskExecutionStatus | null
+    agentId: $Enums.AgentProvider | null
+    jobId: string | null
+    containerName: string | null
+    completed: boolean | null
+    needsInput: boolean | null
+    inputRequest: string | null
+    result: string | null
+    errorMessage: string | null
+    logs: string | null
+    memoryUsage: number | null
+    tokenCount: number | null
+    startedAt: Date | null
+    finishedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TaskExecutionCountAggregateOutputType = {
+    id: number
+    taskId: number
+    status: number
+    agentId: number
+    jobId: number
+    containerName: number
+    completed: number
+    needsInput: number
+    inputRequest: number
+    result: number
+    errorMessage: number
+    logs: number
+    memoryUsage: number
+    tokenCount: number
+    context: number
+    startedAt: number
+    finishedAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type TaskExecutionAvgAggregateInputType = {
+    memoryUsage?: true
+    tokenCount?: true
+  }
+
+  export type TaskExecutionSumAggregateInputType = {
+    memoryUsage?: true
+    tokenCount?: true
+  }
+
+  export type TaskExecutionMinAggregateInputType = {
+    id?: true
+    taskId?: true
+    status?: true
+    agentId?: true
+    jobId?: true
+    containerName?: true
+    completed?: true
+    needsInput?: true
+    inputRequest?: true
+    result?: true
+    errorMessage?: true
+    logs?: true
+    memoryUsage?: true
+    tokenCount?: true
+    startedAt?: true
+    finishedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TaskExecutionMaxAggregateInputType = {
+    id?: true
+    taskId?: true
+    status?: true
+    agentId?: true
+    jobId?: true
+    containerName?: true
+    completed?: true
+    needsInput?: true
+    inputRequest?: true
+    result?: true
+    errorMessage?: true
+    logs?: true
+    memoryUsage?: true
+    tokenCount?: true
+    startedAt?: true
+    finishedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TaskExecutionCountAggregateInputType = {
+    id?: true
+    taskId?: true
+    status?: true
+    agentId?: true
+    jobId?: true
+    containerName?: true
+    completed?: true
+    needsInput?: true
+    inputRequest?: true
+    result?: true
+    errorMessage?: true
+    logs?: true
+    memoryUsage?: true
+    tokenCount?: true
+    context?: true
+    startedAt?: true
+    finishedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type TaskExecutionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TaskExecution to aggregate.
+     */
+    where?: TaskExecutionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TaskExecutions to fetch.
+     */
+    orderBy?: TaskExecutionOrderByWithRelationInput | TaskExecutionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TaskExecutionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TaskExecutions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TaskExecutions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TaskExecutions
+    **/
+    _count?: true | TaskExecutionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: TaskExecutionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: TaskExecutionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TaskExecutionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TaskExecutionMaxAggregateInputType
+  }
+
+  export type GetTaskExecutionAggregateType<T extends TaskExecutionAggregateArgs> = {
+        [P in keyof T & keyof AggregateTaskExecution]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTaskExecution[P]>
+      : GetScalarType<T[P], AggregateTaskExecution[P]>
+  }
+
+
+
+
+  export type TaskExecutionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TaskExecutionWhereInput
+    orderBy?: TaskExecutionOrderByWithAggregationInput | TaskExecutionOrderByWithAggregationInput[]
+    by: TaskExecutionScalarFieldEnum[] | TaskExecutionScalarFieldEnum
+    having?: TaskExecutionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TaskExecutionCountAggregateInputType | true
+    _avg?: TaskExecutionAvgAggregateInputType
+    _sum?: TaskExecutionSumAggregateInputType
+    _min?: TaskExecutionMinAggregateInputType
+    _max?: TaskExecutionMaxAggregateInputType
+  }
+
+  export type TaskExecutionGroupByOutputType = {
+    id: string
+    taskId: string
+    status: $Enums.TaskExecutionStatus
+    agentId: $Enums.AgentProvider
+    jobId: string | null
+    containerName: string | null
+    completed: boolean
+    needsInput: boolean
+    inputRequest: string | null
+    result: string | null
+    errorMessage: string | null
+    logs: string | null
+    memoryUsage: number | null
+    tokenCount: number | null
+    context:unknown | null
+    startedAt: Date | null
+    finishedAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    _count: TaskExecutionCountAggregateOutputType | null
+    _avg: TaskExecutionAvgAggregateOutputType | null
+    _sum: TaskExecutionSumAggregateOutputType | null
+    _min: TaskExecutionMinAggregateOutputType | null
+    _max: TaskExecutionMaxAggregateOutputType | null
+  }
+
+  type GetTaskExecutionGroupByPayload<T extends TaskExecutionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TaskExecutionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TaskExecutionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TaskExecutionGroupByOutputType[P]>
+            : GetScalarType<T[P], TaskExecutionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TaskExecutionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    taskId?: boolean
+    status?: boolean
+    agentId?: boolean
+    jobId?: boolean
+    containerName?: boolean
+    completed?: boolean
+    needsInput?: boolean
+    inputRequest?: boolean
+    result?: boolean
+    errorMessage?: boolean
+    logs?: boolean
+    memoryUsage?: boolean
+    tokenCount?: boolean
+    context?: boolean
+    startedAt?: boolean
+    finishedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    task?: boolean | TaskDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["taskExecution"]>
+
+  export type TaskExecutionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    taskId?: boolean
+    status?: boolean
+    agentId?: boolean
+    jobId?: boolean
+    containerName?: boolean
+    completed?: boolean
+    needsInput?: boolean
+    inputRequest?: boolean
+    result?: boolean
+    errorMessage?: boolean
+    logs?: boolean
+    memoryUsage?: boolean
+    tokenCount?: boolean
+    context?: boolean
+    startedAt?: boolean
+    finishedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    task?: boolean | TaskDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["taskExecution"]>
+
+  export type TaskExecutionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    taskId?: boolean
+    status?: boolean
+    agentId?: boolean
+    jobId?: boolean
+    containerName?: boolean
+    completed?: boolean
+    needsInput?: boolean
+    inputRequest?: boolean
+    result?: boolean
+    errorMessage?: boolean
+    logs?: boolean
+    memoryUsage?: boolean
+    tokenCount?: boolean
+    context?: boolean
+    startedAt?: boolean
+    finishedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    task?: boolean | TaskDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["taskExecution"]>
+
+  export type TaskExecutionSelectScalar = {
+    id?: boolean
+    taskId?: boolean
+    status?: boolean
+    agentId?: boolean
+    jobId?: boolean
+    containerName?: boolean
+    completed?: boolean
+    needsInput?: boolean
+    inputRequest?: boolean
+    result?: boolean
+    errorMessage?: boolean
+    logs?: boolean
+    memoryUsage?: boolean
+    tokenCount?: boolean
+    context?: boolean
+    startedAt?: boolean
+    finishedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type TaskExecutionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "taskId" | "status" | "agentId" | "jobId" | "containerName" | "completed" | "needsInput" | "inputRequest" | "result" | "errorMessage" | "logs" | "memoryUsage" | "tokenCount" | "context" | "startedAt" | "finishedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["taskExecution"]>
+  export type TaskExecutionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    task?: boolean | TaskDefaultArgs<ExtArgs>
+  }
+  export type TaskExecutionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    task?: boolean | TaskDefaultArgs<ExtArgs>
+  }
+  export type TaskExecutionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    task?: boolean | TaskDefaultArgs<ExtArgs>
+  }
+
+  export type $TaskExecutionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TaskExecution"
+    objects: {
+      task: Prisma.$TaskPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      taskId: string
+      status: $Enums.TaskExecutionStatus
+      agentId: $Enums.AgentProvider
+      jobId: string | null
+      containerName: string | null
+      completed: boolean
+      needsInput: boolean
+      inputRequest: string | null
+      result: string | null
+      errorMessage: string | null
+      logs: string | null
+      memoryUsage: number | null
+      tokenCount: number | null
+      context:unknown | null
+      startedAt: Date | null
+      finishedAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["taskExecution"]>
+    composites: {}
+  }
+
+  type TaskExecutionGetPayload<S extends boolean | null | undefined | TaskExecutionDefaultArgs> = $Result.GetResult<Prisma.$TaskExecutionPayload, S>
+
+  type TaskExecutionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TaskExecutionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TaskExecutionCountAggregateInputType | true
+    }
+
+  export interface TaskExecutionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TaskExecution'], meta: { name: 'TaskExecution' } }
+    /**
+     * Find zero or one TaskExecution that matches the filter.
+     * @param {TaskExecutionFindUniqueArgs} args - Arguments to find a TaskExecution
+     * @example
+     * // Get one TaskExecution
+     * const taskExecution = await prisma.taskExecution.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TaskExecutionFindUniqueArgs>(args: SelectSubset<T, TaskExecutionFindUniqueArgs<ExtArgs>>): Prisma__TaskExecutionClient<$Result.GetResult<Prisma.$TaskExecutionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one TaskExecution that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TaskExecutionFindUniqueOrThrowArgs} args - Arguments to find a TaskExecution
+     * @example
+     * // Get one TaskExecution
+     * const taskExecution = await prisma.taskExecution.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TaskExecutionFindUniqueOrThrowArgs>(args: SelectSubset<T, TaskExecutionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TaskExecutionClient<$Result.GetResult<Prisma.$TaskExecutionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TaskExecution that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaskExecutionFindFirstArgs} args - Arguments to find a TaskExecution
+     * @example
+     * // Get one TaskExecution
+     * const taskExecution = await prisma.taskExecution.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TaskExecutionFindFirstArgs>(args?: SelectSubset<T, TaskExecutionFindFirstArgs<ExtArgs>>): Prisma__TaskExecutionClient<$Result.GetResult<Prisma.$TaskExecutionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TaskExecution that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaskExecutionFindFirstOrThrowArgs} args - Arguments to find a TaskExecution
+     * @example
+     * // Get one TaskExecution
+     * const taskExecution = await prisma.taskExecution.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TaskExecutionFindFirstOrThrowArgs>(args?: SelectSubset<T, TaskExecutionFindFirstOrThrowArgs<ExtArgs>>): Prisma__TaskExecutionClient<$Result.GetResult<Prisma.$TaskExecutionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more TaskExecutions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaskExecutionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TaskExecutions
+     * const taskExecutions = await prisma.taskExecution.findMany()
+     * 
+     * // Get first 10 TaskExecutions
+     * const taskExecutions = await prisma.taskExecution.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const taskExecutionWithIdOnly = await prisma.taskExecution.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TaskExecutionFindManyArgs>(args?: SelectSubset<T, TaskExecutionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskExecutionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a TaskExecution.
+     * @param {TaskExecutionCreateArgs} args - Arguments to create a TaskExecution.
+     * @example
+     * // Create one TaskExecution
+     * const TaskExecution = await prisma.taskExecution.create({
+     *   data: {
+     *     // ... data to create a TaskExecution
+     *   }
+     * })
+     * 
+     */
+    create<T extends TaskExecutionCreateArgs>(args: SelectSubset<T, TaskExecutionCreateArgs<ExtArgs>>): Prisma__TaskExecutionClient<$Result.GetResult<Prisma.$TaskExecutionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many TaskExecutions.
+     * @param {TaskExecutionCreateManyArgs} args - Arguments to create many TaskExecutions.
+     * @example
+     * // Create many TaskExecutions
+     * const taskExecution = await prisma.taskExecution.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TaskExecutionCreateManyArgs>(args?: SelectSubset<T, TaskExecutionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many TaskExecutions and returns the data saved in the database.
+     * @param {TaskExecutionCreateManyAndReturnArgs} args - Arguments to create many TaskExecutions.
+     * @example
+     * // Create many TaskExecutions
+     * const taskExecution = await prisma.taskExecution.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many TaskExecutions and only return the `id`
+     * const taskExecutionWithIdOnly = await prisma.taskExecution.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TaskExecutionCreateManyAndReturnArgs>(args?: SelectSubset<T, TaskExecutionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskExecutionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a TaskExecution.
+     * @param {TaskExecutionDeleteArgs} args - Arguments to delete one TaskExecution.
+     * @example
+     * // Delete one TaskExecution
+     * const TaskExecution = await prisma.taskExecution.delete({
+     *   where: {
+     *     // ... filter to delete one TaskExecution
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TaskExecutionDeleteArgs>(args: SelectSubset<T, TaskExecutionDeleteArgs<ExtArgs>>): Prisma__TaskExecutionClient<$Result.GetResult<Prisma.$TaskExecutionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one TaskExecution.
+     * @param {TaskExecutionUpdateArgs} args - Arguments to update one TaskExecution.
+     * @example
+     * // Update one TaskExecution
+     * const taskExecution = await prisma.taskExecution.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TaskExecutionUpdateArgs>(args: SelectSubset<T, TaskExecutionUpdateArgs<ExtArgs>>): Prisma__TaskExecutionClient<$Result.GetResult<Prisma.$TaskExecutionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more TaskExecutions.
+     * @param {TaskExecutionDeleteManyArgs} args - Arguments to filter TaskExecutions to delete.
+     * @example
+     * // Delete a few TaskExecutions
+     * const { count } = await prisma.taskExecution.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TaskExecutionDeleteManyArgs>(args?: SelectSubset<T, TaskExecutionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TaskExecutions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaskExecutionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TaskExecutions
+     * const taskExecution = await prisma.taskExecution.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TaskExecutionUpdateManyArgs>(args: SelectSubset<T, TaskExecutionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TaskExecutions and returns the data updated in the database.
+     * @param {TaskExecutionUpdateManyAndReturnArgs} args - Arguments to update many TaskExecutions.
+     * @example
+     * // Update many TaskExecutions
+     * const taskExecution = await prisma.taskExecution.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more TaskExecutions and only return the `id`
+     * const taskExecutionWithIdOnly = await prisma.taskExecution.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends TaskExecutionUpdateManyAndReturnArgs>(args: SelectSubset<T, TaskExecutionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskExecutionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one TaskExecution.
+     * @param {TaskExecutionUpsertArgs} args - Arguments to update or create a TaskExecution.
+     * @example
+     * // Update or create a TaskExecution
+     * const taskExecution = await prisma.taskExecution.upsert({
+     *   create: {
+     *     // ... data to create a TaskExecution
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TaskExecution we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TaskExecutionUpsertArgs>(args: SelectSubset<T, TaskExecutionUpsertArgs<ExtArgs>>): Prisma__TaskExecutionClient<$Result.GetResult<Prisma.$TaskExecutionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of TaskExecutions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaskExecutionCountArgs} args - Arguments to filter TaskExecutions to count.
+     * @example
+     * // Count the number of TaskExecutions
+     * const count = await prisma.taskExecution.count({
+     *   where: {
+     *     // ... the filter for the TaskExecutions we want to count
+     *   }
+     * })
+    **/
+    count<T extends TaskExecutionCountArgs>(
+      args?: Subset<T, TaskExecutionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TaskExecutionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TaskExecution.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaskExecutionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TaskExecutionAggregateArgs>(args: Subset<T, TaskExecutionAggregateArgs>): Prisma.PrismaPromise<GetTaskExecutionAggregateType<T>>
+
+    /**
+     * Group by TaskExecution.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TaskExecutionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TaskExecutionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TaskExecutionGroupByArgs['orderBy'] }
+        : { orderBy?: TaskExecutionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TaskExecutionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTaskExecutionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TaskExecution model
+   */
+  readonly fields: TaskExecutionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TaskExecution.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TaskExecutionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    task<T extends TaskDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TaskDefaultArgs<ExtArgs>>): Prisma__TaskClient<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the TaskExecution model
+   */
+  interface TaskExecutionFieldRefs {
+    readonly id: FieldRef<"TaskExecution", 'String'>
+    readonly taskId: FieldRef<"TaskExecution", 'String'>
+    readonly status: FieldRef<"TaskExecution", 'TaskExecutionStatus'>
+    readonly agentId: FieldRef<"TaskExecution", 'AgentProvider'>
+    readonly jobId: FieldRef<"TaskExecution", 'String'>
+    readonly containerName: FieldRef<"TaskExecution", 'String'>
+    readonly completed: FieldRef<"TaskExecution", 'Boolean'>
+    readonly needsInput: FieldRef<"TaskExecution", 'Boolean'>
+    readonly inputRequest: FieldRef<"TaskExecution", 'String'>
+    readonly result: FieldRef<"TaskExecution", 'String'>
+    readonly errorMessage: FieldRef<"TaskExecution", 'String'>
+    readonly logs: FieldRef<"TaskExecution", 'String'>
+    readonly memoryUsage: FieldRef<"TaskExecution", 'Int'>
+    readonly tokenCount: FieldRef<"TaskExecution", 'Int'>
+    readonly context: FieldRef<"TaskExecution", 'Json'>
+    readonly startedAt: FieldRef<"TaskExecution", 'DateTime'>
+    readonly finishedAt: FieldRef<"TaskExecution", 'DateTime'>
+    readonly createdAt: FieldRef<"TaskExecution", 'DateTime'>
+    readonly updatedAt: FieldRef<"TaskExecution", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * TaskExecution findUnique
+   */
+  export type TaskExecutionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskExecution
+     */
+    select?: TaskExecutionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaskExecution
+     */
+    omit?: TaskExecutionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskExecutionInclude<ExtArgs> | null
+    /**
+     * Filter, which TaskExecution to fetch.
+     */
+    where: TaskExecutionWhereUniqueInput
+  }
+
+  /**
+   * TaskExecution findUniqueOrThrow
+   */
+  export type TaskExecutionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskExecution
+     */
+    select?: TaskExecutionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaskExecution
+     */
+    omit?: TaskExecutionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskExecutionInclude<ExtArgs> | null
+    /**
+     * Filter, which TaskExecution to fetch.
+     */
+    where: TaskExecutionWhereUniqueInput
+  }
+
+  /**
+   * TaskExecution findFirst
+   */
+  export type TaskExecutionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskExecution
+     */
+    select?: TaskExecutionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaskExecution
+     */
+    omit?: TaskExecutionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskExecutionInclude<ExtArgs> | null
+    /**
+     * Filter, which TaskExecution to fetch.
+     */
+    where?: TaskExecutionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TaskExecutions to fetch.
+     */
+    orderBy?: TaskExecutionOrderByWithRelationInput | TaskExecutionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TaskExecutions.
+     */
+    cursor?: TaskExecutionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TaskExecutions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TaskExecutions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TaskExecutions.
+     */
+    distinct?: TaskExecutionScalarFieldEnum | TaskExecutionScalarFieldEnum[]
+  }
+
+  /**
+   * TaskExecution findFirstOrThrow
+   */
+  export type TaskExecutionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskExecution
+     */
+    select?: TaskExecutionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaskExecution
+     */
+    omit?: TaskExecutionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskExecutionInclude<ExtArgs> | null
+    /**
+     * Filter, which TaskExecution to fetch.
+     */
+    where?: TaskExecutionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TaskExecutions to fetch.
+     */
+    orderBy?: TaskExecutionOrderByWithRelationInput | TaskExecutionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TaskExecutions.
+     */
+    cursor?: TaskExecutionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TaskExecutions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TaskExecutions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TaskExecutions.
+     */
+    distinct?: TaskExecutionScalarFieldEnum | TaskExecutionScalarFieldEnum[]
+  }
+
+  /**
+   * TaskExecution findMany
+   */
+  export type TaskExecutionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskExecution
+     */
+    select?: TaskExecutionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaskExecution
+     */
+    omit?: TaskExecutionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskExecutionInclude<ExtArgs> | null
+    /**
+     * Filter, which TaskExecutions to fetch.
+     */
+    where?: TaskExecutionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TaskExecutions to fetch.
+     */
+    orderBy?: TaskExecutionOrderByWithRelationInput | TaskExecutionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TaskExecutions.
+     */
+    cursor?: TaskExecutionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TaskExecutions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TaskExecutions.
+     */
+    skip?: number
+    distinct?: TaskExecutionScalarFieldEnum | TaskExecutionScalarFieldEnum[]
+  }
+
+  /**
+   * TaskExecution create
+   */
+  export type TaskExecutionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskExecution
+     */
+    select?: TaskExecutionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaskExecution
+     */
+    omit?: TaskExecutionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskExecutionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a TaskExecution.
+     */
+    data: XOR<TaskExecutionCreateInput, TaskExecutionUncheckedCreateInput>
+  }
+
+  /**
+   * TaskExecution createMany
+   */
+  export type TaskExecutionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TaskExecutions.
+     */
+    data: TaskExecutionCreateManyInput | TaskExecutionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * TaskExecution createManyAndReturn
+   */
+  export type TaskExecutionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskExecution
+     */
+    select?: TaskExecutionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaskExecution
+     */
+    omit?: TaskExecutionOmit<ExtArgs> | null
+    /**
+     * The data used to create many TaskExecutions.
+     */
+    data: TaskExecutionCreateManyInput | TaskExecutionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskExecutionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TaskExecution update
+   */
+  export type TaskExecutionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskExecution
+     */
+    select?: TaskExecutionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaskExecution
+     */
+    omit?: TaskExecutionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskExecutionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a TaskExecution.
+     */
+    data: XOR<TaskExecutionUpdateInput, TaskExecutionUncheckedUpdateInput>
+    /**
+     * Choose, which TaskExecution to update.
+     */
+    where: TaskExecutionWhereUniqueInput
+  }
+
+  /**
+   * TaskExecution updateMany
+   */
+  export type TaskExecutionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TaskExecutions.
+     */
+    data: XOR<TaskExecutionUpdateManyMutationInput, TaskExecutionUncheckedUpdateManyInput>
+    /**
+     * Filter which TaskExecutions to update
+     */
+    where?: TaskExecutionWhereInput
+    /**
+     * Limit how many TaskExecutions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * TaskExecution updateManyAndReturn
+   */
+  export type TaskExecutionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskExecution
+     */
+    select?: TaskExecutionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaskExecution
+     */
+    omit?: TaskExecutionOmit<ExtArgs> | null
+    /**
+     * The data used to update TaskExecutions.
+     */
+    data: XOR<TaskExecutionUpdateManyMutationInput, TaskExecutionUncheckedUpdateManyInput>
+    /**
+     * Filter which TaskExecutions to update
+     */
+    where?: TaskExecutionWhereInput
+    /**
+     * Limit how many TaskExecutions to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskExecutionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TaskExecution upsert
+   */
+  export type TaskExecutionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskExecution
+     */
+    select?: TaskExecutionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaskExecution
+     */
+    omit?: TaskExecutionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskExecutionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the TaskExecution to update in case it exists.
+     */
+    where: TaskExecutionWhereUniqueInput
+    /**
+     * In case the TaskExecution found by the `where` argument doesn't exist, create a new TaskExecution with this data.
+     */
+    create: XOR<TaskExecutionCreateInput, TaskExecutionUncheckedCreateInput>
+    /**
+     * In case the TaskExecution was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TaskExecutionUpdateInput, TaskExecutionUncheckedUpdateInput>
+  }
+
+  /**
+   * TaskExecution delete
+   */
+  export type TaskExecutionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskExecution
+     */
+    select?: TaskExecutionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaskExecution
+     */
+    omit?: TaskExecutionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskExecutionInclude<ExtArgs> | null
+    /**
+     * Filter which TaskExecution to delete.
+     */
+    where: TaskExecutionWhereUniqueInput
+  }
+
+  /**
+   * TaskExecution deleteMany
+   */
+  export type TaskExecutionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TaskExecutions to delete
+     */
+    where?: TaskExecutionWhereInput
+    /**
+     * Limit how many TaskExecutions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * TaskExecution without action
+   */
+  export type TaskExecutionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskExecution
+     */
+    select?: TaskExecutionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaskExecution
+     */
+    omit?: TaskExecutionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskExecutionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ApiClient
+   */
+
+  export type AggregateApiClient = {
+    _count: ApiClientCountAggregateOutputType | null
+    _min: ApiClientMinAggregateOutputType | null
+    _max: ApiClientMaxAggregateOutputType | null
+  }
+
+  export type ApiClientMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    description: string | null
+    userId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ApiClientMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    description: string | null
+    userId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ApiClientCountAggregateOutputType = {
+    id: number
+    name: number
+    description: number
+    userId: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ApiClientMinAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    userId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ApiClientMaxAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    userId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ApiClientCountAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    userId?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ApiClientAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ApiClient to aggregate.
+     */
+    where?: ApiClientWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApiClients to fetch.
+     */
+    orderBy?: ApiClientOrderByWithRelationInput | ApiClientOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ApiClientWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApiClients from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApiClients.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ApiClients
+    **/
+    _count?: true | ApiClientCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ApiClientMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ApiClientMaxAggregateInputType
+  }
+
+  export type GetApiClientAggregateType<T extends ApiClientAggregateArgs> = {
+        [P in keyof T & keyof AggregateApiClient]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateApiClient[P]>
+      : GetScalarType<T[P], AggregateApiClient[P]>
+  }
+
+
+
+
+  export type ApiClientGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ApiClientWhereInput
+    orderBy?: ApiClientOrderByWithAggregationInput | ApiClientOrderByWithAggregationInput[]
+    by: ApiClientScalarFieldEnum[] | ApiClientScalarFieldEnum
+    having?: ApiClientScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ApiClientCountAggregateInputType | true
+    _min?: ApiClientMinAggregateInputType
+    _max?: ApiClientMaxAggregateInputType
+  }
+
+  export type ApiClientGroupByOutputType = {
+    id: string
+    name: string
+    description: string | null
+    userId: string
+    createdAt: Date
+    updatedAt: Date
+    _count: ApiClientCountAggregateOutputType | null
+    _min: ApiClientMinAggregateOutputType | null
+    _max: ApiClientMaxAggregateOutputType | null
+  }
+
+  type GetApiClientGroupByPayload<T extends ApiClientGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ApiClientGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ApiClientGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ApiClientGroupByOutputType[P]>
+            : GetScalarType<T[P], ApiClientGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ApiClientSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    userId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    secrets?: boolean | ApiClient$secretsArgs<ExtArgs>
+    callLogs?: boolean | ApiClient$callLogsArgs<ExtArgs>
+    _count?: boolean | ApiClientCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["apiClient"]>
+
+  export type ApiClientSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    userId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["apiClient"]>
+
+  export type ApiClientSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    userId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["apiClient"]>
+
+  export type ApiClientSelectScalar = {
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    userId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ApiClientOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["apiClient"]>
+  export type ApiClientInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    secrets?: boolean | ApiClient$secretsArgs<ExtArgs>
+    callLogs?: boolean | ApiClient$callLogsArgs<ExtArgs>
+    _count?: boolean | ApiClientCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type ApiClientIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type ApiClientIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $ApiClientPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ApiClient"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      secrets: Prisma.$ApiSecretPayload<ExtArgs>[]
+      callLogs: Prisma.$ApiCallLogPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      description: string | null
+      userId: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["apiClient"]>
+    composites: {}
+  }
+
+  type ApiClientGetPayload<S extends boolean | null | undefined | ApiClientDefaultArgs> = $Result.GetResult<Prisma.$ApiClientPayload, S>
+
+  type ApiClientCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ApiClientFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ApiClientCountAggregateInputType | true
+    }
+
+  export interface ApiClientDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ApiClient'], meta: { name: 'ApiClient' } }
+    /**
+     * Find zero or one ApiClient that matches the filter.
+     * @param {ApiClientFindUniqueArgs} args - Arguments to find a ApiClient
+     * @example
+     * // Get one ApiClient
+     * const apiClient = await prisma.apiClient.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ApiClientFindUniqueArgs>(args: SelectSubset<T, ApiClientFindUniqueArgs<ExtArgs>>): Prisma__ApiClientClient<$Result.GetResult<Prisma.$ApiClientPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ApiClient that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ApiClientFindUniqueOrThrowArgs} args - Arguments to find a ApiClient
+     * @example
+     * // Get one ApiClient
+     * const apiClient = await prisma.apiClient.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ApiClientFindUniqueOrThrowArgs>(args: SelectSubset<T, ApiClientFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ApiClientClient<$Result.GetResult<Prisma.$ApiClientPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ApiClient that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiClientFindFirstArgs} args - Arguments to find a ApiClient
+     * @example
+     * // Get one ApiClient
+     * const apiClient = await prisma.apiClient.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ApiClientFindFirstArgs>(args?: SelectSubset<T, ApiClientFindFirstArgs<ExtArgs>>): Prisma__ApiClientClient<$Result.GetResult<Prisma.$ApiClientPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ApiClient that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiClientFindFirstOrThrowArgs} args - Arguments to find a ApiClient
+     * @example
+     * // Get one ApiClient
+     * const apiClient = await prisma.apiClient.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ApiClientFindFirstOrThrowArgs>(args?: SelectSubset<T, ApiClientFindFirstOrThrowArgs<ExtArgs>>): Prisma__ApiClientClient<$Result.GetResult<Prisma.$ApiClientPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ApiClients that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiClientFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ApiClients
+     * const apiClients = await prisma.apiClient.findMany()
+     * 
+     * // Get first 10 ApiClients
+     * const apiClients = await prisma.apiClient.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const apiClientWithIdOnly = await prisma.apiClient.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ApiClientFindManyArgs>(args?: SelectSubset<T, ApiClientFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApiClientPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ApiClient.
+     * @param {ApiClientCreateArgs} args - Arguments to create a ApiClient.
+     * @example
+     * // Create one ApiClient
+     * const ApiClient = await prisma.apiClient.create({
+     *   data: {
+     *     // ... data to create a ApiClient
+     *   }
+     * })
+     * 
+     */
+    create<T extends ApiClientCreateArgs>(args: SelectSubset<T, ApiClientCreateArgs<ExtArgs>>): Prisma__ApiClientClient<$Result.GetResult<Prisma.$ApiClientPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ApiClients.
+     * @param {ApiClientCreateManyArgs} args - Arguments to create many ApiClients.
+     * @example
+     * // Create many ApiClients
+     * const apiClient = await prisma.apiClient.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ApiClientCreateManyArgs>(args?: SelectSubset<T, ApiClientCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ApiClients and returns the data saved in the database.
+     * @param {ApiClientCreateManyAndReturnArgs} args - Arguments to create many ApiClients.
+     * @example
+     * // Create many ApiClients
+     * const apiClient = await prisma.apiClient.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ApiClients and only return the `id`
+     * const apiClientWithIdOnly = await prisma.apiClient.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ApiClientCreateManyAndReturnArgs>(args?: SelectSubset<T, ApiClientCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApiClientPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ApiClient.
+     * @param {ApiClientDeleteArgs} args - Arguments to delete one ApiClient.
+     * @example
+     * // Delete one ApiClient
+     * const ApiClient = await prisma.apiClient.delete({
+     *   where: {
+     *     // ... filter to delete one ApiClient
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ApiClientDeleteArgs>(args: SelectSubset<T, ApiClientDeleteArgs<ExtArgs>>): Prisma__ApiClientClient<$Result.GetResult<Prisma.$ApiClientPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ApiClient.
+     * @param {ApiClientUpdateArgs} args - Arguments to update one ApiClient.
+     * @example
+     * // Update one ApiClient
+     * const apiClient = await prisma.apiClient.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ApiClientUpdateArgs>(args: SelectSubset<T, ApiClientUpdateArgs<ExtArgs>>): Prisma__ApiClientClient<$Result.GetResult<Prisma.$ApiClientPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ApiClients.
+     * @param {ApiClientDeleteManyArgs} args - Arguments to filter ApiClients to delete.
+     * @example
+     * // Delete a few ApiClients
+     * const { count } = await prisma.apiClient.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ApiClientDeleteManyArgs>(args?: SelectSubset<T, ApiClientDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ApiClients.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiClientUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ApiClients
+     * const apiClient = await prisma.apiClient.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ApiClientUpdateManyArgs>(args: SelectSubset<T, ApiClientUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ApiClients and returns the data updated in the database.
+     * @param {ApiClientUpdateManyAndReturnArgs} args - Arguments to update many ApiClients.
+     * @example
+     * // Update many ApiClients
+     * const apiClient = await prisma.apiClient.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ApiClients and only return the `id`
+     * const apiClientWithIdOnly = await prisma.apiClient.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ApiClientUpdateManyAndReturnArgs>(args: SelectSubset<T, ApiClientUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApiClientPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ApiClient.
+     * @param {ApiClientUpsertArgs} args - Arguments to update or create a ApiClient.
+     * @example
+     * // Update or create a ApiClient
+     * const apiClient = await prisma.apiClient.upsert({
+     *   create: {
+     *     // ... data to create a ApiClient
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ApiClient we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ApiClientUpsertArgs>(args: SelectSubset<T, ApiClientUpsertArgs<ExtArgs>>): Prisma__ApiClientClient<$Result.GetResult<Prisma.$ApiClientPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ApiClients.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiClientCountArgs} args - Arguments to filter ApiClients to count.
+     * @example
+     * // Count the number of ApiClients
+     * const count = await prisma.apiClient.count({
+     *   where: {
+     *     // ... the filter for the ApiClients we want to count
+     *   }
+     * })
+    **/
+    count<T extends ApiClientCountArgs>(
+      args?: Subset<T, ApiClientCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ApiClientCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ApiClient.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiClientAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ApiClientAggregateArgs>(args: Subset<T, ApiClientAggregateArgs>): Prisma.PrismaPromise<GetApiClientAggregateType<T>>
+
+    /**
+     * Group by ApiClient.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiClientGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ApiClientGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ApiClientGroupByArgs['orderBy'] }
+        : { orderBy?: ApiClientGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ApiClientGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetApiClientGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ApiClient model
+   */
+  readonly fields: ApiClientFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ApiClient.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ApiClientClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    secrets<T extends ApiClient$secretsArgs<ExtArgs> = {}>(args?: Subset<T, ApiClient$secretsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApiSecretPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    callLogs<T extends ApiClient$callLogsArgs<ExtArgs> = {}>(args?: Subset<T, ApiClient$callLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApiCallLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ApiClient model
+   */
+  interface ApiClientFieldRefs {
+    readonly id: FieldRef<"ApiClient", 'String'>
+    readonly name: FieldRef<"ApiClient", 'String'>
+    readonly description: FieldRef<"ApiClient", 'String'>
+    readonly userId: FieldRef<"ApiClient", 'String'>
+    readonly createdAt: FieldRef<"ApiClient", 'DateTime'>
+    readonly updatedAt: FieldRef<"ApiClient", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ApiClient findUnique
+   */
+  export type ApiClientFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiClient
+     */
+    select?: ApiClientSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiClient
+     */
+    omit?: ApiClientOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApiClientInclude<ExtArgs> | null
+    /**
+     * Filter, which ApiClient to fetch.
+     */
+    where: ApiClientWhereUniqueInput
+  }
+
+  /**
+   * ApiClient findUniqueOrThrow
+   */
+  export type ApiClientFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiClient
+     */
+    select?: ApiClientSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiClient
+     */
+    omit?: ApiClientOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApiClientInclude<ExtArgs> | null
+    /**
+     * Filter, which ApiClient to fetch.
+     */
+    where: ApiClientWhereUniqueInput
+  }
+
+  /**
+   * ApiClient findFirst
+   */
+  export type ApiClientFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiClient
+     */
+    select?: ApiClientSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiClient
+     */
+    omit?: ApiClientOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApiClientInclude<ExtArgs> | null
+    /**
+     * Filter, which ApiClient to fetch.
+     */
+    where?: ApiClientWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApiClients to fetch.
+     */
+    orderBy?: ApiClientOrderByWithRelationInput | ApiClientOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ApiClients.
+     */
+    cursor?: ApiClientWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApiClients from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApiClients.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ApiClients.
+     */
+    distinct?: ApiClientScalarFieldEnum | ApiClientScalarFieldEnum[]
+  }
+
+  /**
+   * ApiClient findFirstOrThrow
+   */
+  export type ApiClientFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiClient
+     */
+    select?: ApiClientSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiClient
+     */
+    omit?: ApiClientOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApiClientInclude<ExtArgs> | null
+    /**
+     * Filter, which ApiClient to fetch.
+     */
+    where?: ApiClientWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApiClients to fetch.
+     */
+    orderBy?: ApiClientOrderByWithRelationInput | ApiClientOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ApiClients.
+     */
+    cursor?: ApiClientWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApiClients from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApiClients.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ApiClients.
+     */
+    distinct?: ApiClientScalarFieldEnum | ApiClientScalarFieldEnum[]
+  }
+
+  /**
+   * ApiClient findMany
+   */
+  export type ApiClientFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiClient
+     */
+    select?: ApiClientSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiClient
+     */
+    omit?: ApiClientOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApiClientInclude<ExtArgs> | null
+    /**
+     * Filter, which ApiClients to fetch.
+     */
+    where?: ApiClientWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApiClients to fetch.
+     */
+    orderBy?: ApiClientOrderByWithRelationInput | ApiClientOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ApiClients.
+     */
+    cursor?: ApiClientWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApiClients from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApiClients.
+     */
+    skip?: number
+    distinct?: ApiClientScalarFieldEnum | ApiClientScalarFieldEnum[]
+  }
+
+  /**
+   * ApiClient create
+   */
+  export type ApiClientCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiClient
+     */
+    select?: ApiClientSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiClient
+     */
+    omit?: ApiClientOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApiClientInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ApiClient.
+     */
+    data: XOR<ApiClientCreateInput, ApiClientUncheckedCreateInput>
+  }
+
+  /**
+   * ApiClient createMany
+   */
+  export type ApiClientCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ApiClients.
+     */
+    data: ApiClientCreateManyInput | ApiClientCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ApiClient createManyAndReturn
+   */
+  export type ApiClientCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiClient
+     */
+    select?: ApiClientSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiClient
+     */
+    omit?: ApiClientOmit<ExtArgs> | null
+    /**
+     * The data used to create many ApiClients.
+     */
+    data: ApiClientCreateManyInput | ApiClientCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApiClientIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ApiClient update
+   */
+  export type ApiClientUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiClient
+     */
+    select?: ApiClientSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiClient
+     */
+    omit?: ApiClientOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApiClientInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ApiClient.
+     */
+    data: XOR<ApiClientUpdateInput, ApiClientUncheckedUpdateInput>
+    /**
+     * Choose, which ApiClient to update.
+     */
+    where: ApiClientWhereUniqueInput
+  }
+
+  /**
+   * ApiClient updateMany
+   */
+  export type ApiClientUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ApiClients.
+     */
+    data: XOR<ApiClientUpdateManyMutationInput, ApiClientUncheckedUpdateManyInput>
+    /**
+     * Filter which ApiClients to update
+     */
+    where?: ApiClientWhereInput
+    /**
+     * Limit how many ApiClients to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ApiClient updateManyAndReturn
+   */
+  export type ApiClientUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiClient
+     */
+    select?: ApiClientSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiClient
+     */
+    omit?: ApiClientOmit<ExtArgs> | null
+    /**
+     * The data used to update ApiClients.
+     */
+    data: XOR<ApiClientUpdateManyMutationInput, ApiClientUncheckedUpdateManyInput>
+    /**
+     * Filter which ApiClients to update
+     */
+    where?: ApiClientWhereInput
+    /**
+     * Limit how many ApiClients to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApiClientIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ApiClient upsert
+   */
+  export type ApiClientUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiClient
+     */
+    select?: ApiClientSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiClient
+     */
+    omit?: ApiClientOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApiClientInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ApiClient to update in case it exists.
+     */
+    where: ApiClientWhereUniqueInput
+    /**
+     * In case the ApiClient found by the `where` argument doesn't exist, create a new ApiClient with this data.
+     */
+    create: XOR<ApiClientCreateInput, ApiClientUncheckedCreateInput>
+    /**
+     * In case the ApiClient was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ApiClientUpdateInput, ApiClientUncheckedUpdateInput>
+  }
+
+  /**
+   * ApiClient delete
+   */
+  export type ApiClientDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiClient
+     */
+    select?: ApiClientSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiClient
+     */
+    omit?: ApiClientOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApiClientInclude<ExtArgs> | null
+    /**
+     * Filter which ApiClient to delete.
+     */
+    where: ApiClientWhereUniqueInput
+  }
+
+  /**
+   * ApiClient deleteMany
+   */
+  export type ApiClientDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ApiClients to delete
+     */
+    where?: ApiClientWhereInput
+    /**
+     * Limit how many ApiClients to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ApiClient.secrets
+   */
+  export type ApiClient$secretsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiSecret
+     */
+    select?: ApiSecretSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiSecret
+     */
+    omit?: ApiSecretOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApiSecretInclude<ExtArgs> | null
+    where?: ApiSecretWhereInput
+    orderBy?: ApiSecretOrderByWithRelationInput | ApiSecretOrderByWithRelationInput[]
+    cursor?: ApiSecretWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ApiSecretScalarFieldEnum | ApiSecretScalarFieldEnum[]
+  }
+
+  /**
+   * ApiClient.callLogs
+   */
+  export type ApiClient$callLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiCallLog
+     */
+    select?: ApiCallLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiCallLog
+     */
+    omit?: ApiCallLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApiCallLogInclude<ExtArgs> | null
+    where?: ApiCallLogWhereInput
+    orderBy?: ApiCallLogOrderByWithRelationInput | ApiCallLogOrderByWithRelationInput[]
+    cursor?: ApiCallLogWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ApiCallLogScalarFieldEnum | ApiCallLogScalarFieldEnum[]
+  }
+
+  /**
+   * ApiClient without action
+   */
+  export type ApiClientDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiClient
+     */
+    select?: ApiClientSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiClient
+     */
+    omit?: ApiClientOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApiClientInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ApiSecret
+   */
+
+  export type AggregateApiSecret = {
+    _count: ApiSecretCountAggregateOutputType | null
+    _min: ApiSecretMinAggregateOutputType | null
+    _max: ApiSecretMaxAggregateOutputType | null
+  }
+
+  export type ApiSecretMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    keyHash: string | null
+    keyPrefix: string | null
+    clientId: string | null
+    lastUsedAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type ApiSecretMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    keyHash: string | null
+    keyPrefix: string | null
+    clientId: string | null
+    lastUsedAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type ApiSecretCountAggregateOutputType = {
+    id: number
+    name: number
+    keyHash: number
+    keyPrefix: number
+    clientId: number
+    lastUsedAt: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type ApiSecretMinAggregateInputType = {
+    id?: true
+    name?: true
+    keyHash?: true
+    keyPrefix?: true
+    clientId?: true
+    lastUsedAt?: true
+    createdAt?: true
+  }
+
+  export type ApiSecretMaxAggregateInputType = {
+    id?: true
+    name?: true
+    keyHash?: true
+    keyPrefix?: true
+    clientId?: true
+    lastUsedAt?: true
+    createdAt?: true
+  }
+
+  export type ApiSecretCountAggregateInputType = {
+    id?: true
+    name?: true
+    keyHash?: true
+    keyPrefix?: true
+    clientId?: true
+    lastUsedAt?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type ApiSecretAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ApiSecret to aggregate.
+     */
+    where?: ApiSecretWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApiSecrets to fetch.
+     */
+    orderBy?: ApiSecretOrderByWithRelationInput | ApiSecretOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ApiSecretWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApiSecrets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApiSecrets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ApiSecrets
+    **/
+    _count?: true | ApiSecretCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ApiSecretMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ApiSecretMaxAggregateInputType
+  }
+
+  export type GetApiSecretAggregateType<T extends ApiSecretAggregateArgs> = {
+        [P in keyof T & keyof AggregateApiSecret]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateApiSecret[P]>
+      : GetScalarType<T[P], AggregateApiSecret[P]>
+  }
+
+
+
+
+  export type ApiSecretGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ApiSecretWhereInput
+    orderBy?: ApiSecretOrderByWithAggregationInput | ApiSecretOrderByWithAggregationInput[]
+    by: ApiSecretScalarFieldEnum[] | ApiSecretScalarFieldEnum
+    having?: ApiSecretScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ApiSecretCountAggregateInputType | true
+    _min?: ApiSecretMinAggregateInputType
+    _max?: ApiSecretMaxAggregateInputType
+  }
+
+  export type ApiSecretGroupByOutputType = {
+    id: string
+    name: string
+    keyHash: string
+    keyPrefix: string
+    clientId: string
+    lastUsedAt: Date | null
+    createdAt: Date
+    _count: ApiSecretCountAggregateOutputType | null
+    _min: ApiSecretMinAggregateOutputType | null
+    _max: ApiSecretMaxAggregateOutputType | null
+  }
+
+  type GetApiSecretGroupByPayload<T extends ApiSecretGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ApiSecretGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ApiSecretGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ApiSecretGroupByOutputType[P]>
+            : GetScalarType<T[P], ApiSecretGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ApiSecretSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    keyHash?: boolean
+    keyPrefix?: boolean
+    clientId?: boolean
+    lastUsedAt?: boolean
+    createdAt?: boolean
+    client?: boolean | ApiClientDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["apiSecret"]>
+
+  export type ApiSecretSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    keyHash?: boolean
+    keyPrefix?: boolean
+    clientId?: boolean
+    lastUsedAt?: boolean
+    createdAt?: boolean
+    client?: boolean | ApiClientDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["apiSecret"]>
+
+  export type ApiSecretSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    keyHash?: boolean
+    keyPrefix?: boolean
+    clientId?: boolean
+    lastUsedAt?: boolean
+    createdAt?: boolean
+    client?: boolean | ApiClientDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["apiSecret"]>
+
+  export type ApiSecretSelectScalar = {
+    id?: boolean
+    name?: boolean
+    keyHash?: boolean
+    keyPrefix?: boolean
+    clientId?: boolean
+    lastUsedAt?: boolean
+    createdAt?: boolean
+  }
+
+  export type ApiSecretOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "keyHash" | "keyPrefix" | "clientId" | "lastUsedAt" | "createdAt", ExtArgs["result"]["apiSecret"]>
+  export type ApiSecretInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    client?: boolean | ApiClientDefaultArgs<ExtArgs>
+  }
+  export type ApiSecretIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    client?: boolean | ApiClientDefaultArgs<ExtArgs>
+  }
+  export type ApiSecretIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    client?: boolean | ApiClientDefaultArgs<ExtArgs>
+  }
+
+  export type $ApiSecretPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ApiSecret"
+    objects: {
+      client: Prisma.$ApiClientPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      keyHash: string
+      keyPrefix: string
+      clientId: string
+      lastUsedAt: Date | null
+      createdAt: Date
+    }, ExtArgs["result"]["apiSecret"]>
+    composites: {}
+  }
+
+  type ApiSecretGetPayload<S extends boolean | null | undefined | ApiSecretDefaultArgs> = $Result.GetResult<Prisma.$ApiSecretPayload, S>
+
+  type ApiSecretCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ApiSecretFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ApiSecretCountAggregateInputType | true
+    }
+
+  export interface ApiSecretDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ApiSecret'], meta: { name: 'ApiSecret' } }
+    /**
+     * Find zero or one ApiSecret that matches the filter.
+     * @param {ApiSecretFindUniqueArgs} args - Arguments to find a ApiSecret
+     * @example
+     * // Get one ApiSecret
+     * const apiSecret = await prisma.apiSecret.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ApiSecretFindUniqueArgs>(args: SelectSubset<T, ApiSecretFindUniqueArgs<ExtArgs>>): Prisma__ApiSecretClient<$Result.GetResult<Prisma.$ApiSecretPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ApiSecret that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ApiSecretFindUniqueOrThrowArgs} args - Arguments to find a ApiSecret
+     * @example
+     * // Get one ApiSecret
+     * const apiSecret = await prisma.apiSecret.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ApiSecretFindUniqueOrThrowArgs>(args: SelectSubset<T, ApiSecretFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ApiSecretClient<$Result.GetResult<Prisma.$ApiSecretPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ApiSecret that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiSecretFindFirstArgs} args - Arguments to find a ApiSecret
+     * @example
+     * // Get one ApiSecret
+     * const apiSecret = await prisma.apiSecret.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ApiSecretFindFirstArgs>(args?: SelectSubset<T, ApiSecretFindFirstArgs<ExtArgs>>): Prisma__ApiSecretClient<$Result.GetResult<Prisma.$ApiSecretPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ApiSecret that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiSecretFindFirstOrThrowArgs} args - Arguments to find a ApiSecret
+     * @example
+     * // Get one ApiSecret
+     * const apiSecret = await prisma.apiSecret.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ApiSecretFindFirstOrThrowArgs>(args?: SelectSubset<T, ApiSecretFindFirstOrThrowArgs<ExtArgs>>): Prisma__ApiSecretClient<$Result.GetResult<Prisma.$ApiSecretPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ApiSecrets that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiSecretFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ApiSecrets
+     * const apiSecrets = await prisma.apiSecret.findMany()
+     * 
+     * // Get first 10 ApiSecrets
+     * const apiSecrets = await prisma.apiSecret.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const apiSecretWithIdOnly = await prisma.apiSecret.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ApiSecretFindManyArgs>(args?: SelectSubset<T, ApiSecretFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApiSecretPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ApiSecret.
+     * @param {ApiSecretCreateArgs} args - Arguments to create a ApiSecret.
+     * @example
+     * // Create one ApiSecret
+     * const ApiSecret = await prisma.apiSecret.create({
+     *   data: {
+     *     // ... data to create a ApiSecret
+     *   }
+     * })
+     * 
+     */
+    create<T extends ApiSecretCreateArgs>(args: SelectSubset<T, ApiSecretCreateArgs<ExtArgs>>): Prisma__ApiSecretClient<$Result.GetResult<Prisma.$ApiSecretPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ApiSecrets.
+     * @param {ApiSecretCreateManyArgs} args - Arguments to create many ApiSecrets.
+     * @example
+     * // Create many ApiSecrets
+     * const apiSecret = await prisma.apiSecret.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ApiSecretCreateManyArgs>(args?: SelectSubset<T, ApiSecretCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ApiSecrets and returns the data saved in the database.
+     * @param {ApiSecretCreateManyAndReturnArgs} args - Arguments to create many ApiSecrets.
+     * @example
+     * // Create many ApiSecrets
+     * const apiSecret = await prisma.apiSecret.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ApiSecrets and only return the `id`
+     * const apiSecretWithIdOnly = await prisma.apiSecret.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ApiSecretCreateManyAndReturnArgs>(args?: SelectSubset<T, ApiSecretCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApiSecretPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ApiSecret.
+     * @param {ApiSecretDeleteArgs} args - Arguments to delete one ApiSecret.
+     * @example
+     * // Delete one ApiSecret
+     * const ApiSecret = await prisma.apiSecret.delete({
+     *   where: {
+     *     // ... filter to delete one ApiSecret
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ApiSecretDeleteArgs>(args: SelectSubset<T, ApiSecretDeleteArgs<ExtArgs>>): Prisma__ApiSecretClient<$Result.GetResult<Prisma.$ApiSecretPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ApiSecret.
+     * @param {ApiSecretUpdateArgs} args - Arguments to update one ApiSecret.
+     * @example
+     * // Update one ApiSecret
+     * const apiSecret = await prisma.apiSecret.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ApiSecretUpdateArgs>(args: SelectSubset<T, ApiSecretUpdateArgs<ExtArgs>>): Prisma__ApiSecretClient<$Result.GetResult<Prisma.$ApiSecretPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ApiSecrets.
+     * @param {ApiSecretDeleteManyArgs} args - Arguments to filter ApiSecrets to delete.
+     * @example
+     * // Delete a few ApiSecrets
+     * const { count } = await prisma.apiSecret.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ApiSecretDeleteManyArgs>(args?: SelectSubset<T, ApiSecretDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ApiSecrets.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiSecretUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ApiSecrets
+     * const apiSecret = await prisma.apiSecret.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ApiSecretUpdateManyArgs>(args: SelectSubset<T, ApiSecretUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ApiSecrets and returns the data updated in the database.
+     * @param {ApiSecretUpdateManyAndReturnArgs} args - Arguments to update many ApiSecrets.
+     * @example
+     * // Update many ApiSecrets
+     * const apiSecret = await prisma.apiSecret.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ApiSecrets and only return the `id`
+     * const apiSecretWithIdOnly = await prisma.apiSecret.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ApiSecretUpdateManyAndReturnArgs>(args: SelectSubset<T, ApiSecretUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApiSecretPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ApiSecret.
+     * @param {ApiSecretUpsertArgs} args - Arguments to update or create a ApiSecret.
+     * @example
+     * // Update or create a ApiSecret
+     * const apiSecret = await prisma.apiSecret.upsert({
+     *   create: {
+     *     // ... data to create a ApiSecret
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ApiSecret we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ApiSecretUpsertArgs>(args: SelectSubset<T, ApiSecretUpsertArgs<ExtArgs>>): Prisma__ApiSecretClient<$Result.GetResult<Prisma.$ApiSecretPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ApiSecrets.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiSecretCountArgs} args - Arguments to filter ApiSecrets to count.
+     * @example
+     * // Count the number of ApiSecrets
+     * const count = await prisma.apiSecret.count({
+     *   where: {
+     *     // ... the filter for the ApiSecrets we want to count
+     *   }
+     * })
+    **/
+    count<T extends ApiSecretCountArgs>(
+      args?: Subset<T, ApiSecretCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ApiSecretCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ApiSecret.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiSecretAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ApiSecretAggregateArgs>(args: Subset<T, ApiSecretAggregateArgs>): Prisma.PrismaPromise<GetApiSecretAggregateType<T>>
+
+    /**
+     * Group by ApiSecret.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiSecretGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ApiSecretGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ApiSecretGroupByArgs['orderBy'] }
+        : { orderBy?: ApiSecretGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ApiSecretGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetApiSecretGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ApiSecret model
+   */
+  readonly fields: ApiSecretFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ApiSecret.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ApiSecretClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    client<T extends ApiClientDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ApiClientDefaultArgs<ExtArgs>>): Prisma__ApiClientClient<$Result.GetResult<Prisma.$ApiClientPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ApiSecret model
+   */
+  interface ApiSecretFieldRefs {
+    readonly id: FieldRef<"ApiSecret", 'String'>
+    readonly name: FieldRef<"ApiSecret", 'String'>
+    readonly keyHash: FieldRef<"ApiSecret", 'String'>
+    readonly keyPrefix: FieldRef<"ApiSecret", 'String'>
+    readonly clientId: FieldRef<"ApiSecret", 'String'>
+    readonly lastUsedAt: FieldRef<"ApiSecret", 'DateTime'>
+    readonly createdAt: FieldRef<"ApiSecret", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ApiSecret findUnique
+   */
+  export type ApiSecretFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiSecret
+     */
+    select?: ApiSecretSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiSecret
+     */
+    omit?: ApiSecretOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApiSecretInclude<ExtArgs> | null
+    /**
+     * Filter, which ApiSecret to fetch.
+     */
+    where: ApiSecretWhereUniqueInput
+  }
+
+  /**
+   * ApiSecret findUniqueOrThrow
+   */
+  export type ApiSecretFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiSecret
+     */
+    select?: ApiSecretSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiSecret
+     */
+    omit?: ApiSecretOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApiSecretInclude<ExtArgs> | null
+    /**
+     * Filter, which ApiSecret to fetch.
+     */
+    where: ApiSecretWhereUniqueInput
+  }
+
+  /**
+   * ApiSecret findFirst
+   */
+  export type ApiSecretFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiSecret
+     */
+    select?: ApiSecretSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiSecret
+     */
+    omit?: ApiSecretOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApiSecretInclude<ExtArgs> | null
+    /**
+     * Filter, which ApiSecret to fetch.
+     */
+    where?: ApiSecretWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApiSecrets to fetch.
+     */
+    orderBy?: ApiSecretOrderByWithRelationInput | ApiSecretOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ApiSecrets.
+     */
+    cursor?: ApiSecretWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApiSecrets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApiSecrets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ApiSecrets.
+     */
+    distinct?: ApiSecretScalarFieldEnum | ApiSecretScalarFieldEnum[]
+  }
+
+  /**
+   * ApiSecret findFirstOrThrow
+   */
+  export type ApiSecretFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiSecret
+     */
+    select?: ApiSecretSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiSecret
+     */
+    omit?: ApiSecretOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApiSecretInclude<ExtArgs> | null
+    /**
+     * Filter, which ApiSecret to fetch.
+     */
+    where?: ApiSecretWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApiSecrets to fetch.
+     */
+    orderBy?: ApiSecretOrderByWithRelationInput | ApiSecretOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ApiSecrets.
+     */
+    cursor?: ApiSecretWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApiSecrets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApiSecrets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ApiSecrets.
+     */
+    distinct?: ApiSecretScalarFieldEnum | ApiSecretScalarFieldEnum[]
+  }
+
+  /**
+   * ApiSecret findMany
+   */
+  export type ApiSecretFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiSecret
+     */
+    select?: ApiSecretSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiSecret
+     */
+    omit?: ApiSecretOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApiSecretInclude<ExtArgs> | null
+    /**
+     * Filter, which ApiSecrets to fetch.
+     */
+    where?: ApiSecretWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApiSecrets to fetch.
+     */
+    orderBy?: ApiSecretOrderByWithRelationInput | ApiSecretOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ApiSecrets.
+     */
+    cursor?: ApiSecretWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApiSecrets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApiSecrets.
+     */
+    skip?: number
+    distinct?: ApiSecretScalarFieldEnum | ApiSecretScalarFieldEnum[]
+  }
+
+  /**
+   * ApiSecret create
+   */
+  export type ApiSecretCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiSecret
+     */
+    select?: ApiSecretSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiSecret
+     */
+    omit?: ApiSecretOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApiSecretInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ApiSecret.
+     */
+    data: XOR<ApiSecretCreateInput, ApiSecretUncheckedCreateInput>
+  }
+
+  /**
+   * ApiSecret createMany
+   */
+  export type ApiSecretCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ApiSecrets.
+     */
+    data: ApiSecretCreateManyInput | ApiSecretCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ApiSecret createManyAndReturn
+   */
+  export type ApiSecretCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiSecret
+     */
+    select?: ApiSecretSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiSecret
+     */
+    omit?: ApiSecretOmit<ExtArgs> | null
+    /**
+     * The data used to create many ApiSecrets.
+     */
+    data: ApiSecretCreateManyInput | ApiSecretCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApiSecretIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ApiSecret update
+   */
+  export type ApiSecretUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiSecret
+     */
+    select?: ApiSecretSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiSecret
+     */
+    omit?: ApiSecretOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApiSecretInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ApiSecret.
+     */
+    data: XOR<ApiSecretUpdateInput, ApiSecretUncheckedUpdateInput>
+    /**
+     * Choose, which ApiSecret to update.
+     */
+    where: ApiSecretWhereUniqueInput
+  }
+
+  /**
+   * ApiSecret updateMany
+   */
+  export type ApiSecretUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ApiSecrets.
+     */
+    data: XOR<ApiSecretUpdateManyMutationInput, ApiSecretUncheckedUpdateManyInput>
+    /**
+     * Filter which ApiSecrets to update
+     */
+    where?: ApiSecretWhereInput
+    /**
+     * Limit how many ApiSecrets to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ApiSecret updateManyAndReturn
+   */
+  export type ApiSecretUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiSecret
+     */
+    select?: ApiSecretSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiSecret
+     */
+    omit?: ApiSecretOmit<ExtArgs> | null
+    /**
+     * The data used to update ApiSecrets.
+     */
+    data: XOR<ApiSecretUpdateManyMutationInput, ApiSecretUncheckedUpdateManyInput>
+    /**
+     * Filter which ApiSecrets to update
+     */
+    where?: ApiSecretWhereInput
+    /**
+     * Limit how many ApiSecrets to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApiSecretIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ApiSecret upsert
+   */
+  export type ApiSecretUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiSecret
+     */
+    select?: ApiSecretSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiSecret
+     */
+    omit?: ApiSecretOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApiSecretInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ApiSecret to update in case it exists.
+     */
+    where: ApiSecretWhereUniqueInput
+    /**
+     * In case the ApiSecret found by the `where` argument doesn't exist, create a new ApiSecret with this data.
+     */
+    create: XOR<ApiSecretCreateInput, ApiSecretUncheckedCreateInput>
+    /**
+     * In case the ApiSecret was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ApiSecretUpdateInput, ApiSecretUncheckedUpdateInput>
+  }
+
+  /**
+   * ApiSecret delete
+   */
+  export type ApiSecretDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiSecret
+     */
+    select?: ApiSecretSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiSecret
+     */
+    omit?: ApiSecretOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApiSecretInclude<ExtArgs> | null
+    /**
+     * Filter which ApiSecret to delete.
+     */
+    where: ApiSecretWhereUniqueInput
+  }
+
+  /**
+   * ApiSecret deleteMany
+   */
+  export type ApiSecretDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ApiSecrets to delete
+     */
+    where?: ApiSecretWhereInput
+    /**
+     * Limit how many ApiSecrets to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ApiSecret without action
+   */
+  export type ApiSecretDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiSecret
+     */
+    select?: ApiSecretSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiSecret
+     */
+    omit?: ApiSecretOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApiSecretInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ApiCallLog
+   */
+
+  export type AggregateApiCallLog = {
+    _count: ApiCallLogCountAggregateOutputType | null
+    _avg: ApiCallLogAvgAggregateOutputType | null
+    _sum: ApiCallLogSumAggregateOutputType | null
+    _min: ApiCallLogMinAggregateOutputType | null
+    _max: ApiCallLogMaxAggregateOutputType | null
+  }
+
+  export type ApiCallLogAvgAggregateOutputType = {
+    statusCode: number | null
+    responseMs: number | null
+  }
+
+  export type ApiCallLogSumAggregateOutputType = {
+    statusCode: number | null
+    responseMs: number | null
+  }
+
+  export type ApiCallLogMinAggregateOutputType = {
+    id: string | null
+    clientId: string | null
+    endpoint: string | null
+    method: string | null
+    statusCode: number | null
+    ipAddress: string | null
+    userAgent: string | null
+    requestBody: string | null
+    responseMs: number | null
+    errorMessage: string | null
+    createdAt: Date | null
+  }
+
+  export type ApiCallLogMaxAggregateOutputType = {
+    id: string | null
+    clientId: string | null
+    endpoint: string | null
+    method: string | null
+    statusCode: number | null
+    ipAddress: string | null
+    userAgent: string | null
+    requestBody: string | null
+    responseMs: number | null
+    errorMessage: string | null
+    createdAt: Date | null
+  }
+
+  export type ApiCallLogCountAggregateOutputType = {
+    id: number
+    clientId: number
+    endpoint: number
+    method: number
+    statusCode: number
+    ipAddress: number
+    userAgent: number
+    requestBody: number
+    responseMs: number
+    errorMessage: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type ApiCallLogAvgAggregateInputType = {
+    statusCode?: true
+    responseMs?: true
+  }
+
+  export type ApiCallLogSumAggregateInputType = {
+    statusCode?: true
+    responseMs?: true
+  }
+
+  export type ApiCallLogMinAggregateInputType = {
+    id?: true
+    clientId?: true
+    endpoint?: true
+    method?: true
+    statusCode?: true
+    ipAddress?: true
+    userAgent?: true
+    requestBody?: true
+    responseMs?: true
+    errorMessage?: true
+    createdAt?: true
+  }
+
+  export type ApiCallLogMaxAggregateInputType = {
+    id?: true
+    clientId?: true
+    endpoint?: true
+    method?: true
+    statusCode?: true
+    ipAddress?: true
+    userAgent?: true
+    requestBody?: true
+    responseMs?: true
+    errorMessage?: true
+    createdAt?: true
+  }
+
+  export type ApiCallLogCountAggregateInputType = {
+    id?: true
+    clientId?: true
+    endpoint?: true
+    method?: true
+    statusCode?: true
+    ipAddress?: true
+    userAgent?: true
+    requestBody?: true
+    responseMs?: true
+    errorMessage?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type ApiCallLogAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ApiCallLog to aggregate.
+     */
+    where?: ApiCallLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApiCallLogs to fetch.
+     */
+    orderBy?: ApiCallLogOrderByWithRelationInput | ApiCallLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ApiCallLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApiCallLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApiCallLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ApiCallLogs
+    **/
+    _count?: true | ApiCallLogCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ApiCallLogAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ApiCallLogSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ApiCallLogMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ApiCallLogMaxAggregateInputType
+  }
+
+  export type GetApiCallLogAggregateType<T extends ApiCallLogAggregateArgs> = {
+        [P in keyof T & keyof AggregateApiCallLog]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateApiCallLog[P]>
+      : GetScalarType<T[P], AggregateApiCallLog[P]>
+  }
+
+
+
+
+  export type ApiCallLogGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ApiCallLogWhereInput
+    orderBy?: ApiCallLogOrderByWithAggregationInput | ApiCallLogOrderByWithAggregationInput[]
+    by: ApiCallLogScalarFieldEnum[] | ApiCallLogScalarFieldEnum
+    having?: ApiCallLogScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ApiCallLogCountAggregateInputType | true
+    _avg?: ApiCallLogAvgAggregateInputType
+    _sum?: ApiCallLogSumAggregateInputType
+    _min?: ApiCallLogMinAggregateInputType
+    _max?: ApiCallLogMaxAggregateInputType
+  }
+
+  export type ApiCallLogGroupByOutputType = {
+    id: string
+    clientId: string
+    endpoint: string
+    method: string
+    statusCode: number
+    ipAddress: string | null
+    userAgent: string | null
+    requestBody: string | null
+    responseMs: number | null
+    errorMessage: string | null
+    createdAt: Date
+    _count: ApiCallLogCountAggregateOutputType | null
+    _avg: ApiCallLogAvgAggregateOutputType | null
+    _sum: ApiCallLogSumAggregateOutputType | null
+    _min: ApiCallLogMinAggregateOutputType | null
+    _max: ApiCallLogMaxAggregateOutputType | null
+  }
+
+  type GetApiCallLogGroupByPayload<T extends ApiCallLogGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ApiCallLogGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ApiCallLogGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ApiCallLogGroupByOutputType[P]>
+            : GetScalarType<T[P], ApiCallLogGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ApiCallLogSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    clientId?: boolean
+    endpoint?: boolean
+    method?: boolean
+    statusCode?: boolean
+    ipAddress?: boolean
+    userAgent?: boolean
+    requestBody?: boolean
+    responseMs?: boolean
+    errorMessage?: boolean
+    createdAt?: boolean
+    client?: boolean | ApiClientDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["apiCallLog"]>
+
+  export type ApiCallLogSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    clientId?: boolean
+    endpoint?: boolean
+    method?: boolean
+    statusCode?: boolean
+    ipAddress?: boolean
+    userAgent?: boolean
+    requestBody?: boolean
+    responseMs?: boolean
+    errorMessage?: boolean
+    createdAt?: boolean
+    client?: boolean | ApiClientDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["apiCallLog"]>
+
+  export type ApiCallLogSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    clientId?: boolean
+    endpoint?: boolean
+    method?: boolean
+    statusCode?: boolean
+    ipAddress?: boolean
+    userAgent?: boolean
+    requestBody?: boolean
+    responseMs?: boolean
+    errorMessage?: boolean
+    createdAt?: boolean
+    client?: boolean | ApiClientDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["apiCallLog"]>
+
+  export type ApiCallLogSelectScalar = {
+    id?: boolean
+    clientId?: boolean
+    endpoint?: boolean
+    method?: boolean
+    statusCode?: boolean
+    ipAddress?: boolean
+    userAgent?: boolean
+    requestBody?: boolean
+    responseMs?: boolean
+    errorMessage?: boolean
+    createdAt?: boolean
+  }
+
+  export type ApiCallLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clientId" | "endpoint" | "method" | "statusCode" | "ipAddress" | "userAgent" | "requestBody" | "responseMs" | "errorMessage" | "createdAt", ExtArgs["result"]["apiCallLog"]>
+  export type ApiCallLogInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    client?: boolean | ApiClientDefaultArgs<ExtArgs>
+  }
+  export type ApiCallLogIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    client?: boolean | ApiClientDefaultArgs<ExtArgs>
+  }
+  export type ApiCallLogIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    client?: boolean | ApiClientDefaultArgs<ExtArgs>
+  }
+
+  export type $ApiCallLogPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ApiCallLog"
+    objects: {
+      client: Prisma.$ApiClientPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      clientId: string
+      endpoint: string
+      method: string
+      statusCode: number
+      ipAddress: string | null
+      userAgent: string | null
+      requestBody: string | null
+      responseMs: number | null
+      errorMessage: string | null
+      createdAt: Date
+    }, ExtArgs["result"]["apiCallLog"]>
+    composites: {}
+  }
+
+  type ApiCallLogGetPayload<S extends boolean | null | undefined | ApiCallLogDefaultArgs> = $Result.GetResult<Prisma.$ApiCallLogPayload, S>
+
+  type ApiCallLogCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ApiCallLogFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ApiCallLogCountAggregateInputType | true
+    }
+
+  export interface ApiCallLogDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ApiCallLog'], meta: { name: 'ApiCallLog' } }
+    /**
+     * Find zero or one ApiCallLog that matches the filter.
+     * @param {ApiCallLogFindUniqueArgs} args - Arguments to find a ApiCallLog
+     * @example
+     * // Get one ApiCallLog
+     * const apiCallLog = await prisma.apiCallLog.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ApiCallLogFindUniqueArgs>(args: SelectSubset<T, ApiCallLogFindUniqueArgs<ExtArgs>>): Prisma__ApiCallLogClient<$Result.GetResult<Prisma.$ApiCallLogPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ApiCallLog that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ApiCallLogFindUniqueOrThrowArgs} args - Arguments to find a ApiCallLog
+     * @example
+     * // Get one ApiCallLog
+     * const apiCallLog = await prisma.apiCallLog.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ApiCallLogFindUniqueOrThrowArgs>(args: SelectSubset<T, ApiCallLogFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ApiCallLogClient<$Result.GetResult<Prisma.$ApiCallLogPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ApiCallLog that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiCallLogFindFirstArgs} args - Arguments to find a ApiCallLog
+     * @example
+     * // Get one ApiCallLog
+     * const apiCallLog = await prisma.apiCallLog.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ApiCallLogFindFirstArgs>(args?: SelectSubset<T, ApiCallLogFindFirstArgs<ExtArgs>>): Prisma__ApiCallLogClient<$Result.GetResult<Prisma.$ApiCallLogPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ApiCallLog that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiCallLogFindFirstOrThrowArgs} args - Arguments to find a ApiCallLog
+     * @example
+     * // Get one ApiCallLog
+     * const apiCallLog = await prisma.apiCallLog.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ApiCallLogFindFirstOrThrowArgs>(args?: SelectSubset<T, ApiCallLogFindFirstOrThrowArgs<ExtArgs>>): Prisma__ApiCallLogClient<$Result.GetResult<Prisma.$ApiCallLogPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ApiCallLogs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiCallLogFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ApiCallLogs
+     * const apiCallLogs = await prisma.apiCallLog.findMany()
+     * 
+     * // Get first 10 ApiCallLogs
+     * const apiCallLogs = await prisma.apiCallLog.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const apiCallLogWithIdOnly = await prisma.apiCallLog.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ApiCallLogFindManyArgs>(args?: SelectSubset<T, ApiCallLogFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApiCallLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ApiCallLog.
+     * @param {ApiCallLogCreateArgs} args - Arguments to create a ApiCallLog.
+     * @example
+     * // Create one ApiCallLog
+     * const ApiCallLog = await prisma.apiCallLog.create({
+     *   data: {
+     *     // ... data to create a ApiCallLog
+     *   }
+     * })
+     * 
+     */
+    create<T extends ApiCallLogCreateArgs>(args: SelectSubset<T, ApiCallLogCreateArgs<ExtArgs>>): Prisma__ApiCallLogClient<$Result.GetResult<Prisma.$ApiCallLogPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ApiCallLogs.
+     * @param {ApiCallLogCreateManyArgs} args - Arguments to create many ApiCallLogs.
+     * @example
+     * // Create many ApiCallLogs
+     * const apiCallLog = await prisma.apiCallLog.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ApiCallLogCreateManyArgs>(args?: SelectSubset<T, ApiCallLogCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ApiCallLogs and returns the data saved in the database.
+     * @param {ApiCallLogCreateManyAndReturnArgs} args - Arguments to create many ApiCallLogs.
+     * @example
+     * // Create many ApiCallLogs
+     * const apiCallLog = await prisma.apiCallLog.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ApiCallLogs and only return the `id`
+     * const apiCallLogWithIdOnly = await prisma.apiCallLog.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ApiCallLogCreateManyAndReturnArgs>(args?: SelectSubset<T, ApiCallLogCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApiCallLogPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ApiCallLog.
+     * @param {ApiCallLogDeleteArgs} args - Arguments to delete one ApiCallLog.
+     * @example
+     * // Delete one ApiCallLog
+     * const ApiCallLog = await prisma.apiCallLog.delete({
+     *   where: {
+     *     // ... filter to delete one ApiCallLog
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ApiCallLogDeleteArgs>(args: SelectSubset<T, ApiCallLogDeleteArgs<ExtArgs>>): Prisma__ApiCallLogClient<$Result.GetResult<Prisma.$ApiCallLogPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ApiCallLog.
+     * @param {ApiCallLogUpdateArgs} args - Arguments to update one ApiCallLog.
+     * @example
+     * // Update one ApiCallLog
+     * const apiCallLog = await prisma.apiCallLog.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ApiCallLogUpdateArgs>(args: SelectSubset<T, ApiCallLogUpdateArgs<ExtArgs>>): Prisma__ApiCallLogClient<$Result.GetResult<Prisma.$ApiCallLogPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ApiCallLogs.
+     * @param {ApiCallLogDeleteManyArgs} args - Arguments to filter ApiCallLogs to delete.
+     * @example
+     * // Delete a few ApiCallLogs
+     * const { count } = await prisma.apiCallLog.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ApiCallLogDeleteManyArgs>(args?: SelectSubset<T, ApiCallLogDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ApiCallLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiCallLogUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ApiCallLogs
+     * const apiCallLog = await prisma.apiCallLog.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ApiCallLogUpdateManyArgs>(args: SelectSubset<T, ApiCallLogUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ApiCallLogs and returns the data updated in the database.
+     * @param {ApiCallLogUpdateManyAndReturnArgs} args - Arguments to update many ApiCallLogs.
+     * @example
+     * // Update many ApiCallLogs
+     * const apiCallLog = await prisma.apiCallLog.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ApiCallLogs and only return the `id`
+     * const apiCallLogWithIdOnly = await prisma.apiCallLog.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ApiCallLogUpdateManyAndReturnArgs>(args: SelectSubset<T, ApiCallLogUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApiCallLogPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ApiCallLog.
+     * @param {ApiCallLogUpsertArgs} args - Arguments to update or create a ApiCallLog.
+     * @example
+     * // Update or create a ApiCallLog
+     * const apiCallLog = await prisma.apiCallLog.upsert({
+     *   create: {
+     *     // ... data to create a ApiCallLog
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ApiCallLog we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ApiCallLogUpsertArgs>(args: SelectSubset<T, ApiCallLogUpsertArgs<ExtArgs>>): Prisma__ApiCallLogClient<$Result.GetResult<Prisma.$ApiCallLogPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ApiCallLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiCallLogCountArgs} args - Arguments to filter ApiCallLogs to count.
+     * @example
+     * // Count the number of ApiCallLogs
+     * const count = await prisma.apiCallLog.count({
+     *   where: {
+     *     // ... the filter for the ApiCallLogs we want to count
+     *   }
+     * })
+    **/
+    count<T extends ApiCallLogCountArgs>(
+      args?: Subset<T, ApiCallLogCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ApiCallLogCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ApiCallLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiCallLogAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ApiCallLogAggregateArgs>(args: Subset<T, ApiCallLogAggregateArgs>): Prisma.PrismaPromise<GetApiCallLogAggregateType<T>>
+
+    /**
+     * Group by ApiCallLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiCallLogGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ApiCallLogGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ApiCallLogGroupByArgs['orderBy'] }
+        : { orderBy?: ApiCallLogGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ApiCallLogGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetApiCallLogGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ApiCallLog model
+   */
+  readonly fields: ApiCallLogFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ApiCallLog.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ApiCallLogClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    client<T extends ApiClientDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ApiClientDefaultArgs<ExtArgs>>): Prisma__ApiClientClient<$Result.GetResult<Prisma.$ApiClientPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ApiCallLog model
+   */
+  interface ApiCallLogFieldRefs {
+    readonly id: FieldRef<"ApiCallLog", 'String'>
+    readonly clientId: FieldRef<"ApiCallLog", 'String'>
+    readonly endpoint: FieldRef<"ApiCallLog", 'String'>
+    readonly method: FieldRef<"ApiCallLog", 'String'>
+    readonly statusCode: FieldRef<"ApiCallLog", 'Int'>
+    readonly ipAddress: FieldRef<"ApiCallLog", 'String'>
+    readonly userAgent: FieldRef<"ApiCallLog", 'String'>
+    readonly requestBody: FieldRef<"ApiCallLog", 'String'>
+    readonly responseMs: FieldRef<"ApiCallLog", 'Int'>
+    readonly errorMessage: FieldRef<"ApiCallLog", 'String'>
+    readonly createdAt: FieldRef<"ApiCallLog", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ApiCallLog findUnique
+   */
+  export type ApiCallLogFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiCallLog
+     */
+    select?: ApiCallLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiCallLog
+     */
+    omit?: ApiCallLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApiCallLogInclude<ExtArgs> | null
+    /**
+     * Filter, which ApiCallLog to fetch.
+     */
+    where: ApiCallLogWhereUniqueInput
+  }
+
+  /**
+   * ApiCallLog findUniqueOrThrow
+   */
+  export type ApiCallLogFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiCallLog
+     */
+    select?: ApiCallLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiCallLog
+     */
+    omit?: ApiCallLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApiCallLogInclude<ExtArgs> | null
+    /**
+     * Filter, which ApiCallLog to fetch.
+     */
+    where: ApiCallLogWhereUniqueInput
+  }
+
+  /**
+   * ApiCallLog findFirst
+   */
+  export type ApiCallLogFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiCallLog
+     */
+    select?: ApiCallLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiCallLog
+     */
+    omit?: ApiCallLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApiCallLogInclude<ExtArgs> | null
+    /**
+     * Filter, which ApiCallLog to fetch.
+     */
+    where?: ApiCallLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApiCallLogs to fetch.
+     */
+    orderBy?: ApiCallLogOrderByWithRelationInput | ApiCallLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ApiCallLogs.
+     */
+    cursor?: ApiCallLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApiCallLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApiCallLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ApiCallLogs.
+     */
+    distinct?: ApiCallLogScalarFieldEnum | ApiCallLogScalarFieldEnum[]
+  }
+
+  /**
+   * ApiCallLog findFirstOrThrow
+   */
+  export type ApiCallLogFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiCallLog
+     */
+    select?: ApiCallLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiCallLog
+     */
+    omit?: ApiCallLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApiCallLogInclude<ExtArgs> | null
+    /**
+     * Filter, which ApiCallLog to fetch.
+     */
+    where?: ApiCallLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApiCallLogs to fetch.
+     */
+    orderBy?: ApiCallLogOrderByWithRelationInput | ApiCallLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ApiCallLogs.
+     */
+    cursor?: ApiCallLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApiCallLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApiCallLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ApiCallLogs.
+     */
+    distinct?: ApiCallLogScalarFieldEnum | ApiCallLogScalarFieldEnum[]
+  }
+
+  /**
+   * ApiCallLog findMany
+   */
+  export type ApiCallLogFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiCallLog
+     */
+    select?: ApiCallLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiCallLog
+     */
+    omit?: ApiCallLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApiCallLogInclude<ExtArgs> | null
+    /**
+     * Filter, which ApiCallLogs to fetch.
+     */
+    where?: ApiCallLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApiCallLogs to fetch.
+     */
+    orderBy?: ApiCallLogOrderByWithRelationInput | ApiCallLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ApiCallLogs.
+     */
+    cursor?: ApiCallLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApiCallLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApiCallLogs.
+     */
+    skip?: number
+    distinct?: ApiCallLogScalarFieldEnum | ApiCallLogScalarFieldEnum[]
+  }
+
+  /**
+   * ApiCallLog create
+   */
+  export type ApiCallLogCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiCallLog
+     */
+    select?: ApiCallLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiCallLog
+     */
+    omit?: ApiCallLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApiCallLogInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ApiCallLog.
+     */
+    data: XOR<ApiCallLogCreateInput, ApiCallLogUncheckedCreateInput>
+  }
+
+  /**
+   * ApiCallLog createMany
+   */
+  export type ApiCallLogCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ApiCallLogs.
+     */
+    data: ApiCallLogCreateManyInput | ApiCallLogCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ApiCallLog createManyAndReturn
+   */
+  export type ApiCallLogCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiCallLog
+     */
+    select?: ApiCallLogSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiCallLog
+     */
+    omit?: ApiCallLogOmit<ExtArgs> | null
+    /**
+     * The data used to create many ApiCallLogs.
+     */
+    data: ApiCallLogCreateManyInput | ApiCallLogCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApiCallLogIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ApiCallLog update
+   */
+  export type ApiCallLogUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiCallLog
+     */
+    select?: ApiCallLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiCallLog
+     */
+    omit?: ApiCallLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApiCallLogInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ApiCallLog.
+     */
+    data: XOR<ApiCallLogUpdateInput, ApiCallLogUncheckedUpdateInput>
+    /**
+     * Choose, which ApiCallLog to update.
+     */
+    where: ApiCallLogWhereUniqueInput
+  }
+
+  /**
+   * ApiCallLog updateMany
+   */
+  export type ApiCallLogUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ApiCallLogs.
+     */
+    data: XOR<ApiCallLogUpdateManyMutationInput, ApiCallLogUncheckedUpdateManyInput>
+    /**
+     * Filter which ApiCallLogs to update
+     */
+    where?: ApiCallLogWhereInput
+    /**
+     * Limit how many ApiCallLogs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ApiCallLog updateManyAndReturn
+   */
+  export type ApiCallLogUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiCallLog
+     */
+    select?: ApiCallLogSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiCallLog
+     */
+    omit?: ApiCallLogOmit<ExtArgs> | null
+    /**
+     * The data used to update ApiCallLogs.
+     */
+    data: XOR<ApiCallLogUpdateManyMutationInput, ApiCallLogUncheckedUpdateManyInput>
+    /**
+     * Filter which ApiCallLogs to update
+     */
+    where?: ApiCallLogWhereInput
+    /**
+     * Limit how many ApiCallLogs to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApiCallLogIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ApiCallLog upsert
+   */
+  export type ApiCallLogUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiCallLog
+     */
+    select?: ApiCallLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiCallLog
+     */
+    omit?: ApiCallLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApiCallLogInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ApiCallLog to update in case it exists.
+     */
+    where: ApiCallLogWhereUniqueInput
+    /**
+     * In case the ApiCallLog found by the `where` argument doesn't exist, create a new ApiCallLog with this data.
+     */
+    create: XOR<ApiCallLogCreateInput, ApiCallLogUncheckedCreateInput>
+    /**
+     * In case the ApiCallLog was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ApiCallLogUpdateInput, ApiCallLogUncheckedUpdateInput>
+  }
+
+  /**
+   * ApiCallLog delete
+   */
+  export type ApiCallLogDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiCallLog
+     */
+    select?: ApiCallLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiCallLog
+     */
+    omit?: ApiCallLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApiCallLogInclude<ExtArgs> | null
+    /**
+     * Filter which ApiCallLog to delete.
+     */
+    where: ApiCallLogWhereUniqueInput
+  }
+
+  /**
+   * ApiCallLog deleteMany
+   */
+  export type ApiCallLogDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ApiCallLogs to delete
+     */
+    where?: ApiCallLogWhereInput
+    /**
+     * Limit how many ApiCallLogs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ApiCallLog without action
+   */
+  export type ApiCallLogDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiCallLog
+     */
+    select?: ApiCallLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ApiCallLog
+     */
+    omit?: ApiCallLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApiCallLogInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -8502,6 +14966,90 @@ export namespace Prisma {
   };
 
   export type UserPreferencesScalarFieldEnum = (typeof UserPreferencesScalarFieldEnum)[keyof typeof UserPreferencesScalarFieldEnum]
+
+
+  export const TaskScalarFieldEnum: {
+    id: 'id',
+    title: 'title',
+    body: 'body',
+    status: 'status',
+    source: 'source',
+    agentId: 'agentId',
+    mountPoint: 'mountPoint',
+    userId: 'userId',
+    attachments: 'attachments',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type TaskScalarFieldEnum = (typeof TaskScalarFieldEnum)[keyof typeof TaskScalarFieldEnum]
+
+
+  export const TaskExecutionScalarFieldEnum: {
+    id: 'id',
+    taskId: 'taskId',
+    status: 'status',
+    agentId: 'agentId',
+    jobId: 'jobId',
+    containerName: 'containerName',
+    completed: 'completed',
+    needsInput: 'needsInput',
+    inputRequest: 'inputRequest',
+    result: 'result',
+    errorMessage: 'errorMessage',
+    logs: 'logs',
+    memoryUsage: 'memoryUsage',
+    tokenCount: 'tokenCount',
+    context: 'context',
+    startedAt: 'startedAt',
+    finishedAt: 'finishedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type TaskExecutionScalarFieldEnum = (typeof TaskExecutionScalarFieldEnum)[keyof typeof TaskExecutionScalarFieldEnum]
+
+
+  export const ApiClientScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    description: 'description',
+    userId: 'userId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ApiClientScalarFieldEnum = (typeof ApiClientScalarFieldEnum)[keyof typeof ApiClientScalarFieldEnum]
+
+
+  export const ApiSecretScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    keyHash: 'keyHash',
+    keyPrefix: 'keyPrefix',
+    clientId: 'clientId',
+    lastUsedAt: 'lastUsedAt',
+    createdAt: 'createdAt'
+  };
+
+  export type ApiSecretScalarFieldEnum = (typeof ApiSecretScalarFieldEnum)[keyof typeof ApiSecretScalarFieldEnum]
+
+
+  export const ApiCallLogScalarFieldEnum: {
+    id: 'id',
+    clientId: 'clientId',
+    endpoint: 'endpoint',
+    method: 'method',
+    statusCode: 'statusCode',
+    ipAddress: 'ipAddress',
+    userAgent: 'userAgent',
+    requestBody: 'requestBody',
+    responseMs: 'responseMs',
+    errorMessage: 'errorMessage',
+    createdAt: 'createdAt'
+  };
+
+  export type ApiCallLogScalarFieldEnum = (typeof ApiCallLogScalarFieldEnum)[keyof typeof ApiCallLogScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -8628,6 +15176,62 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'TaskStatus'
+   */
+  export type EnumTaskStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TaskStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'TaskStatus[]'
+   */
+  export type ListEnumTaskStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TaskStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'TaskSource'
+   */
+  export type EnumTaskSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TaskSource'>
+    
+
+
+  /**
+   * Reference to a field of type 'TaskSource[]'
+   */
+  export type ListEnumTaskSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TaskSource[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'AgentProvider'
+   */
+  export type EnumAgentProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AgentProvider'>
+    
+
+
+  /**
+   * Reference to a field of type 'AgentProvider[]'
+   */
+  export type ListEnumAgentProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AgentProvider[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'TaskExecutionStatus'
+   */
+  export type EnumTaskExecutionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TaskExecutionStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'TaskExecutionStatus[]'
+   */
+  export type ListEnumTaskExecutionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TaskExecutionStatus[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -8671,6 +15275,8 @@ export namespace Prisma {
     sessions?: SessionListRelationFilter
     accounts?: AccountListRelationFilter
     terminalSessions?: TerminalSessionListRelationFilter
+    tasks?: TaskListRelationFilter
+    apiClients?: ApiClientListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -8697,6 +15303,8 @@ export namespace Prisma {
     sessions?: SessionOrderByRelationAggregateInput
     accounts?: AccountOrderByRelationAggregateInput
     terminalSessions?: TerminalSessionOrderByRelationAggregateInput
+    tasks?: TaskOrderByRelationAggregateInput
+    apiClients?: ApiClientOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -8726,6 +15334,8 @@ export namespace Prisma {
     sessions?: SessionListRelationFilter
     accounts?: AccountListRelationFilter
     terminalSessions?: TerminalSessionListRelationFilter
+    tasks?: TaskListRelationFilter
+    apiClients?: ApiClientListRelationFilter
   }, "id" | "email" | "username">
 
   export type UserOrderByWithAggregationInput = {
@@ -9137,6 +15747,439 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"UserPreferences"> | Date | string
   }
 
+  export type TaskWhereInput = {
+    AND?: TaskWhereInput | TaskWhereInput[]
+    OR?: TaskWhereInput[]
+    NOT?: TaskWhereInput | TaskWhereInput[]
+    id?: StringFilter<"Task"> | string
+    title?: StringNullableFilter<"Task"> | string | null
+    body?: StringFilter<"Task"> | string
+    status?: EnumTaskStatusFilter<"Task"> | $Enums.TaskStatus
+    source?: EnumTaskSourceFilter<"Task"> | $Enums.TaskSource
+    agentId?: EnumAgentProviderNullableFilter<"Task"> | $Enums.AgentProvider | null
+    mountPoint?: StringNullableFilter<"Task"> | string | null
+    userId?: StringFilter<"Task"> | string
+    attachments?: JsonNullableFilter<"Task">
+    createdAt?: DateTimeFilter<"Task"> | Date | string
+    updatedAt?: DateTimeFilter<"Task"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    executions?: TaskExecutionListRelationFilter
+  }
+
+  export type TaskOrderByWithRelationInput = {
+    id?: SortOrder
+    title?: SortOrderInput | SortOrder
+    body?: SortOrder
+    status?: SortOrder
+    source?: SortOrder
+    agentId?: SortOrderInput | SortOrder
+    mountPoint?: SortOrderInput | SortOrder
+    userId?: SortOrder
+    attachments?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+    executions?: TaskExecutionOrderByRelationAggregateInput
+  }
+
+  export type TaskWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: TaskWhereInput | TaskWhereInput[]
+    OR?: TaskWhereInput[]
+    NOT?: TaskWhereInput | TaskWhereInput[]
+    title?: StringNullableFilter<"Task"> | string | null
+    body?: StringFilter<"Task"> | string
+    status?: EnumTaskStatusFilter<"Task"> | $Enums.TaskStatus
+    source?: EnumTaskSourceFilter<"Task"> | $Enums.TaskSource
+    agentId?: EnumAgentProviderNullableFilter<"Task"> | $Enums.AgentProvider | null
+    mountPoint?: StringNullableFilter<"Task"> | string | null
+    userId?: StringFilter<"Task"> | string
+    attachments?: JsonNullableFilter<"Task">
+    createdAt?: DateTimeFilter<"Task"> | Date | string
+    updatedAt?: DateTimeFilter<"Task"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    executions?: TaskExecutionListRelationFilter
+  }, "id">
+
+  export type TaskOrderByWithAggregationInput = {
+    id?: SortOrder
+    title?: SortOrderInput | SortOrder
+    body?: SortOrder
+    status?: SortOrder
+    source?: SortOrder
+    agentId?: SortOrderInput | SortOrder
+    mountPoint?: SortOrderInput | SortOrder
+    userId?: SortOrder
+    attachments?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: TaskCountOrderByAggregateInput
+    _max?: TaskMaxOrderByAggregateInput
+    _min?: TaskMinOrderByAggregateInput
+  }
+
+  export type TaskScalarWhereWithAggregatesInput = {
+    AND?: TaskScalarWhereWithAggregatesInput | TaskScalarWhereWithAggregatesInput[]
+    OR?: TaskScalarWhereWithAggregatesInput[]
+    NOT?: TaskScalarWhereWithAggregatesInput | TaskScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Task"> | string
+    title?: StringNullableWithAggregatesFilter<"Task"> | string | null
+    body?: StringWithAggregatesFilter<"Task"> | string
+    status?: EnumTaskStatusWithAggregatesFilter<"Task"> | $Enums.TaskStatus
+    source?: EnumTaskSourceWithAggregatesFilter<"Task"> | $Enums.TaskSource
+    agentId?: EnumAgentProviderNullableWithAggregatesFilter<"Task"> | $Enums.AgentProvider | null
+    mountPoint?: StringNullableWithAggregatesFilter<"Task"> | string | null
+    userId?: StringWithAggregatesFilter<"Task"> | string
+    attachments?: JsonNullableWithAggregatesFilter<"Task">
+    createdAt?: DateTimeWithAggregatesFilter<"Task"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Task"> | Date | string
+  }
+
+  export type TaskExecutionWhereInput = {
+    AND?: TaskExecutionWhereInput | TaskExecutionWhereInput[]
+    OR?: TaskExecutionWhereInput[]
+    NOT?: TaskExecutionWhereInput | TaskExecutionWhereInput[]
+    id?: StringFilter<"TaskExecution"> | string
+    taskId?: StringFilter<"TaskExecution"> | string
+    status?: EnumTaskExecutionStatusFilter<"TaskExecution"> | $Enums.TaskExecutionStatus
+    agentId?: EnumAgentProviderFilter<"TaskExecution"> | $Enums.AgentProvider
+    jobId?: StringNullableFilter<"TaskExecution"> | string | null
+    containerName?: StringNullableFilter<"TaskExecution"> | string | null
+    completed?: BoolFilter<"TaskExecution"> | boolean
+    needsInput?: BoolFilter<"TaskExecution"> | boolean
+    inputRequest?: StringNullableFilter<"TaskExecution"> | string | null
+    result?: StringNullableFilter<"TaskExecution"> | string | null
+    errorMessage?: StringNullableFilter<"TaskExecution"> | string | null
+    logs?: StringNullableFilter<"TaskExecution"> | string | null
+    memoryUsage?: IntNullableFilter<"TaskExecution"> | number | null
+    tokenCount?: IntNullableFilter<"TaskExecution"> | number | null
+    context?: JsonNullableFilter<"TaskExecution">
+    startedAt?: DateTimeNullableFilter<"TaskExecution"> | Date | string | null
+    finishedAt?: DateTimeNullableFilter<"TaskExecution"> | Date | string | null
+    createdAt?: DateTimeFilter<"TaskExecution"> | Date | string
+    updatedAt?: DateTimeFilter<"TaskExecution"> | Date | string
+    task?: XOR<TaskScalarRelationFilter, TaskWhereInput>
+  }
+
+  export type TaskExecutionOrderByWithRelationInput = {
+    id?: SortOrder
+    taskId?: SortOrder
+    status?: SortOrder
+    agentId?: SortOrder
+    jobId?: SortOrderInput | SortOrder
+    containerName?: SortOrderInput | SortOrder
+    completed?: SortOrder
+    needsInput?: SortOrder
+    inputRequest?: SortOrderInput | SortOrder
+    result?: SortOrderInput | SortOrder
+    errorMessage?: SortOrderInput | SortOrder
+    logs?: SortOrderInput | SortOrder
+    memoryUsage?: SortOrderInput | SortOrder
+    tokenCount?: SortOrderInput | SortOrder
+    context?: SortOrderInput | SortOrder
+    startedAt?: SortOrderInput | SortOrder
+    finishedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    task?: TaskOrderByWithRelationInput
+  }
+
+  export type TaskExecutionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: TaskExecutionWhereInput | TaskExecutionWhereInput[]
+    OR?: TaskExecutionWhereInput[]
+    NOT?: TaskExecutionWhereInput | TaskExecutionWhereInput[]
+    taskId?: StringFilter<"TaskExecution"> | string
+    status?: EnumTaskExecutionStatusFilter<"TaskExecution"> | $Enums.TaskExecutionStatus
+    agentId?: EnumAgentProviderFilter<"TaskExecution"> | $Enums.AgentProvider
+    jobId?: StringNullableFilter<"TaskExecution"> | string | null
+    containerName?: StringNullableFilter<"TaskExecution"> | string | null
+    completed?: BoolFilter<"TaskExecution"> | boolean
+    needsInput?: BoolFilter<"TaskExecution"> | boolean
+    inputRequest?: StringNullableFilter<"TaskExecution"> | string | null
+    result?: StringNullableFilter<"TaskExecution"> | string | null
+    errorMessage?: StringNullableFilter<"TaskExecution"> | string | null
+    logs?: StringNullableFilter<"TaskExecution"> | string | null
+    memoryUsage?: IntNullableFilter<"TaskExecution"> | number | null
+    tokenCount?: IntNullableFilter<"TaskExecution"> | number | null
+    context?: JsonNullableFilter<"TaskExecution">
+    startedAt?: DateTimeNullableFilter<"TaskExecution"> | Date | string | null
+    finishedAt?: DateTimeNullableFilter<"TaskExecution"> | Date | string | null
+    createdAt?: DateTimeFilter<"TaskExecution"> | Date | string
+    updatedAt?: DateTimeFilter<"TaskExecution"> | Date | string
+    task?: XOR<TaskScalarRelationFilter, TaskWhereInput>
+  }, "id">
+
+  export type TaskExecutionOrderByWithAggregationInput = {
+    id?: SortOrder
+    taskId?: SortOrder
+    status?: SortOrder
+    agentId?: SortOrder
+    jobId?: SortOrderInput | SortOrder
+    containerName?: SortOrderInput | SortOrder
+    completed?: SortOrder
+    needsInput?: SortOrder
+    inputRequest?: SortOrderInput | SortOrder
+    result?: SortOrderInput | SortOrder
+    errorMessage?: SortOrderInput | SortOrder
+    logs?: SortOrderInput | SortOrder
+    memoryUsage?: SortOrderInput | SortOrder
+    tokenCount?: SortOrderInput | SortOrder
+    context?: SortOrderInput | SortOrder
+    startedAt?: SortOrderInput | SortOrder
+    finishedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: TaskExecutionCountOrderByAggregateInput
+    _avg?: TaskExecutionAvgOrderByAggregateInput
+    _max?: TaskExecutionMaxOrderByAggregateInput
+    _min?: TaskExecutionMinOrderByAggregateInput
+    _sum?: TaskExecutionSumOrderByAggregateInput
+  }
+
+  export type TaskExecutionScalarWhereWithAggregatesInput = {
+    AND?: TaskExecutionScalarWhereWithAggregatesInput | TaskExecutionScalarWhereWithAggregatesInput[]
+    OR?: TaskExecutionScalarWhereWithAggregatesInput[]
+    NOT?: TaskExecutionScalarWhereWithAggregatesInput | TaskExecutionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"TaskExecution"> | string
+    taskId?: StringWithAggregatesFilter<"TaskExecution"> | string
+    status?: EnumTaskExecutionStatusWithAggregatesFilter<"TaskExecution"> | $Enums.TaskExecutionStatus
+    agentId?: EnumAgentProviderWithAggregatesFilter<"TaskExecution"> | $Enums.AgentProvider
+    jobId?: StringNullableWithAggregatesFilter<"TaskExecution"> | string | null
+    containerName?: StringNullableWithAggregatesFilter<"TaskExecution"> | string | null
+    completed?: BoolWithAggregatesFilter<"TaskExecution"> | boolean
+    needsInput?: BoolWithAggregatesFilter<"TaskExecution"> | boolean
+    inputRequest?: StringNullableWithAggregatesFilter<"TaskExecution"> | string | null
+    result?: StringNullableWithAggregatesFilter<"TaskExecution"> | string | null
+    errorMessage?: StringNullableWithAggregatesFilter<"TaskExecution"> | string | null
+    logs?: StringNullableWithAggregatesFilter<"TaskExecution"> | string | null
+    memoryUsage?: IntNullableWithAggregatesFilter<"TaskExecution"> | number | null
+    tokenCount?: IntNullableWithAggregatesFilter<"TaskExecution"> | number | null
+    context?: JsonNullableWithAggregatesFilter<"TaskExecution">
+    startedAt?: DateTimeNullableWithAggregatesFilter<"TaskExecution"> | Date | string | null
+    finishedAt?: DateTimeNullableWithAggregatesFilter<"TaskExecution"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"TaskExecution"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"TaskExecution"> | Date | string
+  }
+
+  export type ApiClientWhereInput = {
+    AND?: ApiClientWhereInput | ApiClientWhereInput[]
+    OR?: ApiClientWhereInput[]
+    NOT?: ApiClientWhereInput | ApiClientWhereInput[]
+    id?: StringFilter<"ApiClient"> | string
+    name?: StringFilter<"ApiClient"> | string
+    description?: StringNullableFilter<"ApiClient"> | string | null
+    userId?: StringFilter<"ApiClient"> | string
+    createdAt?: DateTimeFilter<"ApiClient"> | Date | string
+    updatedAt?: DateTimeFilter<"ApiClient"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    secrets?: ApiSecretListRelationFilter
+    callLogs?: ApiCallLogListRelationFilter
+  }
+
+  export type ApiClientOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+    secrets?: ApiSecretOrderByRelationAggregateInput
+    callLogs?: ApiCallLogOrderByRelationAggregateInput
+  }
+
+  export type ApiClientWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ApiClientWhereInput | ApiClientWhereInput[]
+    OR?: ApiClientWhereInput[]
+    NOT?: ApiClientWhereInput | ApiClientWhereInput[]
+    name?: StringFilter<"ApiClient"> | string
+    description?: StringNullableFilter<"ApiClient"> | string | null
+    userId?: StringFilter<"ApiClient"> | string
+    createdAt?: DateTimeFilter<"ApiClient"> | Date | string
+    updatedAt?: DateTimeFilter<"ApiClient"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    secrets?: ApiSecretListRelationFilter
+    callLogs?: ApiCallLogListRelationFilter
+  }, "id">
+
+  export type ApiClientOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ApiClientCountOrderByAggregateInput
+    _max?: ApiClientMaxOrderByAggregateInput
+    _min?: ApiClientMinOrderByAggregateInput
+  }
+
+  export type ApiClientScalarWhereWithAggregatesInput = {
+    AND?: ApiClientScalarWhereWithAggregatesInput | ApiClientScalarWhereWithAggregatesInput[]
+    OR?: ApiClientScalarWhereWithAggregatesInput[]
+    NOT?: ApiClientScalarWhereWithAggregatesInput | ApiClientScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ApiClient"> | string
+    name?: StringWithAggregatesFilter<"ApiClient"> | string
+    description?: StringNullableWithAggregatesFilter<"ApiClient"> | string | null
+    userId?: StringWithAggregatesFilter<"ApiClient"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"ApiClient"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ApiClient"> | Date | string
+  }
+
+  export type ApiSecretWhereInput = {
+    AND?: ApiSecretWhereInput | ApiSecretWhereInput[]
+    OR?: ApiSecretWhereInput[]
+    NOT?: ApiSecretWhereInput | ApiSecretWhereInput[]
+    id?: StringFilter<"ApiSecret"> | string
+    name?: StringFilter<"ApiSecret"> | string
+    keyHash?: StringFilter<"ApiSecret"> | string
+    keyPrefix?: StringFilter<"ApiSecret"> | string
+    clientId?: StringFilter<"ApiSecret"> | string
+    lastUsedAt?: DateTimeNullableFilter<"ApiSecret"> | Date | string | null
+    createdAt?: DateTimeFilter<"ApiSecret"> | Date | string
+    client?: XOR<ApiClientScalarRelationFilter, ApiClientWhereInput>
+  }
+
+  export type ApiSecretOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    keyHash?: SortOrder
+    keyPrefix?: SortOrder
+    clientId?: SortOrder
+    lastUsedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    client?: ApiClientOrderByWithRelationInput
+  }
+
+  export type ApiSecretWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ApiSecretWhereInput | ApiSecretWhereInput[]
+    OR?: ApiSecretWhereInput[]
+    NOT?: ApiSecretWhereInput | ApiSecretWhereInput[]
+    name?: StringFilter<"ApiSecret"> | string
+    keyHash?: StringFilter<"ApiSecret"> | string
+    keyPrefix?: StringFilter<"ApiSecret"> | string
+    clientId?: StringFilter<"ApiSecret"> | string
+    lastUsedAt?: DateTimeNullableFilter<"ApiSecret"> | Date | string | null
+    createdAt?: DateTimeFilter<"ApiSecret"> | Date | string
+    client?: XOR<ApiClientScalarRelationFilter, ApiClientWhereInput>
+  }, "id">
+
+  export type ApiSecretOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    keyHash?: SortOrder
+    keyPrefix?: SortOrder
+    clientId?: SortOrder
+    lastUsedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: ApiSecretCountOrderByAggregateInput
+    _max?: ApiSecretMaxOrderByAggregateInput
+    _min?: ApiSecretMinOrderByAggregateInput
+  }
+
+  export type ApiSecretScalarWhereWithAggregatesInput = {
+    AND?: ApiSecretScalarWhereWithAggregatesInput | ApiSecretScalarWhereWithAggregatesInput[]
+    OR?: ApiSecretScalarWhereWithAggregatesInput[]
+    NOT?: ApiSecretScalarWhereWithAggregatesInput | ApiSecretScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ApiSecret"> | string
+    name?: StringWithAggregatesFilter<"ApiSecret"> | string
+    keyHash?: StringWithAggregatesFilter<"ApiSecret"> | string
+    keyPrefix?: StringWithAggregatesFilter<"ApiSecret"> | string
+    clientId?: StringWithAggregatesFilter<"ApiSecret"> | string
+    lastUsedAt?: DateTimeNullableWithAggregatesFilter<"ApiSecret"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"ApiSecret"> | Date | string
+  }
+
+  export type ApiCallLogWhereInput = {
+    AND?: ApiCallLogWhereInput | ApiCallLogWhereInput[]
+    OR?: ApiCallLogWhereInput[]
+    NOT?: ApiCallLogWhereInput | ApiCallLogWhereInput[]
+    id?: StringFilter<"ApiCallLog"> | string
+    clientId?: StringFilter<"ApiCallLog"> | string
+    endpoint?: StringFilter<"ApiCallLog"> | string
+    method?: StringFilter<"ApiCallLog"> | string
+    statusCode?: IntFilter<"ApiCallLog"> | number
+    ipAddress?: StringNullableFilter<"ApiCallLog"> | string | null
+    userAgent?: StringNullableFilter<"ApiCallLog"> | string | null
+    requestBody?: StringNullableFilter<"ApiCallLog"> | string | null
+    responseMs?: IntNullableFilter<"ApiCallLog"> | number | null
+    errorMessage?: StringNullableFilter<"ApiCallLog"> | string | null
+    createdAt?: DateTimeFilter<"ApiCallLog"> | Date | string
+    client?: XOR<ApiClientScalarRelationFilter, ApiClientWhereInput>
+  }
+
+  export type ApiCallLogOrderByWithRelationInput = {
+    id?: SortOrder
+    clientId?: SortOrder
+    endpoint?: SortOrder
+    method?: SortOrder
+    statusCode?: SortOrder
+    ipAddress?: SortOrderInput | SortOrder
+    userAgent?: SortOrderInput | SortOrder
+    requestBody?: SortOrderInput | SortOrder
+    responseMs?: SortOrderInput | SortOrder
+    errorMessage?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    client?: ApiClientOrderByWithRelationInput
+  }
+
+  export type ApiCallLogWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ApiCallLogWhereInput | ApiCallLogWhereInput[]
+    OR?: ApiCallLogWhereInput[]
+    NOT?: ApiCallLogWhereInput | ApiCallLogWhereInput[]
+    clientId?: StringFilter<"ApiCallLog"> | string
+    endpoint?: StringFilter<"ApiCallLog"> | string
+    method?: StringFilter<"ApiCallLog"> | string
+    statusCode?: IntFilter<"ApiCallLog"> | number
+    ipAddress?: StringNullableFilter<"ApiCallLog"> | string | null
+    userAgent?: StringNullableFilter<"ApiCallLog"> | string | null
+    requestBody?: StringNullableFilter<"ApiCallLog"> | string | null
+    responseMs?: IntNullableFilter<"ApiCallLog"> | number | null
+    errorMessage?: StringNullableFilter<"ApiCallLog"> | string | null
+    createdAt?: DateTimeFilter<"ApiCallLog"> | Date | string
+    client?: XOR<ApiClientScalarRelationFilter, ApiClientWhereInput>
+  }, "id">
+
+  export type ApiCallLogOrderByWithAggregationInput = {
+    id?: SortOrder
+    clientId?: SortOrder
+    endpoint?: SortOrder
+    method?: SortOrder
+    statusCode?: SortOrder
+    ipAddress?: SortOrderInput | SortOrder
+    userAgent?: SortOrderInput | SortOrder
+    requestBody?: SortOrderInput | SortOrder
+    responseMs?: SortOrderInput | SortOrder
+    errorMessage?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: ApiCallLogCountOrderByAggregateInput
+    _avg?: ApiCallLogAvgOrderByAggregateInput
+    _max?: ApiCallLogMaxOrderByAggregateInput
+    _min?: ApiCallLogMinOrderByAggregateInput
+    _sum?: ApiCallLogSumOrderByAggregateInput
+  }
+
+  export type ApiCallLogScalarWhereWithAggregatesInput = {
+    AND?: ApiCallLogScalarWhereWithAggregatesInput | ApiCallLogScalarWhereWithAggregatesInput[]
+    OR?: ApiCallLogScalarWhereWithAggregatesInput[]
+    NOT?: ApiCallLogScalarWhereWithAggregatesInput | ApiCallLogScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ApiCallLog"> | string
+    clientId?: StringWithAggregatesFilter<"ApiCallLog"> | string
+    endpoint?: StringWithAggregatesFilter<"ApiCallLog"> | string
+    method?: StringWithAggregatesFilter<"ApiCallLog"> | string
+    statusCode?: IntWithAggregatesFilter<"ApiCallLog"> | number
+    ipAddress?: StringNullableWithAggregatesFilter<"ApiCallLog"> | string | null
+    userAgent?: StringNullableWithAggregatesFilter<"ApiCallLog"> | string | null
+    requestBody?: StringNullableWithAggregatesFilter<"ApiCallLog"> | string | null
+    responseMs?: IntNullableWithAggregatesFilter<"ApiCallLog"> | number | null
+    errorMessage?: StringNullableWithAggregatesFilter<"ApiCallLog"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"ApiCallLog"> | Date | string
+  }
+
   export type UserCreateInput = {
     id: string
     createdAt?: Date | string
@@ -9161,6 +16204,8 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
     terminalSessions?: TerminalSessionCreateNestedManyWithoutUserInput
+    tasks?: TaskCreateNestedManyWithoutUserInput
+    apiClients?: ApiClientCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -9187,6 +16232,8 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     terminalSessions?: TerminalSessionUncheckedCreateNestedManyWithoutUserInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutUserInput
+    apiClients?: ApiClientUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -9213,6 +16260,8 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
     terminalSessions?: TerminalSessionUpdateManyWithoutUserNestedInput
+    tasks?: TaskUpdateManyWithoutUserNestedInput
+    apiClients?: ApiClientUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -9239,6 +16288,8 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     terminalSessions?: TerminalSessionUncheckedUpdateManyWithoutUserNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutUserNestedInput
+    apiClients?: ApiClientUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -9702,6 +16753,496 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type TaskCreateInput = {
+    id?: string
+    title?: string | null
+    body: string
+    status?: $Enums.TaskStatus
+    source?: $Enums.TaskSource
+    agentId?: $Enums.AgentProvider | null
+    mountPoint?: string | null
+    attachments?:unknown | NullableJsonNullValueInput
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutTasksInput
+    executions?: TaskExecutionCreateNestedManyWithoutTaskInput
+  }
+
+  export type TaskUncheckedCreateInput = {
+    id?: string
+    title?: string | null
+    body: string
+    status?: $Enums.TaskStatus
+    source?: $Enums.TaskSource
+    agentId?: $Enums.AgentProvider | null
+    mountPoint?: string | null
+    userId: string
+    attachments?:unknown | NullableJsonNullValueInput
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    executions?: TaskExecutionUncheckedCreateNestedManyWithoutTaskInput
+  }
+
+  export type TaskUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    body?: StringFieldUpdateOperationsInput | string
+    status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    source?: EnumTaskSourceFieldUpdateOperationsInput | $Enums.TaskSource
+    agentId?: NullableEnumAgentProviderFieldUpdateOperationsInput | $Enums.AgentProvider | null
+    mountPoint?: NullableStringFieldUpdateOperationsInput | string | null
+    attachments?:unknown | NullableJsonNullValueInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutTasksNestedInput
+    executions?: TaskExecutionUpdateManyWithoutTaskNestedInput
+  }
+
+  export type TaskUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    body?: StringFieldUpdateOperationsInput | string
+    status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    source?: EnumTaskSourceFieldUpdateOperationsInput | $Enums.TaskSource
+    agentId?: NullableEnumAgentProviderFieldUpdateOperationsInput | $Enums.AgentProvider | null
+    mountPoint?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
+    attachments?:unknown | NullableJsonNullValueInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    executions?: TaskExecutionUncheckedUpdateManyWithoutTaskNestedInput
+  }
+
+  export type TaskCreateManyInput = {
+    id?: string
+    title?: string | null
+    body: string
+    status?: $Enums.TaskStatus
+    source?: $Enums.TaskSource
+    agentId?: $Enums.AgentProvider | null
+    mountPoint?: string | null
+    userId: string
+    attachments?:unknown | NullableJsonNullValueInput
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TaskUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    body?: StringFieldUpdateOperationsInput | string
+    status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    source?: EnumTaskSourceFieldUpdateOperationsInput | $Enums.TaskSource
+    agentId?: NullableEnumAgentProviderFieldUpdateOperationsInput | $Enums.AgentProvider | null
+    mountPoint?: NullableStringFieldUpdateOperationsInput | string | null
+    attachments?:unknown | NullableJsonNullValueInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TaskUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    body?: StringFieldUpdateOperationsInput | string
+    status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    source?: EnumTaskSourceFieldUpdateOperationsInput | $Enums.TaskSource
+    agentId?: NullableEnumAgentProviderFieldUpdateOperationsInput | $Enums.AgentProvider | null
+    mountPoint?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
+    attachments?:unknown | NullableJsonNullValueInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TaskExecutionCreateInput = {
+    id?: string
+    status?: $Enums.TaskExecutionStatus
+    agentId: $Enums.AgentProvider
+    jobId?: string | null
+    containerName?: string | null
+    completed?: boolean
+    needsInput?: boolean
+    inputRequest?: string | null
+    result?: string | null
+    errorMessage?: string | null
+    logs?: string | null
+    memoryUsage?: number | null
+    tokenCount?: number | null
+    context?:unknown | NullableJsonNullValueInput
+    startedAt?: Date | string | null
+    finishedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    task: TaskCreateNestedOneWithoutExecutionsInput
+  }
+
+  export type TaskExecutionUncheckedCreateInput = {
+    id?: string
+    taskId: string
+    status?: $Enums.TaskExecutionStatus
+    agentId: $Enums.AgentProvider
+    jobId?: string | null
+    containerName?: string | null
+    completed?: boolean
+    needsInput?: boolean
+    inputRequest?: string | null
+    result?: string | null
+    errorMessage?: string | null
+    logs?: string | null
+    memoryUsage?: number | null
+    tokenCount?: number | null
+    context?:unknown | NullableJsonNullValueInput
+    startedAt?: Date | string | null
+    finishedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TaskExecutionUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumTaskExecutionStatusFieldUpdateOperationsInput | $Enums.TaskExecutionStatus
+    agentId?: EnumAgentProviderFieldUpdateOperationsInput | $Enums.AgentProvider
+    jobId?: NullableStringFieldUpdateOperationsInput | string | null
+    containerName?: NullableStringFieldUpdateOperationsInput | string | null
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    needsInput?: BoolFieldUpdateOperationsInput | boolean
+    inputRequest?: NullableStringFieldUpdateOperationsInput | string | null
+    result?: NullableStringFieldUpdateOperationsInput | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    logs?: NullableStringFieldUpdateOperationsInput | string | null
+    memoryUsage?: NullableIntFieldUpdateOperationsInput | number | null
+    tokenCount?: NullableIntFieldUpdateOperationsInput | number | null
+    context?:unknown | NullableJsonNullValueInput
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    task?: TaskUpdateOneRequiredWithoutExecutionsNestedInput
+  }
+
+  export type TaskExecutionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    taskId?: StringFieldUpdateOperationsInput | string
+    status?: EnumTaskExecutionStatusFieldUpdateOperationsInput | $Enums.TaskExecutionStatus
+    agentId?: EnumAgentProviderFieldUpdateOperationsInput | $Enums.AgentProvider
+    jobId?: NullableStringFieldUpdateOperationsInput | string | null
+    containerName?: NullableStringFieldUpdateOperationsInput | string | null
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    needsInput?: BoolFieldUpdateOperationsInput | boolean
+    inputRequest?: NullableStringFieldUpdateOperationsInput | string | null
+    result?: NullableStringFieldUpdateOperationsInput | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    logs?: NullableStringFieldUpdateOperationsInput | string | null
+    memoryUsage?: NullableIntFieldUpdateOperationsInput | number | null
+    tokenCount?: NullableIntFieldUpdateOperationsInput | number | null
+    context?:unknown | NullableJsonNullValueInput
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TaskExecutionCreateManyInput = {
+    id?: string
+    taskId: string
+    status?: $Enums.TaskExecutionStatus
+    agentId: $Enums.AgentProvider
+    jobId?: string | null
+    containerName?: string | null
+    completed?: boolean
+    needsInput?: boolean
+    inputRequest?: string | null
+    result?: string | null
+    errorMessage?: string | null
+    logs?: string | null
+    memoryUsage?: number | null
+    tokenCount?: number | null
+    context?:unknown | NullableJsonNullValueInput
+    startedAt?: Date | string | null
+    finishedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TaskExecutionUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumTaskExecutionStatusFieldUpdateOperationsInput | $Enums.TaskExecutionStatus
+    agentId?: EnumAgentProviderFieldUpdateOperationsInput | $Enums.AgentProvider
+    jobId?: NullableStringFieldUpdateOperationsInput | string | null
+    containerName?: NullableStringFieldUpdateOperationsInput | string | null
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    needsInput?: BoolFieldUpdateOperationsInput | boolean
+    inputRequest?: NullableStringFieldUpdateOperationsInput | string | null
+    result?: NullableStringFieldUpdateOperationsInput | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    logs?: NullableStringFieldUpdateOperationsInput | string | null
+    memoryUsage?: NullableIntFieldUpdateOperationsInput | number | null
+    tokenCount?: NullableIntFieldUpdateOperationsInput | number | null
+    context?:unknown | NullableJsonNullValueInput
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TaskExecutionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    taskId?: StringFieldUpdateOperationsInput | string
+    status?: EnumTaskExecutionStatusFieldUpdateOperationsInput | $Enums.TaskExecutionStatus
+    agentId?: EnumAgentProviderFieldUpdateOperationsInput | $Enums.AgentProvider
+    jobId?: NullableStringFieldUpdateOperationsInput | string | null
+    containerName?: NullableStringFieldUpdateOperationsInput | string | null
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    needsInput?: BoolFieldUpdateOperationsInput | boolean
+    inputRequest?: NullableStringFieldUpdateOperationsInput | string | null
+    result?: NullableStringFieldUpdateOperationsInput | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    logs?: NullableStringFieldUpdateOperationsInput | string | null
+    memoryUsage?: NullableIntFieldUpdateOperationsInput | number | null
+    tokenCount?: NullableIntFieldUpdateOperationsInput | number | null
+    context?:unknown | NullableJsonNullValueInput
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApiClientCreateInput = {
+    id?: string
+    name: string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutApiClientsInput
+    secrets?: ApiSecretCreateNestedManyWithoutClientInput
+    callLogs?: ApiCallLogCreateNestedManyWithoutClientInput
+  }
+
+  export type ApiClientUncheckedCreateInput = {
+    id?: string
+    name: string
+    description?: string | null
+    userId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    secrets?: ApiSecretUncheckedCreateNestedManyWithoutClientInput
+    callLogs?: ApiCallLogUncheckedCreateNestedManyWithoutClientInput
+  }
+
+  export type ApiClientUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutApiClientsNestedInput
+    secrets?: ApiSecretUpdateManyWithoutClientNestedInput
+    callLogs?: ApiCallLogUpdateManyWithoutClientNestedInput
+  }
+
+  export type ApiClientUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    secrets?: ApiSecretUncheckedUpdateManyWithoutClientNestedInput
+    callLogs?: ApiCallLogUncheckedUpdateManyWithoutClientNestedInput
+  }
+
+  export type ApiClientCreateManyInput = {
+    id?: string
+    name: string
+    description?: string | null
+    userId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ApiClientUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApiClientUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApiSecretCreateInput = {
+    id?: string
+    name: string
+    keyHash: string
+    keyPrefix: string
+    lastUsedAt?: Date | string | null
+    createdAt?: Date | string
+    client: ApiClientCreateNestedOneWithoutSecretsInput
+  }
+
+  export type ApiSecretUncheckedCreateInput = {
+    id?: string
+    name: string
+    keyHash: string
+    keyPrefix: string
+    clientId: string
+    lastUsedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type ApiSecretUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    keyHash?: StringFieldUpdateOperationsInput | string
+    keyPrefix?: StringFieldUpdateOperationsInput | string
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    client?: ApiClientUpdateOneRequiredWithoutSecretsNestedInput
+  }
+
+  export type ApiSecretUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    keyHash?: StringFieldUpdateOperationsInput | string
+    keyPrefix?: StringFieldUpdateOperationsInput | string
+    clientId?: StringFieldUpdateOperationsInput | string
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApiSecretCreateManyInput = {
+    id?: string
+    name: string
+    keyHash: string
+    keyPrefix: string
+    clientId: string
+    lastUsedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type ApiSecretUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    keyHash?: StringFieldUpdateOperationsInput | string
+    keyPrefix?: StringFieldUpdateOperationsInput | string
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApiSecretUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    keyHash?: StringFieldUpdateOperationsInput | string
+    keyPrefix?: StringFieldUpdateOperationsInput | string
+    clientId?: StringFieldUpdateOperationsInput | string
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApiCallLogCreateInput = {
+    id?: string
+    endpoint: string
+    method: string
+    statusCode: number
+    ipAddress?: string | null
+    userAgent?: string | null
+    requestBody?: string | null
+    responseMs?: number | null
+    errorMessage?: string | null
+    createdAt?: Date | string
+    client: ApiClientCreateNestedOneWithoutCallLogsInput
+  }
+
+  export type ApiCallLogUncheckedCreateInput = {
+    id?: string
+    clientId: string
+    endpoint: string
+    method: string
+    statusCode: number
+    ipAddress?: string | null
+    userAgent?: string | null
+    requestBody?: string | null
+    responseMs?: number | null
+    errorMessage?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ApiCallLogUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    endpoint?: StringFieldUpdateOperationsInput | string
+    method?: StringFieldUpdateOperationsInput | string
+    statusCode?: IntFieldUpdateOperationsInput | number
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    requestBody?: NullableStringFieldUpdateOperationsInput | string | null
+    responseMs?: NullableIntFieldUpdateOperationsInput | number | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    client?: ApiClientUpdateOneRequiredWithoutCallLogsNestedInput
+  }
+
+  export type ApiCallLogUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clientId?: StringFieldUpdateOperationsInput | string
+    endpoint?: StringFieldUpdateOperationsInput | string
+    method?: StringFieldUpdateOperationsInput | string
+    statusCode?: IntFieldUpdateOperationsInput | number
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    requestBody?: NullableStringFieldUpdateOperationsInput | string | null
+    responseMs?: NullableIntFieldUpdateOperationsInput | number | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApiCallLogCreateManyInput = {
+    id?: string
+    clientId: string
+    endpoint: string
+    method: string
+    statusCode: number
+    ipAddress?: string | null
+    userAgent?: string | null
+    requestBody?: string | null
+    responseMs?: number | null
+    errorMessage?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ApiCallLogUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    endpoint?: StringFieldUpdateOperationsInput | string
+    method?: StringFieldUpdateOperationsInput | string
+    statusCode?: IntFieldUpdateOperationsInput | number
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    requestBody?: NullableStringFieldUpdateOperationsInput | string | null
+    responseMs?: NullableIntFieldUpdateOperationsInput | number | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApiCallLogUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clientId?: StringFieldUpdateOperationsInput | string
+    endpoint?: StringFieldUpdateOperationsInput | string
+    method?: StringFieldUpdateOperationsInput | string
+    statusCode?: IntFieldUpdateOperationsInput | number
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    requestBody?: NullableStringFieldUpdateOperationsInput | string | null
+    responseMs?: NullableIntFieldUpdateOperationsInput | number | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -9782,6 +17323,18 @@ export namespace Prisma {
     none?: TerminalSessionWhereInput
   }
 
+  export type TaskListRelationFilter = {
+    every?: TaskWhereInput
+    some?: TaskWhereInput
+    none?: TaskWhereInput
+  }
+
+  export type ApiClientListRelationFilter = {
+    every?: ApiClientWhereInput
+    some?: ApiClientWhereInput
+    none?: ApiClientWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -9796,6 +17349,14 @@ export namespace Prisma {
   }
 
   export type TerminalSessionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TaskOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ApiClientOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -10212,6 +17773,381 @@ export namespace Prisma {
     _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
+  export type EnumTaskStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.TaskStatus | EnumTaskStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.TaskStatus[] | ListEnumTaskStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TaskStatus[] | ListEnumTaskStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumTaskStatusFilter<$PrismaModel> | $Enums.TaskStatus
+  }
+
+  export type EnumTaskSourceFilter<$PrismaModel = never> = {
+    equals?: $Enums.TaskSource | EnumTaskSourceFieldRefInput<$PrismaModel>
+    in?: $Enums.TaskSource[] | ListEnumTaskSourceFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TaskSource[] | ListEnumTaskSourceFieldRefInput<$PrismaModel>
+    not?: NestedEnumTaskSourceFilter<$PrismaModel> | $Enums.TaskSource
+  }
+
+  export type EnumAgentProviderNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.AgentProvider | EnumAgentProviderFieldRefInput<$PrismaModel> | null
+    in?: $Enums.AgentProvider[] | ListEnumAgentProviderFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.AgentProvider[] | ListEnumAgentProviderFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumAgentProviderNullableFilter<$PrismaModel> | $Enums.AgentProvider | null
+  }
+
+  export type TaskExecutionListRelationFilter = {
+    every?: TaskExecutionWhereInput
+    some?: TaskExecutionWhereInput
+    none?: TaskExecutionWhereInput
+  }
+
+  export type TaskExecutionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TaskCountOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    body?: SortOrder
+    status?: SortOrder
+    source?: SortOrder
+    agentId?: SortOrder
+    mountPoint?: SortOrder
+    userId?: SortOrder
+    attachments?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TaskMaxOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    body?: SortOrder
+    status?: SortOrder
+    source?: SortOrder
+    agentId?: SortOrder
+    mountPoint?: SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TaskMinOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    body?: SortOrder
+    status?: SortOrder
+    source?: SortOrder
+    agentId?: SortOrder
+    mountPoint?: SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumTaskStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TaskStatus | EnumTaskStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.TaskStatus[] | ListEnumTaskStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TaskStatus[] | ListEnumTaskStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumTaskStatusWithAggregatesFilter<$PrismaModel> | $Enums.TaskStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumTaskStatusFilter<$PrismaModel>
+    _max?: NestedEnumTaskStatusFilter<$PrismaModel>
+  }
+
+  export type EnumTaskSourceWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TaskSource | EnumTaskSourceFieldRefInput<$PrismaModel>
+    in?: $Enums.TaskSource[] | ListEnumTaskSourceFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TaskSource[] | ListEnumTaskSourceFieldRefInput<$PrismaModel>
+    not?: NestedEnumTaskSourceWithAggregatesFilter<$PrismaModel> | $Enums.TaskSource
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumTaskSourceFilter<$PrismaModel>
+    _max?: NestedEnumTaskSourceFilter<$PrismaModel>
+  }
+
+  export type EnumAgentProviderNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AgentProvider | EnumAgentProviderFieldRefInput<$PrismaModel> | null
+    in?: $Enums.AgentProvider[] | ListEnumAgentProviderFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.AgentProvider[] | ListEnumAgentProviderFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumAgentProviderNullableWithAggregatesFilter<$PrismaModel> | $Enums.AgentProvider | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumAgentProviderNullableFilter<$PrismaModel>
+    _max?: NestedEnumAgentProviderNullableFilter<$PrismaModel>
+  }
+
+  export type EnumTaskExecutionStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.TaskExecutionStatus | EnumTaskExecutionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.TaskExecutionStatus[] | ListEnumTaskExecutionStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TaskExecutionStatus[] | ListEnumTaskExecutionStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumTaskExecutionStatusFilter<$PrismaModel> | $Enums.TaskExecutionStatus
+  }
+
+  export type EnumAgentProviderFilter<$PrismaModel = never> = {
+    equals?: $Enums.AgentProvider | EnumAgentProviderFieldRefInput<$PrismaModel>
+    in?: $Enums.AgentProvider[] | ListEnumAgentProviderFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AgentProvider[] | ListEnumAgentProviderFieldRefInput<$PrismaModel>
+    not?: NestedEnumAgentProviderFilter<$PrismaModel> | $Enums.AgentProvider
+  }
+
+  export type TaskScalarRelationFilter = {
+    is?: TaskWhereInput
+    isNot?: TaskWhereInput
+  }
+
+  export type TaskExecutionCountOrderByAggregateInput = {
+    id?: SortOrder
+    taskId?: SortOrder
+    status?: SortOrder
+    agentId?: SortOrder
+    jobId?: SortOrder
+    containerName?: SortOrder
+    completed?: SortOrder
+    needsInput?: SortOrder
+    inputRequest?: SortOrder
+    result?: SortOrder
+    errorMessage?: SortOrder
+    logs?: SortOrder
+    memoryUsage?: SortOrder
+    tokenCount?: SortOrder
+    context?: SortOrder
+    startedAt?: SortOrder
+    finishedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TaskExecutionAvgOrderByAggregateInput = {
+    memoryUsage?: SortOrder
+    tokenCount?: SortOrder
+  }
+
+  export type TaskExecutionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    taskId?: SortOrder
+    status?: SortOrder
+    agentId?: SortOrder
+    jobId?: SortOrder
+    containerName?: SortOrder
+    completed?: SortOrder
+    needsInput?: SortOrder
+    inputRequest?: SortOrder
+    result?: SortOrder
+    errorMessage?: SortOrder
+    logs?: SortOrder
+    memoryUsage?: SortOrder
+    tokenCount?: SortOrder
+    startedAt?: SortOrder
+    finishedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TaskExecutionMinOrderByAggregateInput = {
+    id?: SortOrder
+    taskId?: SortOrder
+    status?: SortOrder
+    agentId?: SortOrder
+    jobId?: SortOrder
+    containerName?: SortOrder
+    completed?: SortOrder
+    needsInput?: SortOrder
+    inputRequest?: SortOrder
+    result?: SortOrder
+    errorMessage?: SortOrder
+    logs?: SortOrder
+    memoryUsage?: SortOrder
+    tokenCount?: SortOrder
+    startedAt?: SortOrder
+    finishedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TaskExecutionSumOrderByAggregateInput = {
+    memoryUsage?: SortOrder
+    tokenCount?: SortOrder
+  }
+
+  export type EnumTaskExecutionStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TaskExecutionStatus | EnumTaskExecutionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.TaskExecutionStatus[] | ListEnumTaskExecutionStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TaskExecutionStatus[] | ListEnumTaskExecutionStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumTaskExecutionStatusWithAggregatesFilter<$PrismaModel> | $Enums.TaskExecutionStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumTaskExecutionStatusFilter<$PrismaModel>
+    _max?: NestedEnumTaskExecutionStatusFilter<$PrismaModel>
+  }
+
+  export type EnumAgentProviderWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AgentProvider | EnumAgentProviderFieldRefInput<$PrismaModel>
+    in?: $Enums.AgentProvider[] | ListEnumAgentProviderFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AgentProvider[] | ListEnumAgentProviderFieldRefInput<$PrismaModel>
+    not?: NestedEnumAgentProviderWithAggregatesFilter<$PrismaModel> | $Enums.AgentProvider
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAgentProviderFilter<$PrismaModel>
+    _max?: NestedEnumAgentProviderFilter<$PrismaModel>
+  }
+
+  export type ApiSecretListRelationFilter = {
+    every?: ApiSecretWhereInput
+    some?: ApiSecretWhereInput
+    none?: ApiSecretWhereInput
+  }
+
+  export type ApiCallLogListRelationFilter = {
+    every?: ApiCallLogWhereInput
+    some?: ApiCallLogWhereInput
+    none?: ApiCallLogWhereInput
+  }
+
+  export type ApiSecretOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ApiCallLogOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ApiClientCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ApiClientMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ApiClientMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ApiClientScalarRelationFilter = {
+    is?: ApiClientWhereInput
+    isNot?: ApiClientWhereInput
+  }
+
+  export type ApiSecretCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    keyHash?: SortOrder
+    keyPrefix?: SortOrder
+    clientId?: SortOrder
+    lastUsedAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ApiSecretMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    keyHash?: SortOrder
+    keyPrefix?: SortOrder
+    clientId?: SortOrder
+    lastUsedAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ApiSecretMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    keyHash?: SortOrder
+    keyPrefix?: SortOrder
+    clientId?: SortOrder
+    lastUsedAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
+  export type ApiCallLogCountOrderByAggregateInput = {
+    id?: SortOrder
+    clientId?: SortOrder
+    endpoint?: SortOrder
+    method?: SortOrder
+    statusCode?: SortOrder
+    ipAddress?: SortOrder
+    userAgent?: SortOrder
+    requestBody?: SortOrder
+    responseMs?: SortOrder
+    errorMessage?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ApiCallLogAvgOrderByAggregateInput = {
+    statusCode?: SortOrder
+    responseMs?: SortOrder
+  }
+
+  export type ApiCallLogMaxOrderByAggregateInput = {
+    id?: SortOrder
+    clientId?: SortOrder
+    endpoint?: SortOrder
+    method?: SortOrder
+    statusCode?: SortOrder
+    ipAddress?: SortOrder
+    userAgent?: SortOrder
+    requestBody?: SortOrder
+    responseMs?: SortOrder
+    errorMessage?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ApiCallLogMinOrderByAggregateInput = {
+    id?: SortOrder
+    clientId?: SortOrder
+    endpoint?: SortOrder
+    method?: SortOrder
+    statusCode?: SortOrder
+    ipAddress?: SortOrder
+    userAgent?: SortOrder
+    requestBody?: SortOrder
+    responseMs?: SortOrder
+    errorMessage?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ApiCallLogSumOrderByAggregateInput = {
+    statusCode?: SortOrder
+    responseMs?: SortOrder
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
   export type UserPreferencesCreateNestedOneWithoutUserInput = {
     create?: XOR<UserPreferencesCreateWithoutUserInput, UserPreferencesUncheckedCreateWithoutUserInput>
     connectOrCreate?: UserPreferencesCreateOrConnectWithoutUserInput
@@ -10239,6 +18175,20 @@ export namespace Prisma {
     connect?: TerminalSessionWhereUniqueInput | TerminalSessionWhereUniqueInput[]
   }
 
+  export type TaskCreateNestedManyWithoutUserInput = {
+    create?: XOR<TaskCreateWithoutUserInput, TaskUncheckedCreateWithoutUserInput> | TaskCreateWithoutUserInput[] | TaskUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TaskCreateOrConnectWithoutUserInput | TaskCreateOrConnectWithoutUserInput[]
+    createMany?: TaskCreateManyUserInputEnvelope
+    connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+  }
+
+  export type ApiClientCreateNestedManyWithoutUserInput = {
+    create?: XOR<ApiClientCreateWithoutUserInput, ApiClientUncheckedCreateWithoutUserInput> | ApiClientCreateWithoutUserInput[] | ApiClientUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ApiClientCreateOrConnectWithoutUserInput | ApiClientCreateOrConnectWithoutUserInput[]
+    createMany?: ApiClientCreateManyUserInputEnvelope
+    connect?: ApiClientWhereUniqueInput | ApiClientWhereUniqueInput[]
+  }
+
   export type UserPreferencesUncheckedCreateNestedOneWithoutUserInput = {
     create?: XOR<UserPreferencesCreateWithoutUserInput, UserPreferencesUncheckedCreateWithoutUserInput>
     connectOrCreate?: UserPreferencesCreateOrConnectWithoutUserInput
@@ -10264,6 +18214,20 @@ export namespace Prisma {
     connectOrCreate?: TerminalSessionCreateOrConnectWithoutUserInput | TerminalSessionCreateOrConnectWithoutUserInput[]
     createMany?: TerminalSessionCreateManyUserInputEnvelope
     connect?: TerminalSessionWhereUniqueInput | TerminalSessionWhereUniqueInput[]
+  }
+
+  export type TaskUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<TaskCreateWithoutUserInput, TaskUncheckedCreateWithoutUserInput> | TaskCreateWithoutUserInput[] | TaskUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TaskCreateOrConnectWithoutUserInput | TaskCreateOrConnectWithoutUserInput[]
+    createMany?: TaskCreateManyUserInputEnvelope
+    connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+  }
+
+  export type ApiClientUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<ApiClientCreateWithoutUserInput, ApiClientUncheckedCreateWithoutUserInput> | ApiClientCreateWithoutUserInput[] | ApiClientUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ApiClientCreateOrConnectWithoutUserInput | ApiClientCreateOrConnectWithoutUserInput[]
+    createMany?: ApiClientCreateManyUserInputEnvelope
+    connect?: ApiClientWhereUniqueInput | ApiClientWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -10338,6 +18302,34 @@ export namespace Prisma {
     deleteMany?: TerminalSessionScalarWhereInput | TerminalSessionScalarWhereInput[]
   }
 
+  export type TaskUpdateManyWithoutUserNestedInput = {
+    create?: XOR<TaskCreateWithoutUserInput, TaskUncheckedCreateWithoutUserInput> | TaskCreateWithoutUserInput[] | TaskUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TaskCreateOrConnectWithoutUserInput | TaskCreateOrConnectWithoutUserInput[]
+    upsert?: TaskUpsertWithWhereUniqueWithoutUserInput | TaskUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: TaskCreateManyUserInputEnvelope
+    set?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    disconnect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    delete?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    update?: TaskUpdateWithWhereUniqueWithoutUserInput | TaskUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: TaskUpdateManyWithWhereWithoutUserInput | TaskUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: TaskScalarWhereInput | TaskScalarWhereInput[]
+  }
+
+  export type ApiClientUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ApiClientCreateWithoutUserInput, ApiClientUncheckedCreateWithoutUserInput> | ApiClientCreateWithoutUserInput[] | ApiClientUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ApiClientCreateOrConnectWithoutUserInput | ApiClientCreateOrConnectWithoutUserInput[]
+    upsert?: ApiClientUpsertWithWhereUniqueWithoutUserInput | ApiClientUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ApiClientCreateManyUserInputEnvelope
+    set?: ApiClientWhereUniqueInput | ApiClientWhereUniqueInput[]
+    disconnect?: ApiClientWhereUniqueInput | ApiClientWhereUniqueInput[]
+    delete?: ApiClientWhereUniqueInput | ApiClientWhereUniqueInput[]
+    connect?: ApiClientWhereUniqueInput | ApiClientWhereUniqueInput[]
+    update?: ApiClientUpdateWithWhereUniqueWithoutUserInput | ApiClientUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ApiClientUpdateManyWithWhereWithoutUserInput | ApiClientUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ApiClientScalarWhereInput | ApiClientScalarWhereInput[]
+  }
+
   export type UserPreferencesUncheckedUpdateOneWithoutUserNestedInput = {
     create?: XOR<UserPreferencesCreateWithoutUserInput, UserPreferencesUncheckedCreateWithoutUserInput>
     connectOrCreate?: UserPreferencesCreateOrConnectWithoutUserInput
@@ -10388,6 +18380,34 @@ export namespace Prisma {
     update?: TerminalSessionUpdateWithWhereUniqueWithoutUserInput | TerminalSessionUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: TerminalSessionUpdateManyWithWhereWithoutUserInput | TerminalSessionUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: TerminalSessionScalarWhereInput | TerminalSessionScalarWhereInput[]
+  }
+
+  export type TaskUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<TaskCreateWithoutUserInput, TaskUncheckedCreateWithoutUserInput> | TaskCreateWithoutUserInput[] | TaskUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TaskCreateOrConnectWithoutUserInput | TaskCreateOrConnectWithoutUserInput[]
+    upsert?: TaskUpsertWithWhereUniqueWithoutUserInput | TaskUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: TaskCreateManyUserInputEnvelope
+    set?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    disconnect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    delete?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+    update?: TaskUpdateWithWhereUniqueWithoutUserInput | TaskUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: TaskUpdateManyWithWhereWithoutUserInput | TaskUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: TaskScalarWhereInput | TaskScalarWhereInput[]
+  }
+
+  export type ApiClientUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ApiClientCreateWithoutUserInput, ApiClientUncheckedCreateWithoutUserInput> | ApiClientCreateWithoutUserInput[] | ApiClientUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ApiClientCreateOrConnectWithoutUserInput | ApiClientCreateOrConnectWithoutUserInput[]
+    upsert?: ApiClientUpsertWithWhereUniqueWithoutUserInput | ApiClientUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ApiClientCreateManyUserInputEnvelope
+    set?: ApiClientWhereUniqueInput | ApiClientWhereUniqueInput[]
+    disconnect?: ApiClientWhereUniqueInput | ApiClientWhereUniqueInput[]
+    delete?: ApiClientWhereUniqueInput | ApiClientWhereUniqueInput[]
+    connect?: ApiClientWhereUniqueInput | ApiClientWhereUniqueInput[]
+    update?: ApiClientUpdateWithWhereUniqueWithoutUserInput | ApiClientUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ApiClientUpdateManyWithWhereWithoutUserInput | ApiClientUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ApiClientScalarWhereInput | ApiClientScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutSessionsInput = {
@@ -10456,6 +18476,230 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutPreferencesInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPreferencesInput, UserUpdateWithoutPreferencesInput>, UserUncheckedUpdateWithoutPreferencesInput>
+  }
+
+  export type UserCreateNestedOneWithoutTasksInput = {
+    create?: XOR<UserCreateWithoutTasksInput, UserUncheckedCreateWithoutTasksInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTasksInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type TaskExecutionCreateNestedManyWithoutTaskInput = {
+    create?: XOR<TaskExecutionCreateWithoutTaskInput, TaskExecutionUncheckedCreateWithoutTaskInput> | TaskExecutionCreateWithoutTaskInput[] | TaskExecutionUncheckedCreateWithoutTaskInput[]
+    connectOrCreate?: TaskExecutionCreateOrConnectWithoutTaskInput | TaskExecutionCreateOrConnectWithoutTaskInput[]
+    createMany?: TaskExecutionCreateManyTaskInputEnvelope
+    connect?: TaskExecutionWhereUniqueInput | TaskExecutionWhereUniqueInput[]
+  }
+
+  export type TaskExecutionUncheckedCreateNestedManyWithoutTaskInput = {
+    create?: XOR<TaskExecutionCreateWithoutTaskInput, TaskExecutionUncheckedCreateWithoutTaskInput> | TaskExecutionCreateWithoutTaskInput[] | TaskExecutionUncheckedCreateWithoutTaskInput[]
+    connectOrCreate?: TaskExecutionCreateOrConnectWithoutTaskInput | TaskExecutionCreateOrConnectWithoutTaskInput[]
+    createMany?: TaskExecutionCreateManyTaskInputEnvelope
+    connect?: TaskExecutionWhereUniqueInput | TaskExecutionWhereUniqueInput[]
+  }
+
+  export type EnumTaskStatusFieldUpdateOperationsInput = {
+    set?: $Enums.TaskStatus
+  }
+
+  export type EnumTaskSourceFieldUpdateOperationsInput = {
+    set?: $Enums.TaskSource
+  }
+
+  export type NullableEnumAgentProviderFieldUpdateOperationsInput = {
+    set?: $Enums.AgentProvider | null
+  }
+
+  export type UserUpdateOneRequiredWithoutTasksNestedInput = {
+    create?: XOR<UserCreateWithoutTasksInput, UserUncheckedCreateWithoutTasksInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTasksInput
+    upsert?: UserUpsertWithoutTasksInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutTasksInput, UserUpdateWithoutTasksInput>, UserUncheckedUpdateWithoutTasksInput>
+  }
+
+  export type TaskExecutionUpdateManyWithoutTaskNestedInput = {
+    create?: XOR<TaskExecutionCreateWithoutTaskInput, TaskExecutionUncheckedCreateWithoutTaskInput> | TaskExecutionCreateWithoutTaskInput[] | TaskExecutionUncheckedCreateWithoutTaskInput[]
+    connectOrCreate?: TaskExecutionCreateOrConnectWithoutTaskInput | TaskExecutionCreateOrConnectWithoutTaskInput[]
+    upsert?: TaskExecutionUpsertWithWhereUniqueWithoutTaskInput | TaskExecutionUpsertWithWhereUniqueWithoutTaskInput[]
+    createMany?: TaskExecutionCreateManyTaskInputEnvelope
+    set?: TaskExecutionWhereUniqueInput | TaskExecutionWhereUniqueInput[]
+    disconnect?: TaskExecutionWhereUniqueInput | TaskExecutionWhereUniqueInput[]
+    delete?: TaskExecutionWhereUniqueInput | TaskExecutionWhereUniqueInput[]
+    connect?: TaskExecutionWhereUniqueInput | TaskExecutionWhereUniqueInput[]
+    update?: TaskExecutionUpdateWithWhereUniqueWithoutTaskInput | TaskExecutionUpdateWithWhereUniqueWithoutTaskInput[]
+    updateMany?: TaskExecutionUpdateManyWithWhereWithoutTaskInput | TaskExecutionUpdateManyWithWhereWithoutTaskInput[]
+    deleteMany?: TaskExecutionScalarWhereInput | TaskExecutionScalarWhereInput[]
+  }
+
+  export type TaskExecutionUncheckedUpdateManyWithoutTaskNestedInput = {
+    create?: XOR<TaskExecutionCreateWithoutTaskInput, TaskExecutionUncheckedCreateWithoutTaskInput> | TaskExecutionCreateWithoutTaskInput[] | TaskExecutionUncheckedCreateWithoutTaskInput[]
+    connectOrCreate?: TaskExecutionCreateOrConnectWithoutTaskInput | TaskExecutionCreateOrConnectWithoutTaskInput[]
+    upsert?: TaskExecutionUpsertWithWhereUniqueWithoutTaskInput | TaskExecutionUpsertWithWhereUniqueWithoutTaskInput[]
+    createMany?: TaskExecutionCreateManyTaskInputEnvelope
+    set?: TaskExecutionWhereUniqueInput | TaskExecutionWhereUniqueInput[]
+    disconnect?: TaskExecutionWhereUniqueInput | TaskExecutionWhereUniqueInput[]
+    delete?: TaskExecutionWhereUniqueInput | TaskExecutionWhereUniqueInput[]
+    connect?: TaskExecutionWhereUniqueInput | TaskExecutionWhereUniqueInput[]
+    update?: TaskExecutionUpdateWithWhereUniqueWithoutTaskInput | TaskExecutionUpdateWithWhereUniqueWithoutTaskInput[]
+    updateMany?: TaskExecutionUpdateManyWithWhereWithoutTaskInput | TaskExecutionUpdateManyWithWhereWithoutTaskInput[]
+    deleteMany?: TaskExecutionScalarWhereInput | TaskExecutionScalarWhereInput[]
+  }
+
+  export type TaskCreateNestedOneWithoutExecutionsInput = {
+    create?: XOR<TaskCreateWithoutExecutionsInput, TaskUncheckedCreateWithoutExecutionsInput>
+    connectOrCreate?: TaskCreateOrConnectWithoutExecutionsInput
+    connect?: TaskWhereUniqueInput
+  }
+
+  export type EnumTaskExecutionStatusFieldUpdateOperationsInput = {
+    set?: $Enums.TaskExecutionStatus
+  }
+
+  export type EnumAgentProviderFieldUpdateOperationsInput = {
+    set?: $Enums.AgentProvider
+  }
+
+  export type TaskUpdateOneRequiredWithoutExecutionsNestedInput = {
+    create?: XOR<TaskCreateWithoutExecutionsInput, TaskUncheckedCreateWithoutExecutionsInput>
+    connectOrCreate?: TaskCreateOrConnectWithoutExecutionsInput
+    upsert?: TaskUpsertWithoutExecutionsInput
+    connect?: TaskWhereUniqueInput
+    update?: XOR<XOR<TaskUpdateToOneWithWhereWithoutExecutionsInput, TaskUpdateWithoutExecutionsInput>, TaskUncheckedUpdateWithoutExecutionsInput>
+  }
+
+  export type UserCreateNestedOneWithoutApiClientsInput = {
+    create?: XOR<UserCreateWithoutApiClientsInput, UserUncheckedCreateWithoutApiClientsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutApiClientsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type ApiSecretCreateNestedManyWithoutClientInput = {
+    create?: XOR<ApiSecretCreateWithoutClientInput, ApiSecretUncheckedCreateWithoutClientInput> | ApiSecretCreateWithoutClientInput[] | ApiSecretUncheckedCreateWithoutClientInput[]
+    connectOrCreate?: ApiSecretCreateOrConnectWithoutClientInput | ApiSecretCreateOrConnectWithoutClientInput[]
+    createMany?: ApiSecretCreateManyClientInputEnvelope
+    connect?: ApiSecretWhereUniqueInput | ApiSecretWhereUniqueInput[]
+  }
+
+  export type ApiCallLogCreateNestedManyWithoutClientInput = {
+    create?: XOR<ApiCallLogCreateWithoutClientInput, ApiCallLogUncheckedCreateWithoutClientInput> | ApiCallLogCreateWithoutClientInput[] | ApiCallLogUncheckedCreateWithoutClientInput[]
+    connectOrCreate?: ApiCallLogCreateOrConnectWithoutClientInput | ApiCallLogCreateOrConnectWithoutClientInput[]
+    createMany?: ApiCallLogCreateManyClientInputEnvelope
+    connect?: ApiCallLogWhereUniqueInput | ApiCallLogWhereUniqueInput[]
+  }
+
+  export type ApiSecretUncheckedCreateNestedManyWithoutClientInput = {
+    create?: XOR<ApiSecretCreateWithoutClientInput, ApiSecretUncheckedCreateWithoutClientInput> | ApiSecretCreateWithoutClientInput[] | ApiSecretUncheckedCreateWithoutClientInput[]
+    connectOrCreate?: ApiSecretCreateOrConnectWithoutClientInput | ApiSecretCreateOrConnectWithoutClientInput[]
+    createMany?: ApiSecretCreateManyClientInputEnvelope
+    connect?: ApiSecretWhereUniqueInput | ApiSecretWhereUniqueInput[]
+  }
+
+  export type ApiCallLogUncheckedCreateNestedManyWithoutClientInput = {
+    create?: XOR<ApiCallLogCreateWithoutClientInput, ApiCallLogUncheckedCreateWithoutClientInput> | ApiCallLogCreateWithoutClientInput[] | ApiCallLogUncheckedCreateWithoutClientInput[]
+    connectOrCreate?: ApiCallLogCreateOrConnectWithoutClientInput | ApiCallLogCreateOrConnectWithoutClientInput[]
+    createMany?: ApiCallLogCreateManyClientInputEnvelope
+    connect?: ApiCallLogWhereUniqueInput | ApiCallLogWhereUniqueInput[]
+  }
+
+  export type UserUpdateOneRequiredWithoutApiClientsNestedInput = {
+    create?: XOR<UserCreateWithoutApiClientsInput, UserUncheckedCreateWithoutApiClientsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutApiClientsInput
+    upsert?: UserUpsertWithoutApiClientsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutApiClientsInput, UserUpdateWithoutApiClientsInput>, UserUncheckedUpdateWithoutApiClientsInput>
+  }
+
+  export type ApiSecretUpdateManyWithoutClientNestedInput = {
+    create?: XOR<ApiSecretCreateWithoutClientInput, ApiSecretUncheckedCreateWithoutClientInput> | ApiSecretCreateWithoutClientInput[] | ApiSecretUncheckedCreateWithoutClientInput[]
+    connectOrCreate?: ApiSecretCreateOrConnectWithoutClientInput | ApiSecretCreateOrConnectWithoutClientInput[]
+    upsert?: ApiSecretUpsertWithWhereUniqueWithoutClientInput | ApiSecretUpsertWithWhereUniqueWithoutClientInput[]
+    createMany?: ApiSecretCreateManyClientInputEnvelope
+    set?: ApiSecretWhereUniqueInput | ApiSecretWhereUniqueInput[]
+    disconnect?: ApiSecretWhereUniqueInput | ApiSecretWhereUniqueInput[]
+    delete?: ApiSecretWhereUniqueInput | ApiSecretWhereUniqueInput[]
+    connect?: ApiSecretWhereUniqueInput | ApiSecretWhereUniqueInput[]
+    update?: ApiSecretUpdateWithWhereUniqueWithoutClientInput | ApiSecretUpdateWithWhereUniqueWithoutClientInput[]
+    updateMany?: ApiSecretUpdateManyWithWhereWithoutClientInput | ApiSecretUpdateManyWithWhereWithoutClientInput[]
+    deleteMany?: ApiSecretScalarWhereInput | ApiSecretScalarWhereInput[]
+  }
+
+  export type ApiCallLogUpdateManyWithoutClientNestedInput = {
+    create?: XOR<ApiCallLogCreateWithoutClientInput, ApiCallLogUncheckedCreateWithoutClientInput> | ApiCallLogCreateWithoutClientInput[] | ApiCallLogUncheckedCreateWithoutClientInput[]
+    connectOrCreate?: ApiCallLogCreateOrConnectWithoutClientInput | ApiCallLogCreateOrConnectWithoutClientInput[]
+    upsert?: ApiCallLogUpsertWithWhereUniqueWithoutClientInput | ApiCallLogUpsertWithWhereUniqueWithoutClientInput[]
+    createMany?: ApiCallLogCreateManyClientInputEnvelope
+    set?: ApiCallLogWhereUniqueInput | ApiCallLogWhereUniqueInput[]
+    disconnect?: ApiCallLogWhereUniqueInput | ApiCallLogWhereUniqueInput[]
+    delete?: ApiCallLogWhereUniqueInput | ApiCallLogWhereUniqueInput[]
+    connect?: ApiCallLogWhereUniqueInput | ApiCallLogWhereUniqueInput[]
+    update?: ApiCallLogUpdateWithWhereUniqueWithoutClientInput | ApiCallLogUpdateWithWhereUniqueWithoutClientInput[]
+    updateMany?: ApiCallLogUpdateManyWithWhereWithoutClientInput | ApiCallLogUpdateManyWithWhereWithoutClientInput[]
+    deleteMany?: ApiCallLogScalarWhereInput | ApiCallLogScalarWhereInput[]
+  }
+
+  export type ApiSecretUncheckedUpdateManyWithoutClientNestedInput = {
+    create?: XOR<ApiSecretCreateWithoutClientInput, ApiSecretUncheckedCreateWithoutClientInput> | ApiSecretCreateWithoutClientInput[] | ApiSecretUncheckedCreateWithoutClientInput[]
+    connectOrCreate?: ApiSecretCreateOrConnectWithoutClientInput | ApiSecretCreateOrConnectWithoutClientInput[]
+    upsert?: ApiSecretUpsertWithWhereUniqueWithoutClientInput | ApiSecretUpsertWithWhereUniqueWithoutClientInput[]
+    createMany?: ApiSecretCreateManyClientInputEnvelope
+    set?: ApiSecretWhereUniqueInput | ApiSecretWhereUniqueInput[]
+    disconnect?: ApiSecretWhereUniqueInput | ApiSecretWhereUniqueInput[]
+    delete?: ApiSecretWhereUniqueInput | ApiSecretWhereUniqueInput[]
+    connect?: ApiSecretWhereUniqueInput | ApiSecretWhereUniqueInput[]
+    update?: ApiSecretUpdateWithWhereUniqueWithoutClientInput | ApiSecretUpdateWithWhereUniqueWithoutClientInput[]
+    updateMany?: ApiSecretUpdateManyWithWhereWithoutClientInput | ApiSecretUpdateManyWithWhereWithoutClientInput[]
+    deleteMany?: ApiSecretScalarWhereInput | ApiSecretScalarWhereInput[]
+  }
+
+  export type ApiCallLogUncheckedUpdateManyWithoutClientNestedInput = {
+    create?: XOR<ApiCallLogCreateWithoutClientInput, ApiCallLogUncheckedCreateWithoutClientInput> | ApiCallLogCreateWithoutClientInput[] | ApiCallLogUncheckedCreateWithoutClientInput[]
+    connectOrCreate?: ApiCallLogCreateOrConnectWithoutClientInput | ApiCallLogCreateOrConnectWithoutClientInput[]
+    upsert?: ApiCallLogUpsertWithWhereUniqueWithoutClientInput | ApiCallLogUpsertWithWhereUniqueWithoutClientInput[]
+    createMany?: ApiCallLogCreateManyClientInputEnvelope
+    set?: ApiCallLogWhereUniqueInput | ApiCallLogWhereUniqueInput[]
+    disconnect?: ApiCallLogWhereUniqueInput | ApiCallLogWhereUniqueInput[]
+    delete?: ApiCallLogWhereUniqueInput | ApiCallLogWhereUniqueInput[]
+    connect?: ApiCallLogWhereUniqueInput | ApiCallLogWhereUniqueInput[]
+    update?: ApiCallLogUpdateWithWhereUniqueWithoutClientInput | ApiCallLogUpdateWithWhereUniqueWithoutClientInput[]
+    updateMany?: ApiCallLogUpdateManyWithWhereWithoutClientInput | ApiCallLogUpdateManyWithWhereWithoutClientInput[]
+    deleteMany?: ApiCallLogScalarWhereInput | ApiCallLogScalarWhereInput[]
+  }
+
+  export type ApiClientCreateNestedOneWithoutSecretsInput = {
+    create?: XOR<ApiClientCreateWithoutSecretsInput, ApiClientUncheckedCreateWithoutSecretsInput>
+    connectOrCreate?: ApiClientCreateOrConnectWithoutSecretsInput
+    connect?: ApiClientWhereUniqueInput
+  }
+
+  export type ApiClientUpdateOneRequiredWithoutSecretsNestedInput = {
+    create?: XOR<ApiClientCreateWithoutSecretsInput, ApiClientUncheckedCreateWithoutSecretsInput>
+    connectOrCreate?: ApiClientCreateOrConnectWithoutSecretsInput
+    upsert?: ApiClientUpsertWithoutSecretsInput
+    connect?: ApiClientWhereUniqueInput
+    update?: XOR<XOR<ApiClientUpdateToOneWithWhereWithoutSecretsInput, ApiClientUpdateWithoutSecretsInput>, ApiClientUncheckedUpdateWithoutSecretsInput>
+  }
+
+  export type ApiClientCreateNestedOneWithoutCallLogsInput = {
+    create?: XOR<ApiClientCreateWithoutCallLogsInput, ApiClientUncheckedCreateWithoutCallLogsInput>
+    connectOrCreate?: ApiClientCreateOrConnectWithoutCallLogsInput
+    connect?: ApiClientWhereUniqueInput
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type ApiClientUpdateOneRequiredWithoutCallLogsNestedInput = {
+    create?: XOR<ApiClientCreateWithoutCallLogsInput, ApiClientUncheckedCreateWithoutCallLogsInput>
+    connectOrCreate?: ApiClientCreateOrConnectWithoutCallLogsInput
+    upsert?: ApiClientUpsertWithoutCallLogsInput
+    connect?: ApiClientWhereUniqueInput
+    update?: XOR<XOR<ApiClientUpdateToOneWithWhereWithoutCallLogsInput, ApiClientUpdateWithoutCallLogsInput>, ApiClientUncheckedUpdateWithoutCallLogsInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -10672,6 +18916,118 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
+  export type NestedEnumTaskStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.TaskStatus | EnumTaskStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.TaskStatus[] | ListEnumTaskStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TaskStatus[] | ListEnumTaskStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumTaskStatusFilter<$PrismaModel> | $Enums.TaskStatus
+  }
+
+  export type NestedEnumTaskSourceFilter<$PrismaModel = never> = {
+    equals?: $Enums.TaskSource | EnumTaskSourceFieldRefInput<$PrismaModel>
+    in?: $Enums.TaskSource[] | ListEnumTaskSourceFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TaskSource[] | ListEnumTaskSourceFieldRefInput<$PrismaModel>
+    not?: NestedEnumTaskSourceFilter<$PrismaModel> | $Enums.TaskSource
+  }
+
+  export type NestedEnumAgentProviderNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.AgentProvider | EnumAgentProviderFieldRefInput<$PrismaModel> | null
+    in?: $Enums.AgentProvider[] | ListEnumAgentProviderFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.AgentProvider[] | ListEnumAgentProviderFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumAgentProviderNullableFilter<$PrismaModel> | $Enums.AgentProvider | null
+  }
+
+  export type NestedEnumTaskStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TaskStatus | EnumTaskStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.TaskStatus[] | ListEnumTaskStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TaskStatus[] | ListEnumTaskStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumTaskStatusWithAggregatesFilter<$PrismaModel> | $Enums.TaskStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumTaskStatusFilter<$PrismaModel>
+    _max?: NestedEnumTaskStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumTaskSourceWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TaskSource | EnumTaskSourceFieldRefInput<$PrismaModel>
+    in?: $Enums.TaskSource[] | ListEnumTaskSourceFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TaskSource[] | ListEnumTaskSourceFieldRefInput<$PrismaModel>
+    not?: NestedEnumTaskSourceWithAggregatesFilter<$PrismaModel> | $Enums.TaskSource
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumTaskSourceFilter<$PrismaModel>
+    _max?: NestedEnumTaskSourceFilter<$PrismaModel>
+  }
+
+  export type NestedEnumAgentProviderNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AgentProvider | EnumAgentProviderFieldRefInput<$PrismaModel> | null
+    in?: $Enums.AgentProvider[] | ListEnumAgentProviderFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.AgentProvider[] | ListEnumAgentProviderFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumAgentProviderNullableWithAggregatesFilter<$PrismaModel> | $Enums.AgentProvider | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumAgentProviderNullableFilter<$PrismaModel>
+    _max?: NestedEnumAgentProviderNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumTaskExecutionStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.TaskExecutionStatus | EnumTaskExecutionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.TaskExecutionStatus[] | ListEnumTaskExecutionStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TaskExecutionStatus[] | ListEnumTaskExecutionStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumTaskExecutionStatusFilter<$PrismaModel> | $Enums.TaskExecutionStatus
+  }
+
+  export type NestedEnumAgentProviderFilter<$PrismaModel = never> = {
+    equals?: $Enums.AgentProvider | EnumAgentProviderFieldRefInput<$PrismaModel>
+    in?: $Enums.AgentProvider[] | ListEnumAgentProviderFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AgentProvider[] | ListEnumAgentProviderFieldRefInput<$PrismaModel>
+    not?: NestedEnumAgentProviderFilter<$PrismaModel> | $Enums.AgentProvider
+  }
+
+  export type NestedEnumTaskExecutionStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TaskExecutionStatus | EnumTaskExecutionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.TaskExecutionStatus[] | ListEnumTaskExecutionStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TaskExecutionStatus[] | ListEnumTaskExecutionStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumTaskExecutionStatusWithAggregatesFilter<$PrismaModel> | $Enums.TaskExecutionStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumTaskExecutionStatusFilter<$PrismaModel>
+    _max?: NestedEnumTaskExecutionStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumAgentProviderWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AgentProvider | EnumAgentProviderFieldRefInput<$PrismaModel>
+    in?: $Enums.AgentProvider[] | ListEnumAgentProviderFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AgentProvider[] | ListEnumAgentProviderFieldRefInput<$PrismaModel>
+    not?: NestedEnumAgentProviderWithAggregatesFilter<$PrismaModel> | $Enums.AgentProvider
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAgentProviderFilter<$PrismaModel>
+    _max?: NestedEnumAgentProviderFilter<$PrismaModel>
+  }
+
+  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type NestedFloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
   export type UserPreferencesCreateWithoutUserInput = {
     id?: string
     agents?:PrismaJson.UserPreferencesAgents | NullableJsonNullValueInput
@@ -10792,6 +19148,74 @@ export namespace Prisma {
 
   export type TerminalSessionCreateManyUserInputEnvelope = {
     data: TerminalSessionCreateManyUserInput | TerminalSessionCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TaskCreateWithoutUserInput = {
+    id?: string
+    title?: string | null
+    body: string
+    status?: $Enums.TaskStatus
+    source?: $Enums.TaskSource
+    agentId?: $Enums.AgentProvider | null
+    mountPoint?: string | null
+    attachments?:unknown | NullableJsonNullValueInput
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    executions?: TaskExecutionCreateNestedManyWithoutTaskInput
+  }
+
+  export type TaskUncheckedCreateWithoutUserInput = {
+    id?: string
+    title?: string | null
+    body: string
+    status?: $Enums.TaskStatus
+    source?: $Enums.TaskSource
+    agentId?: $Enums.AgentProvider | null
+    mountPoint?: string | null
+    attachments?:unknown | NullableJsonNullValueInput
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    executions?: TaskExecutionUncheckedCreateNestedManyWithoutTaskInput
+  }
+
+  export type TaskCreateOrConnectWithoutUserInput = {
+    where: TaskWhereUniqueInput
+    create: XOR<TaskCreateWithoutUserInput, TaskUncheckedCreateWithoutUserInput>
+  }
+
+  export type TaskCreateManyUserInputEnvelope = {
+    data: TaskCreateManyUserInput | TaskCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ApiClientCreateWithoutUserInput = {
+    id?: string
+    name: string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    secrets?: ApiSecretCreateNestedManyWithoutClientInput
+    callLogs?: ApiCallLogCreateNestedManyWithoutClientInput
+  }
+
+  export type ApiClientUncheckedCreateWithoutUserInput = {
+    id?: string
+    name: string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    secrets?: ApiSecretUncheckedCreateNestedManyWithoutClientInput
+    callLogs?: ApiCallLogUncheckedCreateNestedManyWithoutClientInput
+  }
+
+  export type ApiClientCreateOrConnectWithoutUserInput = {
+    where: ApiClientWhereUniqueInput
+    create: XOR<ApiClientCreateWithoutUserInput, ApiClientUncheckedCreateWithoutUserInput>
+  }
+
+  export type ApiClientCreateManyUserInputEnvelope = {
+    data: ApiClientCreateManyUserInput | ApiClientCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -10917,6 +19341,67 @@ export namespace Prisma {
     containerName?: StringNullableFilter<"TerminalSession"> | string | null
   }
 
+  export type TaskUpsertWithWhereUniqueWithoutUserInput = {
+    where: TaskWhereUniqueInput
+    update: XOR<TaskUpdateWithoutUserInput, TaskUncheckedUpdateWithoutUserInput>
+    create: XOR<TaskCreateWithoutUserInput, TaskUncheckedCreateWithoutUserInput>
+  }
+
+  export type TaskUpdateWithWhereUniqueWithoutUserInput = {
+    where: TaskWhereUniqueInput
+    data: XOR<TaskUpdateWithoutUserInput, TaskUncheckedUpdateWithoutUserInput>
+  }
+
+  export type TaskUpdateManyWithWhereWithoutUserInput = {
+    where: TaskScalarWhereInput
+    data: XOR<TaskUpdateManyMutationInput, TaskUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type TaskScalarWhereInput = {
+    AND?: TaskScalarWhereInput | TaskScalarWhereInput[]
+    OR?: TaskScalarWhereInput[]
+    NOT?: TaskScalarWhereInput | TaskScalarWhereInput[]
+    id?: StringFilter<"Task"> | string
+    title?: StringNullableFilter<"Task"> | string | null
+    body?: StringFilter<"Task"> | string
+    status?: EnumTaskStatusFilter<"Task"> | $Enums.TaskStatus
+    source?: EnumTaskSourceFilter<"Task"> | $Enums.TaskSource
+    agentId?: EnumAgentProviderNullableFilter<"Task"> | $Enums.AgentProvider | null
+    mountPoint?: StringNullableFilter<"Task"> | string | null
+    userId?: StringFilter<"Task"> | string
+    attachments?: JsonNullableFilter<"Task">
+    createdAt?: DateTimeFilter<"Task"> | Date | string
+    updatedAt?: DateTimeFilter<"Task"> | Date | string
+  }
+
+  export type ApiClientUpsertWithWhereUniqueWithoutUserInput = {
+    where: ApiClientWhereUniqueInput
+    update: XOR<ApiClientUpdateWithoutUserInput, ApiClientUncheckedUpdateWithoutUserInput>
+    create: XOR<ApiClientCreateWithoutUserInput, ApiClientUncheckedCreateWithoutUserInput>
+  }
+
+  export type ApiClientUpdateWithWhereUniqueWithoutUserInput = {
+    where: ApiClientWhereUniqueInput
+    data: XOR<ApiClientUpdateWithoutUserInput, ApiClientUncheckedUpdateWithoutUserInput>
+  }
+
+  export type ApiClientUpdateManyWithWhereWithoutUserInput = {
+    where: ApiClientScalarWhereInput
+    data: XOR<ApiClientUpdateManyMutationInput, ApiClientUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type ApiClientScalarWhereInput = {
+    AND?: ApiClientScalarWhereInput | ApiClientScalarWhereInput[]
+    OR?: ApiClientScalarWhereInput[]
+    NOT?: ApiClientScalarWhereInput | ApiClientScalarWhereInput[]
+    id?: StringFilter<"ApiClient"> | string
+    name?: StringFilter<"ApiClient"> | string
+    description?: StringNullableFilter<"ApiClient"> | string | null
+    userId?: StringFilter<"ApiClient"> | string
+    createdAt?: DateTimeFilter<"ApiClient"> | Date | string
+    updatedAt?: DateTimeFilter<"ApiClient"> | Date | string
+  }
+
   export type UserCreateWithoutSessionsInput = {
     id: string
     createdAt?: Date | string
@@ -10940,6 +19425,8 @@ export namespace Prisma {
     preferences?: UserPreferencesCreateNestedOneWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
     terminalSessions?: TerminalSessionCreateNestedManyWithoutUserInput
+    tasks?: TaskCreateNestedManyWithoutUserInput
+    apiClients?: ApiClientCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSessionsInput = {
@@ -10965,6 +19452,8 @@ export namespace Prisma {
     preferences?: UserPreferencesUncheckedCreateNestedOneWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     terminalSessions?: TerminalSessionUncheckedCreateNestedManyWithoutUserInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutUserInput
+    apiClients?: ApiClientUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSessionsInput = {
@@ -11006,6 +19495,8 @@ export namespace Prisma {
     preferences?: UserPreferencesUpdateOneWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
     terminalSessions?: TerminalSessionUpdateManyWithoutUserNestedInput
+    tasks?: TaskUpdateManyWithoutUserNestedInput
+    apiClients?: ApiClientUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -11031,6 +19522,8 @@ export namespace Prisma {
     preferences?: UserPreferencesUncheckedUpdateOneWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     terminalSessions?: TerminalSessionUncheckedUpdateManyWithoutUserNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutUserNestedInput
+    apiClients?: ApiClientUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutAccountsInput = {
@@ -11056,6 +19549,8 @@ export namespace Prisma {
     preferences?: UserPreferencesCreateNestedOneWithoutUserInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     terminalSessions?: TerminalSessionCreateNestedManyWithoutUserInput
+    tasks?: TaskCreateNestedManyWithoutUserInput
+    apiClients?: ApiClientCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAccountsInput = {
@@ -11081,6 +19576,8 @@ export namespace Prisma {
     preferences?: UserPreferencesUncheckedCreateNestedOneWithoutUserInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     terminalSessions?: TerminalSessionUncheckedCreateNestedManyWithoutUserInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutUserInput
+    apiClients?: ApiClientUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAccountsInput = {
@@ -11122,6 +19619,8 @@ export namespace Prisma {
     preferences?: UserPreferencesUpdateOneWithoutUserNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     terminalSessions?: TerminalSessionUpdateManyWithoutUserNestedInput
+    tasks?: TaskUpdateManyWithoutUserNestedInput
+    apiClients?: ApiClientUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -11147,6 +19646,8 @@ export namespace Prisma {
     preferences?: UserPreferencesUncheckedUpdateOneWithoutUserNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     terminalSessions?: TerminalSessionUncheckedUpdateManyWithoutUserNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutUserNestedInput
+    apiClients?: ApiClientUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutTerminalSessionsInput = {
@@ -11172,6 +19673,8 @@ export namespace Prisma {
     preferences?: UserPreferencesCreateNestedOneWithoutUserInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
+    tasks?: TaskCreateNestedManyWithoutUserInput
+    apiClients?: ApiClientCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutTerminalSessionsInput = {
@@ -11197,6 +19700,8 @@ export namespace Prisma {
     preferences?: UserPreferencesUncheckedCreateNestedOneWithoutUserInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutUserInput
+    apiClients?: ApiClientUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutTerminalSessionsInput = {
@@ -11238,6 +19743,8 @@ export namespace Prisma {
     preferences?: UserPreferencesUpdateOneWithoutUserNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
+    tasks?: TaskUpdateManyWithoutUserNestedInput
+    apiClients?: ApiClientUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTerminalSessionsInput = {
@@ -11263,6 +19770,8 @@ export namespace Prisma {
     preferences?: UserPreferencesUncheckedUpdateOneWithoutUserNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutUserNestedInput
+    apiClients?: ApiClientUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutPreferencesInput = {
@@ -11288,6 +19797,8 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
     terminalSessions?: TerminalSessionCreateNestedManyWithoutUserInput
+    tasks?: TaskCreateNestedManyWithoutUserInput
+    apiClients?: ApiClientCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutPreferencesInput = {
@@ -11313,6 +19824,8 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     terminalSessions?: TerminalSessionUncheckedCreateNestedManyWithoutUserInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutUserInput
+    apiClients?: ApiClientUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutPreferencesInput = {
@@ -11354,6 +19867,8 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
     terminalSessions?: TerminalSessionUpdateManyWithoutUserNestedInput
+    tasks?: TaskUpdateManyWithoutUserNestedInput
+    apiClients?: ApiClientUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPreferencesInput = {
@@ -11379,6 +19894,659 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     terminalSessions?: TerminalSessionUncheckedUpdateManyWithoutUserNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutUserNestedInput
+    apiClients?: ApiClientUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutTasksInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string | null
+    name: string
+    email: string
+    emailVerified: boolean
+    image?: string | null
+    bio?: string | null
+    avatarImageUrl?: string | null
+    coverImageUrl?: string | null
+    avatarImageUTKey?: string | null
+    coverImageUTKey?: string | null
+    timezone?: string | null
+    role?: string
+    banReason?: string | null
+    banExpires?: Date | string | null
+    banned?: boolean
+    username?: string | null
+    displayUsername?: string | null
+    preferences?: UserPreferencesCreateNestedOneWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    terminalSessions?: TerminalSessionCreateNestedManyWithoutUserInput
+    apiClients?: ApiClientCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutTasksInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string | null
+    name: string
+    email: string
+    emailVerified: boolean
+    image?: string | null
+    bio?: string | null
+    avatarImageUrl?: string | null
+    coverImageUrl?: string | null
+    avatarImageUTKey?: string | null
+    coverImageUTKey?: string | null
+    timezone?: string | null
+    role?: string
+    banReason?: string | null
+    banExpires?: Date | string | null
+    banned?: boolean
+    username?: string | null
+    displayUsername?: string | null
+    preferences?: UserPreferencesUncheckedCreateNestedOneWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    terminalSessions?: TerminalSessionUncheckedCreateNestedManyWithoutUserInput
+    apiClients?: ApiClientUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutTasksInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutTasksInput, UserUncheckedCreateWithoutTasksInput>
+  }
+
+  export type TaskExecutionCreateWithoutTaskInput = {
+    id?: string
+    status?: $Enums.TaskExecutionStatus
+    agentId: $Enums.AgentProvider
+    jobId?: string | null
+    containerName?: string | null
+    completed?: boolean
+    needsInput?: boolean
+    inputRequest?: string | null
+    result?: string | null
+    errorMessage?: string | null
+    logs?: string | null
+    memoryUsage?: number | null
+    tokenCount?: number | null
+    context?:unknown | NullableJsonNullValueInput
+    startedAt?: Date | string | null
+    finishedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TaskExecutionUncheckedCreateWithoutTaskInput = {
+    id?: string
+    status?: $Enums.TaskExecutionStatus
+    agentId: $Enums.AgentProvider
+    jobId?: string | null
+    containerName?: string | null
+    completed?: boolean
+    needsInput?: boolean
+    inputRequest?: string | null
+    result?: string | null
+    errorMessage?: string | null
+    logs?: string | null
+    memoryUsage?: number | null
+    tokenCount?: number | null
+    context?:unknown | NullableJsonNullValueInput
+    startedAt?: Date | string | null
+    finishedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TaskExecutionCreateOrConnectWithoutTaskInput = {
+    where: TaskExecutionWhereUniqueInput
+    create: XOR<TaskExecutionCreateWithoutTaskInput, TaskExecutionUncheckedCreateWithoutTaskInput>
+  }
+
+  export type TaskExecutionCreateManyTaskInputEnvelope = {
+    data: TaskExecutionCreateManyTaskInput | TaskExecutionCreateManyTaskInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutTasksInput = {
+    update: XOR<UserUpdateWithoutTasksInput, UserUncheckedUpdateWithoutTasksInput>
+    create: XOR<UserCreateWithoutTasksInput, UserUncheckedCreateWithoutTasksInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutTasksInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutTasksInput, UserUncheckedUpdateWithoutTasksInput>
+  }
+
+  export type UserUpdateWithoutTasksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    coverImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarImageUTKey?: NullableStringFieldUpdateOperationsInput | string | null
+    coverImageUTKey?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    banReason?: NullableStringFieldUpdateOperationsInput | string | null
+    banExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    preferences?: UserPreferencesUpdateOneWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    terminalSessions?: TerminalSessionUpdateManyWithoutUserNestedInput
+    apiClients?: ApiClientUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutTasksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    coverImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarImageUTKey?: NullableStringFieldUpdateOperationsInput | string | null
+    coverImageUTKey?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    banReason?: NullableStringFieldUpdateOperationsInput | string | null
+    banExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    preferences?: UserPreferencesUncheckedUpdateOneWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    terminalSessions?: TerminalSessionUncheckedUpdateManyWithoutUserNestedInput
+    apiClients?: ApiClientUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type TaskExecutionUpsertWithWhereUniqueWithoutTaskInput = {
+    where: TaskExecutionWhereUniqueInput
+    update: XOR<TaskExecutionUpdateWithoutTaskInput, TaskExecutionUncheckedUpdateWithoutTaskInput>
+    create: XOR<TaskExecutionCreateWithoutTaskInput, TaskExecutionUncheckedCreateWithoutTaskInput>
+  }
+
+  export type TaskExecutionUpdateWithWhereUniqueWithoutTaskInput = {
+    where: TaskExecutionWhereUniqueInput
+    data: XOR<TaskExecutionUpdateWithoutTaskInput, TaskExecutionUncheckedUpdateWithoutTaskInput>
+  }
+
+  export type TaskExecutionUpdateManyWithWhereWithoutTaskInput = {
+    where: TaskExecutionScalarWhereInput
+    data: XOR<TaskExecutionUpdateManyMutationInput, TaskExecutionUncheckedUpdateManyWithoutTaskInput>
+  }
+
+  export type TaskExecutionScalarWhereInput = {
+    AND?: TaskExecutionScalarWhereInput | TaskExecutionScalarWhereInput[]
+    OR?: TaskExecutionScalarWhereInput[]
+    NOT?: TaskExecutionScalarWhereInput | TaskExecutionScalarWhereInput[]
+    id?: StringFilter<"TaskExecution"> | string
+    taskId?: StringFilter<"TaskExecution"> | string
+    status?: EnumTaskExecutionStatusFilter<"TaskExecution"> | $Enums.TaskExecutionStatus
+    agentId?: EnumAgentProviderFilter<"TaskExecution"> | $Enums.AgentProvider
+    jobId?: StringNullableFilter<"TaskExecution"> | string | null
+    containerName?: StringNullableFilter<"TaskExecution"> | string | null
+    completed?: BoolFilter<"TaskExecution"> | boolean
+    needsInput?: BoolFilter<"TaskExecution"> | boolean
+    inputRequest?: StringNullableFilter<"TaskExecution"> | string | null
+    result?: StringNullableFilter<"TaskExecution"> | string | null
+    errorMessage?: StringNullableFilter<"TaskExecution"> | string | null
+    logs?: StringNullableFilter<"TaskExecution"> | string | null
+    memoryUsage?: IntNullableFilter<"TaskExecution"> | number | null
+    tokenCount?: IntNullableFilter<"TaskExecution"> | number | null
+    context?: JsonNullableFilter<"TaskExecution">
+    startedAt?: DateTimeNullableFilter<"TaskExecution"> | Date | string | null
+    finishedAt?: DateTimeNullableFilter<"TaskExecution"> | Date | string | null
+    createdAt?: DateTimeFilter<"TaskExecution"> | Date | string
+    updatedAt?: DateTimeFilter<"TaskExecution"> | Date | string
+  }
+
+  export type TaskCreateWithoutExecutionsInput = {
+    id?: string
+    title?: string | null
+    body: string
+    status?: $Enums.TaskStatus
+    source?: $Enums.TaskSource
+    agentId?: $Enums.AgentProvider | null
+    mountPoint?: string | null
+    attachments?:unknown | NullableJsonNullValueInput
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutTasksInput
+  }
+
+  export type TaskUncheckedCreateWithoutExecutionsInput = {
+    id?: string
+    title?: string | null
+    body: string
+    status?: $Enums.TaskStatus
+    source?: $Enums.TaskSource
+    agentId?: $Enums.AgentProvider | null
+    mountPoint?: string | null
+    userId: string
+    attachments?:unknown | NullableJsonNullValueInput
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TaskCreateOrConnectWithoutExecutionsInput = {
+    where: TaskWhereUniqueInput
+    create: XOR<TaskCreateWithoutExecutionsInput, TaskUncheckedCreateWithoutExecutionsInput>
+  }
+
+  export type TaskUpsertWithoutExecutionsInput = {
+    update: XOR<TaskUpdateWithoutExecutionsInput, TaskUncheckedUpdateWithoutExecutionsInput>
+    create: XOR<TaskCreateWithoutExecutionsInput, TaskUncheckedCreateWithoutExecutionsInput>
+    where?: TaskWhereInput
+  }
+
+  export type TaskUpdateToOneWithWhereWithoutExecutionsInput = {
+    where?: TaskWhereInput
+    data: XOR<TaskUpdateWithoutExecutionsInput, TaskUncheckedUpdateWithoutExecutionsInput>
+  }
+
+  export type TaskUpdateWithoutExecutionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    body?: StringFieldUpdateOperationsInput | string
+    status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    source?: EnumTaskSourceFieldUpdateOperationsInput | $Enums.TaskSource
+    agentId?: NullableEnumAgentProviderFieldUpdateOperationsInput | $Enums.AgentProvider | null
+    mountPoint?: NullableStringFieldUpdateOperationsInput | string | null
+    attachments?:unknown | NullableJsonNullValueInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutTasksNestedInput
+  }
+
+  export type TaskUncheckedUpdateWithoutExecutionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    body?: StringFieldUpdateOperationsInput | string
+    status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    source?: EnumTaskSourceFieldUpdateOperationsInput | $Enums.TaskSource
+    agentId?: NullableEnumAgentProviderFieldUpdateOperationsInput | $Enums.AgentProvider | null
+    mountPoint?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
+    attachments?:unknown | NullableJsonNullValueInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserCreateWithoutApiClientsInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string | null
+    name: string
+    email: string
+    emailVerified: boolean
+    image?: string | null
+    bio?: string | null
+    avatarImageUrl?: string | null
+    coverImageUrl?: string | null
+    avatarImageUTKey?: string | null
+    coverImageUTKey?: string | null
+    timezone?: string | null
+    role?: string
+    banReason?: string | null
+    banExpires?: Date | string | null
+    banned?: boolean
+    username?: string | null
+    displayUsername?: string | null
+    preferences?: UserPreferencesCreateNestedOneWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    terminalSessions?: TerminalSessionCreateNestedManyWithoutUserInput
+    tasks?: TaskCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutApiClientsInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string | null
+    name: string
+    email: string
+    emailVerified: boolean
+    image?: string | null
+    bio?: string | null
+    avatarImageUrl?: string | null
+    coverImageUrl?: string | null
+    avatarImageUTKey?: string | null
+    coverImageUTKey?: string | null
+    timezone?: string | null
+    role?: string
+    banReason?: string | null
+    banExpires?: Date | string | null
+    banned?: boolean
+    username?: string | null
+    displayUsername?: string | null
+    preferences?: UserPreferencesUncheckedCreateNestedOneWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    terminalSessions?: TerminalSessionUncheckedCreateNestedManyWithoutUserInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutApiClientsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutApiClientsInput, UserUncheckedCreateWithoutApiClientsInput>
+  }
+
+  export type ApiSecretCreateWithoutClientInput = {
+    id?: string
+    name: string
+    keyHash: string
+    keyPrefix: string
+    lastUsedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type ApiSecretUncheckedCreateWithoutClientInput = {
+    id?: string
+    name: string
+    keyHash: string
+    keyPrefix: string
+    lastUsedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type ApiSecretCreateOrConnectWithoutClientInput = {
+    where: ApiSecretWhereUniqueInput
+    create: XOR<ApiSecretCreateWithoutClientInput, ApiSecretUncheckedCreateWithoutClientInput>
+  }
+
+  export type ApiSecretCreateManyClientInputEnvelope = {
+    data: ApiSecretCreateManyClientInput | ApiSecretCreateManyClientInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ApiCallLogCreateWithoutClientInput = {
+    id?: string
+    endpoint: string
+    method: string
+    statusCode: number
+    ipAddress?: string | null
+    userAgent?: string | null
+    requestBody?: string | null
+    responseMs?: number | null
+    errorMessage?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ApiCallLogUncheckedCreateWithoutClientInput = {
+    id?: string
+    endpoint: string
+    method: string
+    statusCode: number
+    ipAddress?: string | null
+    userAgent?: string | null
+    requestBody?: string | null
+    responseMs?: number | null
+    errorMessage?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ApiCallLogCreateOrConnectWithoutClientInput = {
+    where: ApiCallLogWhereUniqueInput
+    create: XOR<ApiCallLogCreateWithoutClientInput, ApiCallLogUncheckedCreateWithoutClientInput>
+  }
+
+  export type ApiCallLogCreateManyClientInputEnvelope = {
+    data: ApiCallLogCreateManyClientInput | ApiCallLogCreateManyClientInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutApiClientsInput = {
+    update: XOR<UserUpdateWithoutApiClientsInput, UserUncheckedUpdateWithoutApiClientsInput>
+    create: XOR<UserCreateWithoutApiClientsInput, UserUncheckedCreateWithoutApiClientsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutApiClientsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutApiClientsInput, UserUncheckedUpdateWithoutApiClientsInput>
+  }
+
+  export type UserUpdateWithoutApiClientsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    coverImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarImageUTKey?: NullableStringFieldUpdateOperationsInput | string | null
+    coverImageUTKey?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    banReason?: NullableStringFieldUpdateOperationsInput | string | null
+    banExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    preferences?: UserPreferencesUpdateOneWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    terminalSessions?: TerminalSessionUpdateManyWithoutUserNestedInput
+    tasks?: TaskUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutApiClientsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    coverImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarImageUTKey?: NullableStringFieldUpdateOperationsInput | string | null
+    coverImageUTKey?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    banReason?: NullableStringFieldUpdateOperationsInput | string | null
+    banExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    preferences?: UserPreferencesUncheckedUpdateOneWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    terminalSessions?: TerminalSessionUncheckedUpdateManyWithoutUserNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type ApiSecretUpsertWithWhereUniqueWithoutClientInput = {
+    where: ApiSecretWhereUniqueInput
+    update: XOR<ApiSecretUpdateWithoutClientInput, ApiSecretUncheckedUpdateWithoutClientInput>
+    create: XOR<ApiSecretCreateWithoutClientInput, ApiSecretUncheckedCreateWithoutClientInput>
+  }
+
+  export type ApiSecretUpdateWithWhereUniqueWithoutClientInput = {
+    where: ApiSecretWhereUniqueInput
+    data: XOR<ApiSecretUpdateWithoutClientInput, ApiSecretUncheckedUpdateWithoutClientInput>
+  }
+
+  export type ApiSecretUpdateManyWithWhereWithoutClientInput = {
+    where: ApiSecretScalarWhereInput
+    data: XOR<ApiSecretUpdateManyMutationInput, ApiSecretUncheckedUpdateManyWithoutClientInput>
+  }
+
+  export type ApiSecretScalarWhereInput = {
+    AND?: ApiSecretScalarWhereInput | ApiSecretScalarWhereInput[]
+    OR?: ApiSecretScalarWhereInput[]
+    NOT?: ApiSecretScalarWhereInput | ApiSecretScalarWhereInput[]
+    id?: StringFilter<"ApiSecret"> | string
+    name?: StringFilter<"ApiSecret"> | string
+    keyHash?: StringFilter<"ApiSecret"> | string
+    keyPrefix?: StringFilter<"ApiSecret"> | string
+    clientId?: StringFilter<"ApiSecret"> | string
+    lastUsedAt?: DateTimeNullableFilter<"ApiSecret"> | Date | string | null
+    createdAt?: DateTimeFilter<"ApiSecret"> | Date | string
+  }
+
+  export type ApiCallLogUpsertWithWhereUniqueWithoutClientInput = {
+    where: ApiCallLogWhereUniqueInput
+    update: XOR<ApiCallLogUpdateWithoutClientInput, ApiCallLogUncheckedUpdateWithoutClientInput>
+    create: XOR<ApiCallLogCreateWithoutClientInput, ApiCallLogUncheckedCreateWithoutClientInput>
+  }
+
+  export type ApiCallLogUpdateWithWhereUniqueWithoutClientInput = {
+    where: ApiCallLogWhereUniqueInput
+    data: XOR<ApiCallLogUpdateWithoutClientInput, ApiCallLogUncheckedUpdateWithoutClientInput>
+  }
+
+  export type ApiCallLogUpdateManyWithWhereWithoutClientInput = {
+    where: ApiCallLogScalarWhereInput
+    data: XOR<ApiCallLogUpdateManyMutationInput, ApiCallLogUncheckedUpdateManyWithoutClientInput>
+  }
+
+  export type ApiCallLogScalarWhereInput = {
+    AND?: ApiCallLogScalarWhereInput | ApiCallLogScalarWhereInput[]
+    OR?: ApiCallLogScalarWhereInput[]
+    NOT?: ApiCallLogScalarWhereInput | ApiCallLogScalarWhereInput[]
+    id?: StringFilter<"ApiCallLog"> | string
+    clientId?: StringFilter<"ApiCallLog"> | string
+    endpoint?: StringFilter<"ApiCallLog"> | string
+    method?: StringFilter<"ApiCallLog"> | string
+    statusCode?: IntFilter<"ApiCallLog"> | number
+    ipAddress?: StringNullableFilter<"ApiCallLog"> | string | null
+    userAgent?: StringNullableFilter<"ApiCallLog"> | string | null
+    requestBody?: StringNullableFilter<"ApiCallLog"> | string | null
+    responseMs?: IntNullableFilter<"ApiCallLog"> | number | null
+    errorMessage?: StringNullableFilter<"ApiCallLog"> | string | null
+    createdAt?: DateTimeFilter<"ApiCallLog"> | Date | string
+  }
+
+  export type ApiClientCreateWithoutSecretsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutApiClientsInput
+    callLogs?: ApiCallLogCreateNestedManyWithoutClientInput
+  }
+
+  export type ApiClientUncheckedCreateWithoutSecretsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    userId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    callLogs?: ApiCallLogUncheckedCreateNestedManyWithoutClientInput
+  }
+
+  export type ApiClientCreateOrConnectWithoutSecretsInput = {
+    where: ApiClientWhereUniqueInput
+    create: XOR<ApiClientCreateWithoutSecretsInput, ApiClientUncheckedCreateWithoutSecretsInput>
+  }
+
+  export type ApiClientUpsertWithoutSecretsInput = {
+    update: XOR<ApiClientUpdateWithoutSecretsInput, ApiClientUncheckedUpdateWithoutSecretsInput>
+    create: XOR<ApiClientCreateWithoutSecretsInput, ApiClientUncheckedCreateWithoutSecretsInput>
+    where?: ApiClientWhereInput
+  }
+
+  export type ApiClientUpdateToOneWithWhereWithoutSecretsInput = {
+    where?: ApiClientWhereInput
+    data: XOR<ApiClientUpdateWithoutSecretsInput, ApiClientUncheckedUpdateWithoutSecretsInput>
+  }
+
+  export type ApiClientUpdateWithoutSecretsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutApiClientsNestedInput
+    callLogs?: ApiCallLogUpdateManyWithoutClientNestedInput
+  }
+
+  export type ApiClientUncheckedUpdateWithoutSecretsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    callLogs?: ApiCallLogUncheckedUpdateManyWithoutClientNestedInput
+  }
+
+  export type ApiClientCreateWithoutCallLogsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutApiClientsInput
+    secrets?: ApiSecretCreateNestedManyWithoutClientInput
+  }
+
+  export type ApiClientUncheckedCreateWithoutCallLogsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    userId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    secrets?: ApiSecretUncheckedCreateNestedManyWithoutClientInput
+  }
+
+  export type ApiClientCreateOrConnectWithoutCallLogsInput = {
+    where: ApiClientWhereUniqueInput
+    create: XOR<ApiClientCreateWithoutCallLogsInput, ApiClientUncheckedCreateWithoutCallLogsInput>
+  }
+
+  export type ApiClientUpsertWithoutCallLogsInput = {
+    update: XOR<ApiClientUpdateWithoutCallLogsInput, ApiClientUncheckedUpdateWithoutCallLogsInput>
+    create: XOR<ApiClientCreateWithoutCallLogsInput, ApiClientUncheckedCreateWithoutCallLogsInput>
+    where?: ApiClientWhereInput
+  }
+
+  export type ApiClientUpdateToOneWithWhereWithoutCallLogsInput = {
+    where?: ApiClientWhereInput
+    data: XOR<ApiClientUpdateWithoutCallLogsInput, ApiClientUncheckedUpdateWithoutCallLogsInput>
+  }
+
+  export type ApiClientUpdateWithoutCallLogsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutApiClientsNestedInput
+    secrets?: ApiSecretUpdateManyWithoutClientNestedInput
+  }
+
+  export type ApiClientUncheckedUpdateWithoutCallLogsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    secrets?: ApiSecretUncheckedUpdateManyWithoutClientNestedInput
   }
 
   export type SessionCreateManyUserInput = {
@@ -11416,6 +20584,27 @@ export namespace Prisma {
     port?: number | null
     wsPath?: string | null
     containerName?: string | null
+  }
+
+  export type TaskCreateManyUserInput = {
+    id?: string
+    title?: string | null
+    body: string
+    status?: $Enums.TaskStatus
+    source?: $Enums.TaskSource
+    agentId?: $Enums.AgentProvider | null
+    mountPoint?: string | null
+    attachments?:unknown | NullableJsonNullValueInput
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ApiClientCreateManyUserInput = {
+    id?: string
+    name: string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type SessionUpdateWithoutUserInput = {
@@ -11527,6 +20716,247 @@ export namespace Prisma {
     port?: NullableIntFieldUpdateOperationsInput | number | null
     wsPath?: NullableStringFieldUpdateOperationsInput | string | null
     containerName?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type TaskUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    body?: StringFieldUpdateOperationsInput | string
+    status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    source?: EnumTaskSourceFieldUpdateOperationsInput | $Enums.TaskSource
+    agentId?: NullableEnumAgentProviderFieldUpdateOperationsInput | $Enums.AgentProvider | null
+    mountPoint?: NullableStringFieldUpdateOperationsInput | string | null
+    attachments?:unknown | NullableJsonNullValueInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    executions?: TaskExecutionUpdateManyWithoutTaskNestedInput
+  }
+
+  export type TaskUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    body?: StringFieldUpdateOperationsInput | string
+    status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    source?: EnumTaskSourceFieldUpdateOperationsInput | $Enums.TaskSource
+    agentId?: NullableEnumAgentProviderFieldUpdateOperationsInput | $Enums.AgentProvider | null
+    mountPoint?: NullableStringFieldUpdateOperationsInput | string | null
+    attachments?:unknown | NullableJsonNullValueInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    executions?: TaskExecutionUncheckedUpdateManyWithoutTaskNestedInput
+  }
+
+  export type TaskUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    body?: StringFieldUpdateOperationsInput | string
+    status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    source?: EnumTaskSourceFieldUpdateOperationsInput | $Enums.TaskSource
+    agentId?: NullableEnumAgentProviderFieldUpdateOperationsInput | $Enums.AgentProvider | null
+    mountPoint?: NullableStringFieldUpdateOperationsInput | string | null
+    attachments?:unknown | NullableJsonNullValueInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApiClientUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    secrets?: ApiSecretUpdateManyWithoutClientNestedInput
+    callLogs?: ApiCallLogUpdateManyWithoutClientNestedInput
+  }
+
+  export type ApiClientUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    secrets?: ApiSecretUncheckedUpdateManyWithoutClientNestedInput
+    callLogs?: ApiCallLogUncheckedUpdateManyWithoutClientNestedInput
+  }
+
+  export type ApiClientUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TaskExecutionCreateManyTaskInput = {
+    id?: string
+    status?: $Enums.TaskExecutionStatus
+    agentId: $Enums.AgentProvider
+    jobId?: string | null
+    containerName?: string | null
+    completed?: boolean
+    needsInput?: boolean
+    inputRequest?: string | null
+    result?: string | null
+    errorMessage?: string | null
+    logs?: string | null
+    memoryUsage?: number | null
+    tokenCount?: number | null
+    context?:unknown | NullableJsonNullValueInput
+    startedAt?: Date | string | null
+    finishedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TaskExecutionUpdateWithoutTaskInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumTaskExecutionStatusFieldUpdateOperationsInput | $Enums.TaskExecutionStatus
+    agentId?: EnumAgentProviderFieldUpdateOperationsInput | $Enums.AgentProvider
+    jobId?: NullableStringFieldUpdateOperationsInput | string | null
+    containerName?: NullableStringFieldUpdateOperationsInput | string | null
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    needsInput?: BoolFieldUpdateOperationsInput | boolean
+    inputRequest?: NullableStringFieldUpdateOperationsInput | string | null
+    result?: NullableStringFieldUpdateOperationsInput | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    logs?: NullableStringFieldUpdateOperationsInput | string | null
+    memoryUsage?: NullableIntFieldUpdateOperationsInput | number | null
+    tokenCount?: NullableIntFieldUpdateOperationsInput | number | null
+    context?:unknown | NullableJsonNullValueInput
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TaskExecutionUncheckedUpdateWithoutTaskInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumTaskExecutionStatusFieldUpdateOperationsInput | $Enums.TaskExecutionStatus
+    agentId?: EnumAgentProviderFieldUpdateOperationsInput | $Enums.AgentProvider
+    jobId?: NullableStringFieldUpdateOperationsInput | string | null
+    containerName?: NullableStringFieldUpdateOperationsInput | string | null
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    needsInput?: BoolFieldUpdateOperationsInput | boolean
+    inputRequest?: NullableStringFieldUpdateOperationsInput | string | null
+    result?: NullableStringFieldUpdateOperationsInput | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    logs?: NullableStringFieldUpdateOperationsInput | string | null
+    memoryUsage?: NullableIntFieldUpdateOperationsInput | number | null
+    tokenCount?: NullableIntFieldUpdateOperationsInput | number | null
+    context?:unknown | NullableJsonNullValueInput
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TaskExecutionUncheckedUpdateManyWithoutTaskInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumTaskExecutionStatusFieldUpdateOperationsInput | $Enums.TaskExecutionStatus
+    agentId?: EnumAgentProviderFieldUpdateOperationsInput | $Enums.AgentProvider
+    jobId?: NullableStringFieldUpdateOperationsInput | string | null
+    containerName?: NullableStringFieldUpdateOperationsInput | string | null
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    needsInput?: BoolFieldUpdateOperationsInput | boolean
+    inputRequest?: NullableStringFieldUpdateOperationsInput | string | null
+    result?: NullableStringFieldUpdateOperationsInput | string | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    logs?: NullableStringFieldUpdateOperationsInput | string | null
+    memoryUsage?: NullableIntFieldUpdateOperationsInput | number | null
+    tokenCount?: NullableIntFieldUpdateOperationsInput | number | null
+    context?:unknown | NullableJsonNullValueInput
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    finishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApiSecretCreateManyClientInput = {
+    id?: string
+    name: string
+    keyHash: string
+    keyPrefix: string
+    lastUsedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type ApiCallLogCreateManyClientInput = {
+    id?: string
+    endpoint: string
+    method: string
+    statusCode: number
+    ipAddress?: string | null
+    userAgent?: string | null
+    requestBody?: string | null
+    responseMs?: number | null
+    errorMessage?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ApiSecretUpdateWithoutClientInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    keyHash?: StringFieldUpdateOperationsInput | string
+    keyPrefix?: StringFieldUpdateOperationsInput | string
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApiSecretUncheckedUpdateWithoutClientInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    keyHash?: StringFieldUpdateOperationsInput | string
+    keyPrefix?: StringFieldUpdateOperationsInput | string
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApiSecretUncheckedUpdateManyWithoutClientInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    keyHash?: StringFieldUpdateOperationsInput | string
+    keyPrefix?: StringFieldUpdateOperationsInput | string
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApiCallLogUpdateWithoutClientInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    endpoint?: StringFieldUpdateOperationsInput | string
+    method?: StringFieldUpdateOperationsInput | string
+    statusCode?: IntFieldUpdateOperationsInput | number
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    requestBody?: NullableStringFieldUpdateOperationsInput | string | null
+    responseMs?: NullableIntFieldUpdateOperationsInput | number | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApiCallLogUncheckedUpdateWithoutClientInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    endpoint?: StringFieldUpdateOperationsInput | string
+    method?: StringFieldUpdateOperationsInput | string
+    statusCode?: IntFieldUpdateOperationsInput | number
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    requestBody?: NullableStringFieldUpdateOperationsInput | string | null
+    responseMs?: NullableIntFieldUpdateOperationsInput | number | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApiCallLogUncheckedUpdateManyWithoutClientInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    endpoint?: StringFieldUpdateOperationsInput | string
+    method?: StringFieldUpdateOperationsInput | string
+    statusCode?: IntFieldUpdateOperationsInput | number
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    requestBody?: NullableStringFieldUpdateOperationsInput | string | null
+    responseMs?: NullableIntFieldUpdateOperationsInput | number | null
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

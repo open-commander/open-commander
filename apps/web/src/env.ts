@@ -40,6 +40,11 @@ export const env = createEnv({
     AGENT_WORKSPACE: z.string().optional(),
     DIND_CERTS_VOLUME: z.string().optional(),
     COMMANDER_BASE_PATH: z.string().default(path.resolve(process.cwd())),
+    REDIS_HOSTNAME: z.string().default("localhost"),
+    REDIS_PORT: z.coerce.number().default(6379),
+    REDIS_PASSWORD: z.string().optional(),
+    REDIS_TLS: z.coerce.boolean().default(false),
+    GITHUB_TOKEN: z.string().optional(),
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.string().url().default("http://localhost:3000"),
@@ -91,5 +96,10 @@ export const env = createEnv({
     DATABASE_URL: process.env.DATABASE_URL,
     DIND_CERTS_VOLUME: process.env.DIND_CERTS_VOLUME,
     COMMANDER_BASE_PATH: process.env.COMMANDER_BASE_PATH,
+    REDIS_HOSTNAME: process.env.REDIS_HOSTNAME,
+    REDIS_PORT: process.env.REDIS_PORT,
+    REDIS_PASSWORD: process.env.REDIS_PASSWORD,
+    REDIS_TLS: process.env.REDIS_TLS,
+    GITHUB_TOKEN: process.env.GITHUB_TOKEN,
   },
 });

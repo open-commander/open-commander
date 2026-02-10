@@ -47,6 +47,8 @@ model User {
   displayUsername String? @map("display_username")
 
   terminalSessions TerminalSession[]
+  tasks            Task[]
+  apiClients       ApiClient[]
 
   @@unique([username])
   @@map("users")
@@ -142,4 +144,134 @@ model UserPreferences {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("user_preferences")
+}
+
+// #######################
+// # TASK MANAGEMENT     #
+// #######################
+enum TaskStatus {
+  todo
+  doing
+  done
+  canceled
+}
+
+enum TaskSource {
+  web
+  api
+}
+
+model Task {
+  id          String         @id @default(cuid())
+  title       String? // Deprecated, kept for migration compatibility
+  body        String         @db.Text
+  status      TaskStatus     @default(todo)
+  source      TaskSource     @default(web)
+  agentId     AgentProvider?
+  mountPoint  String?        @map("mount_point") // Relative path within workspace to mount as /workspace
+  userId      String         @map("user_id")
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  attachments Json?          @default("[]")
+  createdAt   DateTime       @default(now()) @map("created_at")
+  updatedAt   DateTime       @updatedAt @map("updated_at")
+
+  executions TaskExecution[]
+
+  @@index([userId])
+  @@index([userId, status])
+  @@index([userId, source])
+  @@map("tasks")
+}
+
+enum TaskExecutionStatus {
+  pending
+  running
+  completed
+  failed
+  needs_input
+}
+
+model TaskExecution {
+  id            String              @id @default(cuid())
+  taskId        String              @map("task_id")
+  task          Task                @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  status        TaskExecutionStatus @default(pending)
+  agentId       AgentProvider
+  jobId         String?             @map("job_id") // BullMQ job ID
+  containerName String?             @map("container_name")
+
+  // Execution result
+  completed    Boolean @default(false)
+  needsInput   Boolean @default(false) @map("needs_input")
+  inputRequest String? @map("input_request") @db.Text
+  result       String? @db.Text
+  errorMessage String? @map("error_message") @db.Text
+
+  // Logs and context
+  logs        String? @db.Text
+  memoryUsage Int?    @map("memory_usage")
+  tokenCount  Int?    @map("token_count")
+  context     Json?   @default("{}")
+
+  startedAt  DateTime? @map("started_at")
+  finishedAt DateTime? @map("finished_at")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+
+  @@index([taskId])
+  @@index([taskId, status])
+  @@map("task_executions")
+}
+
+// #######################
+// # API CLIENTS         #
+// #######################
+model ApiClient {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  userId      String   @map("user_id")
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  secrets  ApiSecret[]
+  callLogs ApiCallLog[]
+
+  @@index([userId])
+  @@map("api_clients")
+}
+
+model ApiSecret {
+  id         String    @id @default(cuid())
+  name       String
+  keyHash    String    @map("key_hash") // SHA-256 hash of the secret key
+  keyPrefix  String    @map("key_prefix") // First 8 chars for identification (e.g., "oc_sk_a1b2")
+  clientId   String    @map("client_id")
+  client     ApiClient @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  lastUsedAt DateTime? @map("last_used_at")
+  createdAt  DateTime  @default(now()) @map("created_at")
+
+  @@index([clientId])
+  @@index([keyHash])
+  @@map("api_secrets")
+}
+
+model ApiCallLog {
+  id           String    @id @default(cuid())
+  clientId     String    @map("client_id")
+  client       ApiClient @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  endpoint     String
+  method       String
+  statusCode   Int       @map("status_code")
+  ipAddress    String?   @map("ip_address")
+  userAgent    String?   @map("user_agent")
+  requestBody  String?   @map("request_body") @db.Text
+  responseMs   Int?      @map("response_ms")
+  errorMessage String?   @map("error_message")
+  createdAt    DateTime  @default(now()) @map("created_at")
+
+  @@index([clientId])
+  @@index([clientId, createdAt])
+  @@map("api_call_logs")
 }

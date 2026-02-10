@@ -16,11 +16,15 @@ Component and source file names must use **kebab-case** (e.g. `star-border.tsx`,
 
 ### Lint Is Law
 
-Fix all lint errors before commit. No “pre-existing” excuses.
+Fix all lint errors before commit. No "pre-existing" excuses.
 
 Before completing any task, you MUST execute:
 - `pnpm run check:fix`
 - `pnpm run typecheck`
+
+### No `any` Types
+
+Never use `any` types. Use `unknown` with type guards, proper type definitions, or generic constraints. If database types are missing, run `db:generate` before proceeding.
 
 ---
 
@@ -67,3 +71,9 @@ Do not ever ask me to start the server, assume that it's running.
 # Tailwind
 - Always use gap, never use margin.
 - Try to use "horizontal" and "vertical" from [globals.css](mdc:src/styles/globals.css) instead of flex
+
+# BullMQ Jobs
+- Queue files go in `apps/web/src/server/jobs/queues/`
+- Worker files go in `apps/web/src/server/jobs/workers/`
+- Always add new queues to the board in `apps/web/src/server/jobs/board.ts`
+- Always add new workers to `apps/web/src/server/jobs/index.ts` for graceful shutdown

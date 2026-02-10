@@ -18,7 +18,10 @@
     "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push",
     "db:seed": "bun run prisma/seeds/index.ts",
-    "db:reset": "prisma db push --force-reset"
+    "db:reset": "prisma db push --force-reset",
+    "------------------------- JOBS -------------------------": "",
+    "worker:all": "bun run src/server/jobs/index.ts",
+    "worker:board": "bun run src/server/jobs/board.ts"
   },
   "dependencies": {
     "@appletosolutions/reactbits": "^1.0.3",

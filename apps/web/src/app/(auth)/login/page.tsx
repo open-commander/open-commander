@@ -17,6 +17,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { env } from "@/env";
+import { usePageTitle } from "@/hooks/use-page-title";
 import { cn } from "@/lib/utils";
 import { authClient } from "@/server/auth/client";
 import type { AuthSocialProviders } from "@/types/auth";
@@ -60,6 +61,8 @@ type SocialProviderId = (typeof socialProviders)[number]["id"];
 type LoginStep = "email" | "otp";
 
 export default function LoginPage() {
+  usePageTitle("Login");
+
   const searchParams = useSearchParams();
   const router = useRouter();
   const isAuthDisabled = env.NEXT_PUBLIC_DISABLE_AUTH;

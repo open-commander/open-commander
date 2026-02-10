@@ -19,6 +19,22 @@ RUN chown -R commander:commander "$HOME/.npm"
 COPY entrypoint.sh /opt/entrypoint.sh
 RUN chmod +x /opt/entrypoint.sh
 
+### TASK EXECUTION SCRIPTS ###
+COPY scripts/task-runner.sh /opt/commander/scripts/task-runner.sh
+COPY scripts/task-entrypoint.sh /opt/commander/scripts/task-entrypoint.sh
+RUN chmod +x /opt/commander/scripts/task-runner.sh /opt/commander/scripts/task-entrypoint.sh
+
+##########
+# GitHub #
+##########
+RUN echo "Installing GitHub CLI..."
+RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+    && chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+    && apt-get update \
+    && apt-get install -y gh \
+    && rm -rf /var/lib/apt/lists/*
+
 # Persist bash history.
 RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" \
     && mkdir /commandhistory \

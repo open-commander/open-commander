@@ -19,6 +19,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { usePageTitle } from "@/hooks/use-page-title";
 import { api } from "@/trpc/react";
 
 type StatusFilter = "all" | "approved" | "denied";
@@ -65,6 +66,8 @@ function formatFullDateTime(iso?: string | null): string {
 }
 
 export default function SecurityDashboardPage() {
+  usePageTitle("Security");
+
   const router = useRouter();
   const [domainFilter, setDomainFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");

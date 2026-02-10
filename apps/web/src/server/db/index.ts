@@ -5,10 +5,11 @@ import { PrismaClient } from "@/generated/prisma";
 import { userExtension } from "./extensions/user"; // Import the extension
 
 const adapter = new PrismaPg({ connectionString: env.DATABASE_URL });
+const LOG_SQL = false;
 
 function getExtendedClient() {
   return new PrismaClient({
-    log: IS_DEV ? ["query", "error", "warn"] : ["error"],
+    log: LOG_SQL && IS_DEV ? ["query", "error", "warn"] : ["error"],
     adapter,
   }).$extends(userExtension);
 }

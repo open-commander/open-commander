@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  CheckSquare,
   Keyboard,
   LayoutDashboard,
   Menu,
@@ -94,13 +95,15 @@ export function AppSidebar() {
       ? "dashboard"
       : pathname.startsWith("/sessions")
         ? "sessions"
-        : pathname.startsWith("/security")
-          ? "security"
-          : pathname.startsWith("/help")
-            ? "help"
-            : pathname.startsWith("/settings")
-              ? "settings"
-              : null;
+        : pathname.startsWith("/tasks")
+          ? "tasks"
+          : pathname.startsWith("/security")
+            ? "security"
+            : pathname.startsWith("/help")
+              ? "help"
+              : pathname.startsWith("/settings")
+                ? "settings"
+                : null;
 
   const linkClass = (isActive: boolean) =>
     `${navButtonBase} ${isActive ? "bg-purple-500/25 text-purple-200" : ""}`;
@@ -158,6 +161,14 @@ export function AppSidebar() {
             >
               <Terminal aria-hidden="true" {...iconProps} />
               TUI Sessions
+            </Link>
+            <Link
+              href="/tasks"
+              className={`${mobileLinkBase} ${activePage === "tasks" ? "bg-purple-500/25 text-purple-200" : ""}`}
+              onClick={() => setMobileOpen(false)}
+            >
+              <CheckSquare aria-hidden="true" {...iconProps} />
+              Tasks
             </Link>
             <Link
               href="/security"
@@ -221,6 +232,19 @@ export function AppSidebar() {
                 </Link>
               </TooltipTrigger>
               <TooltipContent side="right">Sessions</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  href="/tasks"
+                  className={linkClass(activePage === "tasks")}
+                  aria-label="Tasks"
+                  aria-current={activePage === "tasks" ? "page" : undefined}
+                >
+                  <CheckSquare aria-hidden="true" {...iconProps} />
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">Tasks</TooltipContent>
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>

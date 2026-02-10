@@ -4,6 +4,7 @@ import { Activity } from "lucide-react";
 import { AppPageShell } from "@/components/app-page-shell";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { usePageTitle } from "@/hooks/use-page-title";
 import { api } from "@/trpc/react";
 
 function EgressChart({
@@ -85,6 +86,8 @@ function EgressChart({
 }
 
 export default function Home() {
+  usePageTitle();
+
   const sessionStats = api.terminal.sessionStats.useQuery();
   const chartData = api.security.egressChartData.useQuery(undefined, {
     refetchInterval: 60_000,

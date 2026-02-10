@@ -183,6 +183,10 @@ export const sessionService = {
             http_proxy: `http://${EGRESS_PROXY_HOST}:${EGRESS_PROXY_PORT}`,
             https_proxy: `http://${EGRESS_PROXY_HOST}:${EGRESS_PROXY_PORT}`,
             no_proxy: `localhost,127.0.0.1,::1,${EGRESS_PROXY_HOST},${DIND_HOST}`,
+            // GitHub CLI authentication (optional)
+            ...(env.GITHUB_TOKEN
+              ? { GITHUB_TOKEN: env.GITHUB_TOKEN, GH_TOKEN: env.GITHUB_TOKEN }
+              : {}),
           },
           mounts: [
             { source: claudeJson, target: "/home/commander/.claude.json" },
@@ -245,6 +249,13 @@ export const sessionService = {
                 http_proxy: `http://${EGRESS_PROXY_HOST}:${EGRESS_PROXY_PORT}`,
                 https_proxy: `http://${EGRESS_PROXY_HOST}:${EGRESS_PROXY_PORT}`,
                 no_proxy: `localhost,127.0.0.1,::1,${EGRESS_PROXY_HOST},${DIND_HOST}`,
+                // GitHub CLI authentication (optional)
+                ...(env.GITHUB_TOKEN
+                  ? {
+                      GITHUB_TOKEN: env.GITHUB_TOKEN,
+                      GH_TOKEN: env.GITHUB_TOKEN,
+                    }
+                  : {}),
               },
               mounts: [
                 {

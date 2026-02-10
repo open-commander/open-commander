@@ -1,6 +1,11 @@
+import type { Metadata } from "next";
 import { AppPageShell } from "@/components/app-page-shell";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+export const metadata: Metadata = {
+  title: "Open Commander | Help",
+};
 
 export default function HelpPage() {
   return (
