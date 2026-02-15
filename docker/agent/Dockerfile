@@ -35,6 +35,11 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | s
     && apt-get install -y gh \
     && rm -rf /var/lib/apt/lists/*
 
+
+RUN apt-get update \
+    && apt-get install -y libgtk-3-dev libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev \
+    && rm -rf /var/lib/apt/lists/*
+
 # Persist bash history.
 RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" \
     && mkdir /commandhistory \
@@ -45,8 +50,8 @@ USER $USERNAME
 ENV HOME=/home/$USERNAME
 WORKDIR $HOME
 
-# Hide tmux status bar by default
-RUN printf "%s\n" "set -g status off" > $HOME/.tmux.conf && \
+# Configure tmux: hide status bar, enable mouse for scroll
+RUN printf "%s\n%s\n" "set -g status off" "set -g mouse on" > $HOME/.tmux.conf && \
     chown $USERNAME:$USERNAME $HOME/.tmux.conf
 
 # Set the default shell to zsh rather than sh

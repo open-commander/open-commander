@@ -44,6 +44,7 @@ export function TerminalPane({
   const startSessionRef = useRef<
     ((options?: { reset?: boolean }) => Promise<void>) | null
   >(null);
+  const sendRawInputRef = useRef<((payload: string) => void) | null>(null);
   const startSessionMutation = api.terminal.startSession.useMutation();
 
   const log = useCallback(
@@ -162,16 +163,14 @@ export function TerminalPane({
       safeLoadAddon(imageAddon, "image");
       safeLoadAddon(unicode11Addon, "unicode11");
       safeLoadAddon(webFontsAddon, "web-fonts");
-      safeLoadAddon(webFontsAddon, "web-fonts");
       safeLoadAddon(webLinksAddon, "web-links");
 
       if (typeof window !== "undefined" && "FontFace" in window) {
-        console.log("loading ligatures addon");
         try {
           const ligaturesAddon = new LigaturesAddon();
           safeLoadAddon(ligaturesAddon, "ligatures");
-        } catch (error) {
-          console.error("[terminal] addon ligatures failed", error);
+        } catch {
+          // Ligatures addon may fail on some systems
         }
       }
 
@@ -183,25 +182,130 @@ export function TerminalPane({
       }
 
       fitAddon.fit();
+
+      /**
+       * Handle mouse wheel for scrolling in both normal and alternate buffer modes.
+       * In alternate buffer (tmux), sends X10 mouse sequences.
+       * In normal buffer, uses xterm's native scrollLines.
+       */
       const handleWheel = (event: WheelEvent) => {
         const activeTerminal = terminalRef.current;
         if (!activeTerminal) return;
-        if (activeTerminal.buffer.active.type !== "normal") return;
         if (event.ctrlKey || event.metaKey) return;
         if (event.deltaY === 0) return;
+
         event.preventDefault();
         event.stopPropagation();
+
         const base = event.deltaMode === 1 ? 1 : 40;
-        const magnitude = Math.max(
-          1,
-          Math.round(Math.abs(event.deltaY) / base),
-        );
+        const magnitude = Math.max(1, Math.round(Math.abs(event.deltaY) / base));
         const direction = event.deltaY > 0 ? 1 : -1;
+
+        if (activeTerminal.buffer.active.type === "alternate") {
+          const sendRaw = sendRawInputRef.current;
+          if (!sendRaw) return;
+
+          const rect = (event.currentTarget as HTMLElement)?.getBoundingClientRect();
+          const cellWidth = activeTerminal.cols > 0 ? rect.width / activeTerminal.cols : 9;
+          const cellHeight = activeTerminal.rows > 0 ? rect.height / activeTerminal.rows : 17;
+          const x = Math.min(Math.max(1, Math.floor((event.clientX - rect.left) / cellWidth) + 1), 223);
+          const y = Math.min(Math.max(1, Math.floor((event.clientY - rect.top) / cellHeight) + 1), 223);
+
+          // X10 mouse format: ESC [ M Cb Cx Cy (button 64=up, 65=down)
+          const button = direction < 0 ? 64 : 65;
+          const sequence = `\x1b[M${String.fromCharCode(button + 32)}${String.fromCharCode(x + 32)}${String.fromCharCode(y + 32)}`;
+
+          for (let i = 0; i < magnitude; i++) {
+            sendRaw(sequence);
+          }
+          return;
+        }
+
         activeTerminal.scrollLines(direction * magnitude);
       };
-      terminalHost.addEventListener("wheel", handleWheel, { passive: false });
+
+      const wheelTarget = terminal.element ?? terminalHost;
+      wheelTarget.addEventListener("wheel", handleWheel, { passive: false });
+      /**
+       * Custom text selection handling that bypasses tmux mouse capture.
+       * Intercepts mouse events and uses xterm's selection API directly.
+       */
+      let isSelecting = false;
+      let selectionStartCol = 0;
+      let selectionStartRow = 0;
+
+      const getCellPosition = (clientX: number, clientY: number) => {
+        const rect = wheelTarget.getBoundingClientRect();
+        const cellWidth = terminal.cols > 0 ? rect.width / terminal.cols : 9;
+        const cellHeight = terminal.rows > 0 ? rect.height / terminal.rows : 17;
+        return {
+          col: Math.max(0, Math.min(Math.floor((clientX - rect.left) / cellWidth), terminal.cols - 1)),
+          row: Math.max(0, Math.min(Math.floor((clientY - rect.top) / cellHeight), terminal.rows - 1)),
+        };
+      };
+
+      const handleMouseDown = (event: MouseEvent) => {
+        if (event.button !== 0) return;
+        if (event.ctrlKey || event.metaKey || event.altKey) return;
+
+        const { col, row } = getCellPosition(event.clientX, event.clientY);
+        selectionStartCol = col;
+        selectionStartRow = row + terminal.buffer.active.viewportY;
+        isSelecting = true;
+        terminal.clearSelection();
+        event.preventDefault();
+        event.stopPropagation();
+      };
+
+      const handleMouseMove = (event: MouseEvent) => {
+        if (!isSelecting) return;
+
+        const { col, row } = getCellPosition(event.clientX, event.clientY);
+        const currentRow = row + terminal.buffer.active.viewportY;
+
+        let startRow = selectionStartRow;
+        let startCol = selectionStartCol;
+        let endRow = currentRow;
+        let endCol = col;
+
+        if (startRow > endRow || (startRow === endRow && startCol > endCol)) {
+          [startRow, startCol, endRow, endCol] = [endRow, endCol, startRow, startCol];
+        }
+
+        if (startRow === endRow) {
+          terminal.select(startCol, startRow, endCol - startCol + 1);
+        } else {
+          const totalCols = terminal.cols;
+          const length = (totalCols - startCol) + ((endRow - startRow - 1) * totalCols) + (endCol + 1);
+          terminal.select(startCol, startRow, length);
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+      };
+
+      const handleMouseUp = (event: MouseEvent) => {
+        if (!isSelecting) return;
+        isSelecting = false;
+
+        const selection = terminal.getSelection();
+        if (selection && selection.length > 0) {
+          navigator.clipboard.writeText(selection).catch(() => {});
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+      };
+
+      wheelTarget.addEventListener("mousedown", handleMouseDown, { capture: true });
+      document.addEventListener("mousemove", handleMouseMove, { capture: true });
+      document.addEventListener("mouseup", handleMouseUp, { capture: true });
+
       removeWheelListener = () => {
-        terminalHost.removeEventListener("wheel", handleWheel);
+        wheelTarget.removeEventListener("wheel", handleWheel);
+        wheelTarget.removeEventListener("mousedown", handleMouseDown, { capture: true });
+        document.removeEventListener("mousemove", handleMouseMove, { capture: true });
+        document.removeEventListener("mouseup", handleMouseUp, { capture: true });
       };
       webFontsAddon.loadFonts(["MesloLGS NF"]).catch(() => {});
       if (terminal.unicode.versions.includes("11")) {
@@ -424,6 +528,20 @@ export function TerminalPane({
           buffer.set(payload, 1);
           activeSocket.send(buffer);
         };
+
+        // Raw input without mouse filtering (for wheel scroll sequences)
+        const sendRawInput = (payload: string) => {
+          const activeSocket = socketRef.current;
+          if (!activeSocket || activeSocket.readyState !== WebSocket.OPEN)
+            return;
+          const buffer = new Uint8Array(3 * payload.length + 1);
+          buffer[0] = "0".charCodeAt(0);
+          const result = encoder.encodeInto(payload, buffer.subarray(1));
+          const written =
+            typeof result.written === "number" ? result.written : payload.length;
+          activeSocket.send(buffer.subarray(0, written + 1));
+        };
+        sendRawInputRef.current = sendRawInput;
 
         const sendResize = (cols: number, rows: number) => {
           const activeSocket = socketRef.current;

@@ -83,3 +83,7 @@
 .amongclaws.com
 .tauri.app
 .openclaw.ai
+.jdx.dev
+.reactbits.dev
+.react.dev
+.shadcn.com
