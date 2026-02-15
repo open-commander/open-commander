@@ -288,11 +288,6 @@ export function TerminalPane({
         if (!isSelecting) return;
         isSelecting = false;
 
-        const selection = terminal.getSelection();
-        if (selection && selection.length > 0) {
-          navigator.clipboard.writeText(selection).catch(() => {});
-        }
-
         event.preventDefault();
         event.stopPropagation();
       };
