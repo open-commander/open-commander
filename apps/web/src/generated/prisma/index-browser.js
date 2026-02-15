@@ -188,7 +188,17 @@ exports.Prisma.TerminalSessionScalarFieldEnum = {
   updatedAt: 'updatedAt',
   port: 'port',
   wsPath: 'wsPath',
-  containerName: 'containerName'
+  containerName: 'containerName',
+  projectId: 'projectId'
+};
+
+exports.Prisma.ProjectScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  folder: 'folder',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.UserPreferencesScalarFieldEnum = {
@@ -334,6 +344,7 @@ exports.Prisma.ModelName = {
   Account: 'Account',
   Verification: 'Verification',
   TerminalSession: 'TerminalSession',
+  Project: 'Project',
   UserPreferences: 'UserPreferences',
   Task: 'Task',
   TaskExecution: 'TaskExecution',

@@ -23,6 +23,7 @@ export function TerminalPane({
   onContainerName,
   onWsUrl,
   onSessionEnded,
+  onConnected,
   onLog,
 }: TerminalPaneProps) {
   const [terminalHost, setTerminalHost] = useState<HTMLDivElement | null>(null);
@@ -383,7 +384,306 @@ export function TerminalPane({
   }, [active]);
 
   /**
+   * Single attempt to start the backend and connect the websocket.
+   * Returns true on success, throws on failure.
+   */
+  const startSessionOnce = useCallback(
+    async (connectionId: number, options?: { reset?: boolean }) => {
+      const data = await startSessionMutation.mutateAsync({
+        sessionId: sessionId!,
+        reset: options?.reset,
+        workspaceSuffix,
+      });
+      log(`startSession: backend ok ${JSON.stringify(data)}`);
+      const protocol = window.location.protocol === "https:" ? "wss" : "ws";
+      const host = window.location.hostname;
+      const nextWsUrl = `${protocol}://${host}:${data.port}${data.wsPath}`;
+      log(`ws: url ${nextWsUrl}`);
+
+      onContainerName(data.containerName);
+      onWsUrl(nextWsUrl);
+      setStatus("connecting");
+
+      terminalDisposablesRef.current.forEach((disposable) => {
+        disposable.dispose();
+      });
+      terminalDisposablesRef.current = [];
+      if (socketRef.current) {
+        log("startSession: closing previous socket");
+        socketRef.current.onopen = null;
+        socketRef.current.onclose = null;
+        socketRef.current.onerror = null;
+        socketRef.current.onmessage = null;
+        socketRef.current.close();
+      }
+
+      if (!textEncoderRef.current) {
+        textEncoderRef.current = new TextEncoder();
+      }
+      if (!textDecoderRef.current) {
+        textDecoderRef.current = new TextDecoder();
+      }
+      const encoder = textEncoderRef.current;
+      const decoder = textDecoderRef.current;
+
+      const connectSocket = async (url: string) => {
+        const maxAttempts = 3;
+        for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+          log(`ws: attempt ${attempt + 1}/${maxAttempts} ${url}`);
+          const socket = new WebSocket(url, ["tty"]);
+          socket.binaryType = "arraybuffer";
+          const opened = await new Promise<boolean>((resolve) => {
+            const timeout = window.setTimeout(
+              () => {
+                log("ws: open timeout");
+                socket.close();
+                resolve(false);
+              },
+              1500 + attempt * 500,
+            );
+            socket.onopen = () => {
+              window.clearTimeout(timeout);
+              log("ws: open");
+              resolve(true);
+            };
+            socket.onerror = () => {
+              window.clearTimeout(timeout);
+              log("ws: error during open");
+              resolve(false);
+            };
+          });
+          if (opened) {
+            return socket;
+          }
+          await new Promise((resolve) =>
+            window.setTimeout(resolve, 400 * (attempt + 1)),
+          );
+        }
+        throw new Error("Failed to connect to ttyd.");
+      };
+
+      const mouseInputPatterns = [
+        "\\u001b\\[<\\d+;\\d+;\\d+;?\\d*[mM]",
+        "\\u001b\\[\\d+;\\d+;\\d+[mM]",
+        "\\u001b\\[M.{3}",
+      ].map((pattern) => new RegExp(pattern, "g"));
+      const filterMouseInput = (input: string) =>
+        mouseInputPatterns.reduce(
+          (next, pattern) => next.replace(pattern, ""),
+          input,
+        );
+
+      const sendInput = (payload: string | Uint8Array) => {
+        const activeSocket = socketRef.current;
+        if (!activeSocket || activeSocket.readyState !== WebSocket.OPEN)
+          return;
+
+        if (typeof payload === "string") {
+          const filtered = filterMouseInput(payload);
+          if (filtered.length === 0) {
+            return;
+          }
+          const buffer = new Uint8Array(3 * payload.length + 1);
+          buffer[0] = "0".charCodeAt(0);
+          const result = encoder.encodeInto(filtered, buffer.subarray(1));
+          const written =
+            typeof result.written === "number"
+              ? result.written
+              : filtered.length;
+          activeSocket.send(buffer.subarray(0, written + 1));
+          return;
+        }
+
+        const buffer = new Uint8Array(payload.length + 1);
+        buffer[0] = "0".charCodeAt(0);
+        buffer.set(payload, 1);
+        activeSocket.send(buffer);
+      };
+
+      // Raw input without mouse filtering (for wheel scroll sequences)
+      const sendRawInput = (payload: string) => {
+        const activeSocket = socketRef.current;
+        if (!activeSocket || activeSocket.readyState !== WebSocket.OPEN)
+          return;
+        const buffer = new Uint8Array(3 * payload.length + 1);
+        buffer[0] = "0".charCodeAt(0);
+        const result = encoder.encodeInto(payload, buffer.subarray(1));
+        const written =
+          typeof result.written === "number" ? result.written : payload.length;
+        activeSocket.send(buffer.subarray(0, written + 1));
+      };
+      sendRawInputRef.current = sendRawInput;
+
+      const sendResize = (cols: number, rows: number) => {
+        const activeSocket = socketRef.current;
+        if (!activeSocket || activeSocket.readyState !== WebSocket.OPEN)
+          return;
+        const message = `1${JSON.stringify({ columns: cols, rows })}`;
+        activeSocket.send(encoder.encode(message));
+      };
+
+      const ensureTerminalSize = async () => {
+        if (!terminalRef.current) return null;
+        for (let attempt = 0; attempt < 10; attempt += 1) {
+          fitAddonRef.current?.fit();
+          const { cols, rows } = terminalRef.current;
+          if (cols >= 20 && rows >= 5) {
+            return { cols, rows };
+          }
+          await new Promise((resolve) => window.setTimeout(resolve, 100));
+        }
+        return {
+          cols: terminalRef.current.cols,
+          rows: terminalRef.current.rows,
+        };
+      };
+
+      setStatus("connecting");
+      const socket = await connectSocket(nextWsUrl);
+      if (connectionIdRef.current !== connectionId) {
+        log("ws: stale connection, closing");
+        socket.close();
+        return;
+      }
+      socketRef.current = socket;
+
+      if (terminalRef.current) {
+        terminalRef.current.reset();
+        terminalRef.current.writeln("Connecting to ttyd...");
+        terminalRef.current.focus();
+        terminalRef.current.options.disableStdin = false;
+        terminalDisposablesRef.current = [
+          terminalRef.current.onData((data) => sendInput(data)),
+          terminalRef.current.onResize(({ cols, rows }) =>
+            sendResize(cols, rows),
+          ),
+        ];
+      }
+
+      socket.onerror = () => {
+        if (connectionIdRef.current !== connectionId) return;
+        log("ws: error");
+        setStatus("error");
+        setError("Failed to connect to ttyd. Check the container.");
+      };
+
+      socket.onclose = () => {
+        if (connectionIdRef.current !== connectionId) return;
+        log("ws: close");
+        if (statusRef.current === "connected") {
+          setStatus("idle");
+        } else {
+          setStatus("error");
+        }
+        if (!sessionEndedRef.current && !errorRef.current) {
+          setError("Connection closed before opening.");
+        }
+      };
+
+      const handleMessage = (
+        messageType: string,
+        payload: Uint8Array | string,
+      ) => {
+        if (connectionIdRef.current !== connectionId) return;
+        if (messageType !== "0") {
+          log(`ws: message type=${messageType}`);
+        }
+        switch (messageType) {
+          case "0":
+            {
+              const text =
+                typeof payload === "string"
+                  ? payload
+                  : decoder.decode(payload);
+              const lowerText = text.toLowerCase();
+              if (
+                lowerText.includes("screen is terminating") ||
+                lowerText.includes("session terminated") ||
+                lowerText.includes("[exited]") ||
+                lowerText.includes("no server running")
+              ) {
+                log("ws: terminal session termination detected");
+                sessionEndedRef.current = true;
+                onSessionEnded(
+                  true,
+                  "Session ended. Start again to continue.",
+                );
+                socket.close();
+                return;
+              }
+              terminalRef.current?.write(payload);
+            }
+            break;
+          case "1":
+            document.title =
+              typeof payload === "string" ? payload : decoder.decode(payload);
+            break;
+          case "2":
+            break;
+          default:
+            break;
+        }
+      };
+
+      socket.onmessage = (event) => {
+        if (typeof event.data === "string") {
+          const messageType = event.data.charAt(0);
+          const payload = event.data.slice(1);
+          handleMessage(messageType, payload);
+          return;
+        }
+
+        if (!(event.data instanceof ArrayBuffer)) return;
+        const view = new Uint8Array(event.data);
+        if (view.length === 0) return;
+        const messageType = String.fromCharCode(view[0]);
+        const payload = view.subarray(1);
+        handleMessage(messageType, payload);
+      };
+
+      setStatus("connected");
+      onConnected?.();
+      if (terminalRef.current) {
+        const size = await ensureTerminalSize();
+        const cols = size?.cols ?? terminalRef.current.cols;
+        const rows = size?.rows ?? terminalRef.current.rows;
+        log(`ws: terminal size cols=${cols} rows=${rows}`);
+        const handshake = JSON.stringify({
+          AuthToken: "",
+          columns: cols,
+          rows,
+        });
+        log(`ws: handshake ${handshake}`);
+        socket.send(encoder.encode(handshake));
+        terminalRef.current.focus();
+        sendResize(cols, rows);
+        log("ws: resize sent");
+        window.setTimeout(() => {
+          const refreshCols = terminalRef.current?.cols ?? cols;
+          const refreshRows = terminalRef.current?.rows ?? rows;
+          sendResize(refreshCols, refreshRows);
+          log(`ws: resize refresh cols=${refreshCols} rows=${refreshRows}`);
+        }, 200);
+      }
+    },
+    [
+      log,
+      onConnected,
+      onContainerName,
+      onSessionEnded,
+      onWsUrl,
+      sessionId,
+      setError,
+      setStatus,
+      startSessionMutation,
+      workspaceSuffix,
+    ],
+  );
+
+  /**
    * Starts or resets the ttyd container and connects the websocket.
+   * Retries the full flow up to 5 times, suppressing errors until
+   * all attempts are exhausted.
    */
   const startSession = useCallback(
     async (options?: { reset?: boolean }) => {
@@ -393,15 +693,16 @@ export function TerminalPane({
       setStatus("starting");
       setError(null);
 
-      try {
-        const connectionId = ++connectionIdRef.current;
-        log(
-          `startSession: id=${connectionId} reset=${
-            options?.reset ? "1" : "0"
-          }`,
-        );
-        if (!terminalRef.current && terminalReadyRef.current) {
-          log("startSession: waiting for terminal");
+      const connectionId = ++connectionIdRef.current;
+      log(
+        `startSession: id=${connectionId} reset=${
+          options?.reset ? "1" : "0"
+        }`,
+      );
+
+      if (!terminalRef.current && terminalReadyRef.current) {
+        log("startSession: waiting for terminal");
+        try {
           await Promise.race([
             terminalReadyRef.current,
             new Promise<void>((_, reject) =>
@@ -411,301 +712,60 @@ export function TerminalPane({
               ),
             ),
           ]);
-          log("startSession: terminal ready");
-        }
-        const data = await startSessionMutation.mutateAsync({
-          sessionId,
-          reset: options?.reset,
-          workspaceSuffix,
-        });
-        log(`startSession: backend ok ${JSON.stringify(data)}`);
-        const protocol = window.location.protocol === "https:" ? "wss" : "ws";
-        const host = window.location.hostname;
-        const nextWsUrl = `${protocol}://${host}:${data.port}${data.wsPath}`;
-        log(`ws: url ${nextWsUrl}`);
-
-        onContainerName(data.containerName);
-        onWsUrl(nextWsUrl);
-        setStatus("connecting");
-
-        terminalDisposablesRef.current.forEach((disposable) => {
-          disposable.dispose();
-        });
-        terminalDisposablesRef.current = [];
-        if (socketRef.current) {
-          log("startSession: closing previous socket");
-          socketRef.current.onopen = null;
-          socketRef.current.onclose = null;
-          socketRef.current.onerror = null;
-          socketRef.current.onmessage = null;
-          socketRef.current.close();
-        }
-
-        if (!textEncoderRef.current) {
-          textEncoderRef.current = new TextEncoder();
-        }
-        if (!textDecoderRef.current) {
-          textDecoderRef.current = new TextDecoder();
-        }
-        const encoder = textEncoderRef.current;
-        const decoder = textDecoderRef.current;
-
-        const connectSocket = async (url: string) => {
-          const maxAttempts = 5;
-          for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
-            log(`ws: attempt ${attempt + 1}/${maxAttempts} ${url}`);
-            const socket = new WebSocket(url, ["tty"]);
-            socket.binaryType = "arraybuffer";
-            const opened = await new Promise<boolean>((resolve) => {
-              const timeout = window.setTimeout(
-                () => {
-                  log("ws: open timeout");
-                  socket.close();
-                  resolve(false);
-                },
-                1500 + attempt * 500,
-              );
-              socket.onopen = () => {
-                window.clearTimeout(timeout);
-                log("ws: open");
-                resolve(true);
-              };
-              socket.onerror = () => {
-                window.clearTimeout(timeout);
-                log("ws: error during open");
-                resolve(false);
-              };
-            });
-            if (opened) {
-              return socket;
-            }
-            await new Promise((resolve) =>
-              window.setTimeout(resolve, 400 * (attempt + 1)),
-            );
-          }
-          throw new Error("Failed to connect to ttyd.");
-        };
-
-        const mouseInputPatterns = [
-          "\\u001b\\[<\\d+;\\d+;\\d+;?\\d*[mM]",
-          "\\u001b\\[\\d+;\\d+;\\d+[mM]",
-          "\\u001b\\[M.{3}",
-        ].map((pattern) => new RegExp(pattern, "g"));
-        const filterMouseInput = (input: string) =>
-          mouseInputPatterns.reduce(
-            (next, pattern) => next.replace(pattern, ""),
-            input,
-          );
-
-        const sendInput = (payload: string | Uint8Array) => {
-          const activeSocket = socketRef.current;
-          if (!activeSocket || activeSocket.readyState !== WebSocket.OPEN)
-            return;
-
-          if (typeof payload === "string") {
-            const filtered = filterMouseInput(payload);
-            if (filtered.length === 0) {
-              return;
-            }
-            const buffer = new Uint8Array(3 * payload.length + 1);
-            buffer[0] = "0".charCodeAt(0);
-            const result = encoder.encodeInto(filtered, buffer.subarray(1));
-            const written =
-              typeof result.written === "number"
-                ? result.written
-                : filtered.length;
-            activeSocket.send(buffer.subarray(0, written + 1));
-            return;
-          }
-
-          const buffer = new Uint8Array(payload.length + 1);
-          buffer[0] = "0".charCodeAt(0);
-          buffer.set(payload, 1);
-          activeSocket.send(buffer);
-        };
-
-        // Raw input without mouse filtering (for wheel scroll sequences)
-        const sendRawInput = (payload: string) => {
-          const activeSocket = socketRef.current;
-          if (!activeSocket || activeSocket.readyState !== WebSocket.OPEN)
-            return;
-          const buffer = new Uint8Array(3 * payload.length + 1);
-          buffer[0] = "0".charCodeAt(0);
-          const result = encoder.encodeInto(payload, buffer.subarray(1));
-          const written =
-            typeof result.written === "number" ? result.written : payload.length;
-          activeSocket.send(buffer.subarray(0, written + 1));
-        };
-        sendRawInputRef.current = sendRawInput;
-
-        const sendResize = (cols: number, rows: number) => {
-          const activeSocket = socketRef.current;
-          if (!activeSocket || activeSocket.readyState !== WebSocket.OPEN)
-            return;
-          const message = `1${JSON.stringify({ columns: cols, rows })}`;
-          activeSocket.send(encoder.encode(message));
-        };
-
-        const ensureTerminalSize = async () => {
-          if (!terminalRef.current) return null;
-          for (let attempt = 0; attempt < 10; attempt += 1) {
-            fitAddonRef.current?.fit();
-            const { cols, rows } = terminalRef.current;
-            if (cols >= 20 && rows >= 5) {
-              return { cols, rows };
-            }
-            await new Promise((resolve) => window.setTimeout(resolve, 100));
-          }
-          return {
-            cols: terminalRef.current.cols,
-            rows: terminalRef.current.rows,
-          };
-        };
-
-        setStatus("connecting");
-        const socket = await connectSocket(nextWsUrl);
-        if (connectionIdRef.current !== connectionId) {
-          log("ws: stale connection, closing");
-          socket.close();
+        } catch (error) {
+          const message =
+            error instanceof Error ? error.message : "Unexpected error.";
+          log(`startSession: terminal wait failed: ${message}`);
+          setStatus("error");
+          setError(message);
           return;
         }
-        socketRef.current = socket;
-
-        if (terminalRef.current) {
-          terminalRef.current.reset();
-          terminalRef.current.writeln("Connecting to ttyd...");
-          terminalRef.current.focus();
-          terminalRef.current.options.disableStdin = false;
-          terminalDisposablesRef.current = [
-            terminalRef.current.onData((data) => sendInput(data)),
-            terminalRef.current.onResize(({ cols, rows }) =>
-              sendResize(cols, rows),
-            ),
-          ];
-        }
-
-        socket.onerror = () => {
-          if (connectionIdRef.current !== connectionId) return;
-          log("ws: error");
-          setStatus("error");
-          setError("Failed to connect to ttyd. Check the container.");
-        };
-
-        socket.onclose = () => {
-          if (connectionIdRef.current !== connectionId) return;
-          log("ws: close");
-          if (statusRef.current === "connected") {
-            setStatus("idle");
-          } else {
-            setStatus("error");
-          }
-          if (!sessionEndedRef.current && !errorRef.current) {
-            setError("Connection closed before opening.");
-          }
-        };
-
-        const handleMessage = (
-          messageType: string,
-          payload: Uint8Array | string,
-        ) => {
-          if (connectionIdRef.current !== connectionId) return;
-          if (messageType !== "0") {
-            log(`ws: message type=${messageType}`);
-          }
-          switch (messageType) {
-            case "0":
-              {
-                const text =
-                  typeof payload === "string"
-                    ? payload
-                    : decoder.decode(payload);
-                const lowerText = text.toLowerCase();
-                if (
-                  lowerText.includes("screen is terminating") ||
-                  lowerText.includes("session terminated") ||
-                  lowerText.includes("[exited]") ||
-                  lowerText.includes("no server running")
-                ) {
-                  log("ws: terminal session termination detected");
-                  sessionEndedRef.current = true;
-                  onSessionEnded(
-                    true,
-                    "Session ended. Start again to continue.",
-                  );
-                  socket.close();
-                  return;
-                }
-                terminalRef.current?.write(payload);
-              }
-              break;
-            case "1":
-              document.title =
-                typeof payload === "string" ? payload : decoder.decode(payload);
-              break;
-            case "2":
-              break;
-            default:
-              break;
-          }
-        };
-
-        socket.onmessage = (event) => {
-          if (typeof event.data === "string") {
-            const messageType = event.data.charAt(0);
-            const payload = event.data.slice(1);
-            handleMessage(messageType, payload);
-            return;
-          }
-
-          if (!(event.data instanceof ArrayBuffer)) return;
-          const view = new Uint8Array(event.data);
-          if (view.length === 0) return;
-          const messageType = String.fromCharCode(view[0]);
-          const payload = view.subarray(1);
-          handleMessage(messageType, payload);
-        };
-
-        setStatus("connected");
-        if (terminalRef.current) {
-          const size = await ensureTerminalSize();
-          const cols = size?.cols ?? terminalRef.current.cols;
-          const rows = size?.rows ?? terminalRef.current.rows;
-          log(`ws: terminal size cols=${cols} rows=${rows}`);
-          const handshake = JSON.stringify({
-            AuthToken: "",
-            columns: cols,
-            rows,
-          });
-          log(`ws: handshake ${handshake}`);
-          socket.send(encoder.encode(handshake));
-          terminalRef.current.focus();
-          sendResize(cols, rows);
-          log("ws: resize sent");
-          window.setTimeout(() => {
-            const refreshCols = terminalRef.current?.cols ?? cols;
-            const refreshRows = terminalRef.current?.rows ?? rows;
-            sendResize(refreshCols, refreshRows);
-            log(`ws: resize refresh cols=${refreshCols} rows=${refreshRows}`);
-          }, 200);
-        }
-      } catch (error) {
-        const message =
-          error instanceof Error ? error.message : "Unexpected error.";
-        log(`startSession: error ${message}`);
-        setStatus("error");
-        setError(message);
+        log("startSession: terminal ready");
       }
+
+      const maxOuterAttempts = 5;
+      let lastError: string | null = null;
+
+      for (let attempt = 0; attempt < maxOuterAttempts; attempt += 1) {
+        if (connectionIdRef.current !== connectionId) return;
+        log(
+          `startSession: outer attempt ${attempt + 1}/${maxOuterAttempts}`,
+        );
+
+        try {
+          await startSessionOnce(connectionId, options);
+          return; // success
+        } catch (error) {
+          lastError =
+            error instanceof Error ? error.message : "Unexpected error.";
+          log(
+            `startSession: attempt ${attempt + 1} failed: ${lastError}`,
+          );
+
+          if (attempt < maxOuterAttempts - 1) {
+            // Keep status as "starting" so the connecting overlay stays visible
+            setStatus("starting");
+            setError(null);
+            const delay = 2000 * (attempt + 1);
+            await new Promise((resolve) =>
+              window.setTimeout(resolve, delay),
+            );
+          }
+        }
+      }
+
+      // All attempts exhausted
+      log(`startSession: all ${maxOuterAttempts} attempts failed`);
+      setStatus("error");
+      setError(lastError ?? "Failed to connect after multiple attempts.");
     },
     [
       log,
-      onContainerName,
       onSessionEnded,
-      onWsUrl,
       sessionId,
       setError,
       setStatus,
-      startSessionMutation,
-      workspaceSuffix,
+      startSessionOnce,
     ],
   );
 

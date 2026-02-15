@@ -24,5 +24,6 @@ export type TerminalPaneProps = {
   onContainerName: (name: string | null) => void;
   onWsUrl: (url: string | null) => void;
   onSessionEnded: (ended: boolean, message: string | null) => void;
+  onConnected?: () => void;
   onLog: (line: string) => void;
 };
