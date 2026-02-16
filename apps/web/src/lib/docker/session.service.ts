@@ -141,7 +141,7 @@ export const sessionService = {
     const session = await db.terminalSession.findUnique({
       where: { id: sessionId, userId },
     });
-    if (!session) {
+    if (!session || session.status === "stopped") {
       throw new TRPCError({
         code: "NOT_FOUND",
         message: "Session not found.",

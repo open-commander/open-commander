@@ -48,6 +48,7 @@ export function TerminalPane({
   >(null);
   const sendRawInputRef = useRef<((payload: string) => void) | null>(null);
   const autoCommandFiredRef = useRef(false);
+  const mountedRef = useRef(true);
   const startSessionMutation = api.terminal.startSession.useMutation();
 
   const log = useCallback(
@@ -72,6 +73,13 @@ export function TerminalPane({
     },
     [onErrorMessage],
   );
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
 
   if (!terminalReadyRef.current) {
     terminalReadyRef.current = new Promise((resolve) => {
@@ -747,7 +755,8 @@ export function TerminalPane({
       let lastError: string | null = null;
 
       for (let attempt = 0; attempt < maxOuterAttempts; attempt += 1) {
-        if (connectionIdRef.current !== connectionId) return;
+        if (connectionIdRef.current !== connectionId || !mountedRef.current)
+          return;
         log(
           `startSession: outer attempt ${attempt + 1}/${maxOuterAttempts}`,
         );
@@ -763,6 +772,7 @@ export function TerminalPane({
           );
 
           if (attempt < maxOuterAttempts - 1) {
+            if (!mountedRef.current) return;
             // Keep status as "starting" so the connecting overlay stays visible
             setStatus("starting");
             setError(null);
@@ -770,6 +780,7 @@ export function TerminalPane({
             await new Promise((resolve) =>
               window.setTimeout(resolve, delay),
             );
+            if (!mountedRef.current) return;
           }
         }
       }
