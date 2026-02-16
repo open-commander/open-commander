@@ -264,6 +264,14 @@ export const sessionService = {
                 },
                 { source: claudeDir, target: "/home/commander/.claude" },
                 {
+                  source: `${env.COMMANDER_BASE_PATH}/.state/codex`,
+                  target: "/home/commander/.codex",
+                },
+                {
+                  source: `${env.COMMANDER_BASE_PATH}/.state/cursor`,
+                  target: "/home/commander/.cursor",
+                },
+                {
                   source: agentsConfig,
                   target: "/home/commander/.commander",
                 },
