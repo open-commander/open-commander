@@ -10,6 +10,7 @@ import {
   X,
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { modKey, useShortcuts } from "@/components/shortcuts/shortcuts-context";
 import {
   Tooltip,
   TooltipContent,
@@ -49,7 +50,7 @@ export function ProjectSessionsPanel() {
   );
 
   const sessionsQuery = api.project.listSessions.useQuery(
-    { projectId: selectedProjectId! },
+    { projectId: selectedProjectId ?? "" },
     {
       enabled: Boolean(selectedProjectId),
       refetchInterval: 5000,
@@ -60,7 +61,7 @@ export function ProjectSessionsPanel() {
   const createSessionMutation = api.project.createSession.useMutation({
     onSuccess: (session) => {
       void utils.project.listSessions.invalidate({
-        projectId: selectedProjectId!,
+        projectId: selectedProjectId ?? "",
       });
       markSessionCreated(session.id);
       setSelectedSessionId(session.id);
@@ -70,7 +71,7 @@ export function ProjectSessionsPanel() {
   const removeSessionMutation = api.terminal.removeSession.useMutation({
     onSuccess: (_result, variables) => {
       void utils.project.listSessions.invalidate({
-        projectId: selectedProjectId!,
+        projectId: selectedProjectId ?? "",
       });
       if (selectedSessionId === variables.id) {
         setSelectedSessionId(null);
@@ -81,7 +82,7 @@ export function ProjectSessionsPanel() {
   const updateNameMutation = api.terminal.updateSessionName.useMutation({
     onSuccess: () => {
       void utils.project.listSessions.invalidate({
-        projectId: selectedProjectId!,
+        projectId: selectedProjectId ?? "",
       });
     },
   });
@@ -194,6 +195,38 @@ export function ProjectSessionsPanel() {
     removeSessionMutation.reset();
   }, [removeSessionMutation]);
 
+  const { shortcutsOpen, registerShortcuts, unregisterShortcuts } =
+    useShortcuts();
+
+  // Register project-session shortcuts for the shortcuts modal.
+  useEffect(() => {
+    if (!isPanelOpen) return;
+    registerShortcuts("project", [
+      {
+        id: "new-project-session",
+        keys: [modKey, "Shift", "A"],
+        description: "New session in project",
+        category: "Project",
+      },
+    ]);
+    return () => unregisterShortcuts("project");
+  }, [isPanelOpen, registerShortcuts, unregisterShortcuts]);
+
+  // Handle Cmd/Ctrl+Shift+A to create a new session in the project.
+  useEffect(() => {
+    if (!isPanelOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (shortcutsOpen) return;
+      const mod = e.metaKey || e.ctrlKey;
+      if (mod && e.shiftKey && e.key.toLowerCase() === "a") {
+        e.preventDefault();
+        handleCreateSession();
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isPanelOpen, shortcutsOpen, handleCreateSession]);
+
   if (!isPanelOpen) return null;
 
   const statusColor = (status: string) => {
@@ -218,8 +251,9 @@ export function ProjectSessionsPanel() {
                   className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-white/10 hover:text-slate-200"
                   aria-label="Project options"
                   onClick={(e) => {
+                    if (!selectedProjectId) return;
                     setProjectMenu({
-                      id: selectedProjectId!,
+                      id: selectedProjectId,
                       x: e.clientX,
                       y: e.clientY,
                     });
@@ -345,7 +379,7 @@ export function ProjectSessionsPanel() {
               return (
                 <div
                   key={session.id}
-                  className={`group relative flex items-center gap-2 rounded-lg px-2.5 py-2 text-sm transition ${
+                  className={`group cursor-pointer relative flex items-center gap-2 rounded-lg px-2.5 text-sm transition ${
                     isActive
                       ? "bg-emerald-400/15 text-emerald-200"
                       : "text-slate-300 hover:bg-white/5 hover:text-slate-100"
@@ -353,7 +387,7 @@ export function ProjectSessionsPanel() {
                 >
                   <button
                     type="button"
-                    className="flex min-w-0 flex-1 cursor-pointer items-center gap-2 text-left"
+                    className="flex min-w-0 flex-1 cursor-pointer items-center gap-2 text-left py-3"
                     onClick={() => {
                       setSelectedSessionId(session.id);
                     }}
