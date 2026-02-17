@@ -283,6 +283,16 @@ export const dockerService = {
     return JSON.parse(trimmed) as Record<string, string>;
   },
 
+  /**
+   * Execute a command inside a running container.
+   *
+   * @param name - Container name.
+   * @param command - Command and arguments to run.
+   */
+  async exec(name: string, command: string[]) {
+    return runDocker(["exec", normalizeContainerName(name), ...command]);
+  },
+
   async safeRemove(name: string, maxAttempts: number = 5) {
     for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
       try {

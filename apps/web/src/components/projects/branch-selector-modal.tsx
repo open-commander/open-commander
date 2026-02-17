@@ -3,46 +3,36 @@
 import { ChevronDown } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { randomSessionName } from "@/lib/random-session-name";
 import { api } from "@/trpc/react";
 
-export type CreateSessionModalProps = {
+export type BranchSelectorModalProps = {
   open: boolean;
+  workspaceSuffix: string;
+  title: string;
+  defaultName: string;
   onClose: () => void;
-  onSubmit: (name: string, workspaceSuffix: string, gitBranch: string) => void;
+  onConfirm: (name: string, gitBranch: string) => void;
 };
 
 /**
- * Modal to create a new session: asks only for the session name.
- * Create button or Enter submits; Escape or Cancel closes. Input is focused when opened.
+ * Modal for creating a session with a name and optional git branch selector.
+ * If the workspace is not a git repo, auto-confirms with just the name.
  */
-export function CreateSessionModal({
+export function BranchSelectorModal({
   open,
+  workspaceSuffix,
+  title,
+  defaultName,
   onClose,
-  onSubmit,
-}: CreateSessionModalProps) {
-  const [name, setName] = useState(randomSessionName);
-  const [workspaceSuffix, setWorkspaceSuffix] = useState("");
+  onConfirm,
+}: BranchSelectorModalProps) {
+  const [name, setName] = useState("");
   const [gitBranch, setGitBranch] = useState("");
   const nameInputRef = useRef<HTMLInputElement>(null);
-  const workspaceQuery = api.terminal.workspaceOptions.useQuery(undefined, {
-    enabled: open,
-    staleTime: 30_000,
-    refetchOnWindowFocus: false,
-  });
-  const workspaceEnabled = workspaceQuery.data?.enabled ?? false;
-  const workspaceOptions = workspaceQuery.isLoading
-    ? [{ label: "Loading workspace...", value: "" }]
-    : workspaceQuery.data?.options?.length
-      ? workspaceQuery.data.options
-      : [{ label: "Workspace root", value: "" }];
-  const workspaceTarget = workspaceSuffix
-    ? `/workspace/${workspaceSuffix}`
-    : "/workspace";
   const branchesQuery = api.terminal.listBranches.useQuery(
     { workspaceSuffix },
     {
-      enabled: open && workspaceEnabled,
+      enabled: open,
       staleTime: 15_000,
       refetchOnWindowFocus: false,
     },
@@ -54,20 +44,21 @@ export function CreateSessionModal({
   const handleSubmit = useCallback(
     (e?: React.FormEvent) => {
       e?.preventDefault();
-      const trimmed = name.trim() || randomSessionName();
-      onSubmit(trimmed, workspaceEnabled ? workspaceSuffix : "", gitBranch);
+      onConfirm(name.trim() || defaultName, gitBranch);
       setName("");
-      setWorkspaceSuffix("");
       setGitBranch("");
       onClose();
     },
-    [name, onSubmit, onClose, workspaceEnabled, workspaceSuffix, gitBranch],
+    [name, defaultName, gitBranch, onConfirm, onClose],
   );
 
   useEffect(() => {
+    if (!open || !defaultName) return;
+    setName(defaultName);
+  }, [open, defaultName]);
+
+  useEffect(() => {
     if (open) {
-      setName(randomSessionName());
-      setWorkspaceSuffix("");
       setGitBranch("");
       const t = requestAnimationFrame(() => {
         nameInputRef.current?.focus();
@@ -76,17 +67,6 @@ export function CreateSessionModal({
       return () => cancelAnimationFrame(t);
     }
   }, [open]);
-
-  useEffect(() => {
-    if (!open) return;
-    if (workspaceOptions.length === 0) {
-      setWorkspaceSuffix("");
-      return;
-    }
-    if (!workspaceOptions.some((option) => option.value === workspaceSuffix)) {
-      setWorkspaceSuffix(workspaceOptions[0]?.value ?? "");
-    }
-  }, [open, workspaceOptions, workspaceSuffix]);
 
   useEffect(() => {
     if (!open) return;
@@ -119,7 +99,7 @@ export function CreateSessionModal({
       className="fixed inset-0 z-100 flex items-center justify-center bg-black/60 p-4"
       role="dialog"
       aria-modal="true"
-      aria-label="Create session"
+      aria-label={title}
     >
       <button
         type="button"
@@ -131,17 +111,20 @@ export function CreateSessionModal({
         className="relative z-10 w-full max-w-md rounded-2xl border border-white/10 bg-(--oc-panel-strong) p-6 shadow-xl"
         onSubmit={handleSubmit}
       >
-        <div className="grid gap-2">
+        <p className="text-xs font-medium uppercase tracking-wider text-slate-400">
+          {title}
+        </p>
+        <div className="mt-4 grid gap-2">
           <label
-            htmlFor="create-session-name"
+            htmlFor="branch-modal-name"
             className="text-xs font-medium uppercase tracking-wider text-slate-400"
           >
             Name
           </label>
           <input
             ref={nameInputRef}
-            id="create-session-name"
-            name="create-session-name"
+            id="branch-modal-name"
+            name="branch-modal-name"
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -157,52 +140,18 @@ export function CreateSessionModal({
             data-form-type="other"
           />
         </div>
-        <div className="mt-4 grid gap-2">
-          <label
-            htmlFor="create-session-workspace"
-            className="text-xs font-medium uppercase tracking-wider text-slate-400"
-          >
-            Workspace
-          </label>
-          <div className="relative">
-            <select
-              id="create-session-workspace"
-              name="create-session-workspace"
-              value={workspaceSuffix}
-              onChange={(e) => setWorkspaceSuffix(e.target.value)}
-              disabled={!workspaceEnabled || workspaceQuery.isLoading}
-              className="w-full appearance-none rounded-xl border border-white/10 bg-(--oc-panel) px-3 py-2 text-sm text-white outline-none transition focus:border-emerald-400/50 focus:ring-2 focus:ring-emerald-400/20 disabled:cursor-not-allowed disabled:border-white/5 disabled:bg-white/5 disabled:text-slate-400"
-            >
-              {workspaceOptions.map((option) => (
-                <option key={option.value || "root"} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-            <ChevronDown
-              className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
-              strokeWidth={2}
-              aria-hidden
-            />
-          </div>
-          <p className="text-xs text-slate-400">
-            {workspaceEnabled
-              ? `Mounts ${workspaceTarget} inside the container.`
-              : "AGENT_WORKSPACE is not configured for this environment."}
-          </p>
-        </div>
-        {workspaceEnabled && isGitRepo && (
+        {isGitRepo && branches.length > 0 && (
           <div className="mt-4 grid gap-2">
             <label
-              htmlFor="create-session-branch"
+              htmlFor="branch-selector"
               className="text-xs font-medium uppercase tracking-wider text-slate-400"
             >
               Branch
             </label>
             <div className="relative">
               <select
-                id="create-session-branch"
-                name="create-session-branch"
+                id="branch-selector"
+                name="branch-selector"
                 value={gitBranch}
                 onChange={(e) => setGitBranch(e.target.value)}
                 disabled={branchesQuery.isLoading}

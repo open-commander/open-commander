@@ -20,12 +20,19 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { env } from "@/env";
+import { randomSessionName } from "@/lib/random-session-name";
 import { buildSessionTree } from "@/lib/session-tree";
 import { api } from "@/trpc/react";
+import { BranchSelectorModal } from "./branch-selector-modal";
 import { ConfirmDeleteProjectModal } from "./confirm-delete-project-modal";
 import { ConfirmRemoveSessionModal } from "./confirm-remove-session-modal";
 import { useProject } from "./project-context";
 import { SessionPresenceAvatars } from "./session-presence-avatars";
+
+type PendingSessionAction =
+  | { type: "create" }
+  | { type: "fork"; parentSessionId: string }
+  | { type: "stack"; parentSessionId: string };
 
 type MenuState = {
   id: string;
@@ -45,6 +52,7 @@ export function ProjectSessionsPanel() {
     setSelectedProjectId,
     isPanelOpen,
     markSessionCreated,
+    setSessionGitBranch,
   } = useProject();
   const utils = api.useUtils();
 
@@ -138,6 +146,8 @@ export function ProjectSessionsPanel() {
     },
   });
 
+  const [pendingAction, setPendingAction] =
+    useState<PendingSessionAction | null>(null);
   const [sessionMenu, setSessionMenu] = useState<MenuState>(null);
   const [projectMenu, setProjectMenu] = useState<MenuState>(null);
   const [removeConfirm, setRemoveConfirm] = useState<{
@@ -181,12 +191,8 @@ export function ProjectSessionsPanel() {
 
   const handleCreateSession = useCallback(() => {
     if (!selectedProjectId) return;
-    const count = sessions.length + 1;
-    createSessionMutation.mutate({
-      projectId: selectedProjectId,
-      name: `Session ${count}`,
-    });
-  }, [selectedProjectId, sessions.length, createSessionMutation]);
+    setPendingAction({ type: "create" });
+  }, [selectedProjectId]);
 
   const handleRename = useCallback(
     (sessionId: string, currentName: string) => {
@@ -244,24 +250,67 @@ export function ProjectSessionsPanel() {
     (sessionId: string) => {
       setSessionMenu(null);
       if (!selectedProjectId) return;
-      forkSessionMutation.mutate({
-        projectId: selectedProjectId,
-        parentSessionId: sessionId,
-      });
+      setPendingAction({ type: "fork", parentSessionId: sessionId });
     },
-    [selectedProjectId, forkSessionMutation],
+    [selectedProjectId],
   );
 
   const handleStack = useCallback(
     (sessionId: string) => {
       setSessionMenu(null);
       if (!selectedProjectId) return;
-      stackSessionMutation.mutate({
-        projectId: selectedProjectId,
-        parentSessionId: sessionId,
-      });
+      setPendingAction({ type: "stack", parentSessionId: sessionId });
     },
-    [selectedProjectId, stackSessionMutation],
+    [selectedProjectId],
+  );
+
+  const [pendingDefaultName, setPendingDefaultName] = useState("");
+
+  useEffect(() => {
+    if (!pendingAction) return;
+    setPendingDefaultName(randomSessionName());
+  }, [pendingAction]);
+
+  const handleBranchConfirm = useCallback(
+    (sessionName: string, gitBranch: string) => {
+      if (!selectedProjectId || !pendingAction) return;
+      const storeBranch = (sessionId: string) => {
+        if (gitBranch) setSessionGitBranch(sessionId, gitBranch);
+      };
+      if (pendingAction.type === "create") {
+        createSessionMutation.mutate(
+          { projectId: selectedProjectId, name: sessionName },
+          { onSuccess: (session) => storeBranch(session.id) },
+        );
+      } else if (pendingAction.type === "fork") {
+        forkSessionMutation.mutate(
+          {
+            projectId: selectedProjectId,
+            parentSessionId: pendingAction.parentSessionId,
+            name: sessionName,
+          },
+          { onSuccess: (session) => storeBranch(session.id) },
+        );
+      } else if (pendingAction.type === "stack") {
+        stackSessionMutation.mutate(
+          {
+            projectId: selectedProjectId,
+            parentSessionId: pendingAction.parentSessionId,
+            name: sessionName,
+          },
+          { onSuccess: (session) => storeBranch(session.id) },
+        );
+      }
+      setPendingAction(null);
+    },
+    [
+      selectedProjectId,
+      pendingAction,
+      createSessionMutation,
+      forkSessionMutation,
+      stackSessionMutation,
+      setSessionGitBranch,
+    ],
   );
 
   const handleRenameProject = useCallback(() => {
@@ -730,6 +779,23 @@ export function ProjectSessionsPanel() {
         childCount={removeConfirm?.childCount ?? 0}
         onClose={() => setRemoveConfirm(null)}
         onConfirm={confirmRemoveSession}
+      />
+
+      <BranchSelectorModal
+        open={pendingAction !== null}
+        workspaceSuffix={
+          (project as { folder?: string } | undefined)?.folder ?? ""
+        }
+        title={
+          pendingAction?.type === "fork"
+            ? "Fork session"
+            : pendingAction?.type === "stack"
+              ? "Stack session"
+              : "Create session"
+        }
+        defaultName={pendingDefaultName}
+        onClose={() => setPendingAction(null)}
+        onConfirm={handleBranchConfirm}
       />
     </>
   );

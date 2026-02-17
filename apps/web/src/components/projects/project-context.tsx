@@ -28,6 +28,10 @@ type ProjectContextValue = {
   isNewSession: (sessionId: string) => boolean;
   /** Clear the "new" flag (called after successful connection). */
   clearNewSession: (sessionId: string) => void;
+  /** Store the git branch chosen when a session was created. */
+  setSessionGitBranch: (sessionId: string, branch: string) => void;
+  /** Retrieve the git branch chosen for a session. */
+  getSessionGitBranch: (sessionId: string) => string;
 };
 
 const ProjectContext = createContext<ProjectContextValue | null>(null);
@@ -45,6 +49,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [hydrated, setHydrated] = useState(false);
   const newSessionsRef = useRef(new Set<string>());
+  const sessionBranchesRef = useRef(new Map<string, string>());
 
   useEffect(() => {
     const storedProject =
@@ -88,6 +93,17 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
     newSessionsRef.current.delete(sessionId);
   }, []);
 
+  const setSessionGitBranch = useCallback(
+    (sessionId: string, branch: string) => {
+      sessionBranchesRef.current.set(sessionId, branch);
+    },
+    [],
+  );
+
+  const getSessionGitBranch = useCallback((sessionId: string) => {
+    return sessionBranchesRef.current.get(sessionId) ?? "";
+  }, []);
+
   const isPanelOpen = hydrated && selectedProjectId !== null;
 
   const value = useMemo(
@@ -102,6 +118,8 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
       markSessionCreated,
       isNewSession,
       clearNewSession,
+      setSessionGitBranch,
+      getSessionGitBranch,
     }),
     [
       hydrated,
@@ -114,6 +132,8 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
       markSessionCreated,
       isNewSession,
       clearNewSession,
+      setSessionGitBranch,
+      getSessionGitBranch,
     ],
   );
 

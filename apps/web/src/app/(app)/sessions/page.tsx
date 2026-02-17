@@ -46,6 +46,7 @@ const EMPTY_SESSION_STATE = {
   sessionEndedMessage: null as string | null,
   resetToken: 0,
   workspaceSuffix: "",
+  gitBranch: "",
 };
 
 /**
@@ -412,12 +413,12 @@ export default function TerminalDashboardPage() {
   }, []);
 
   const handleCreateSessionSubmit = useCallback(
-    async (name: string, workspaceSuffix: string) => {
+    async (name: string, workspaceSuffix: string, gitBranch: string) => {
       try {
         const session = await createSessionMutation.mutateAsync({
-          name: name.trim() || "My Terminal Session",
+          name: name.trim() || name,
         });
-        setSessionState(session.id, { workspaceSuffix });
+        setSessionState(session.id, { workspaceSuffix, gitBranch });
       } catch {
         // Errors are surfaced via createSessionMutation state.
       }
@@ -1191,6 +1192,7 @@ export default function TerminalDashboardPage() {
                               active={isActive}
                               resetToken={state.resetToken}
                               workspaceSuffix={state.workspaceSuffix}
+                              gitBranch={state.gitBranch}
                               wsUrl={state.wsUrl}
                               errorMessage={state.errorMessage}
                               onStatusChange={handlers.onStatusChange}

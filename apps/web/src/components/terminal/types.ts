@@ -16,6 +16,7 @@ export type TerminalPaneProps = {
   active: boolean;
   resetToken: number;
   workspaceSuffix?: string;
+  gitBranch?: string;
   className?: string;
   wsUrl: string | null;
   errorMessage: string | null;

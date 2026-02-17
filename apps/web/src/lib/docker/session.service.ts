@@ -124,7 +124,11 @@ export const sessionService = {
   async start(
     userId: string,
     sessionId: string,
-    options?: { reset?: boolean; workspaceSuffix?: string | null },
+    options?: {
+      reset?: boolean;
+      workspaceSuffix?: string | null;
+      gitBranch?: string | null;
+    },
   ): Promise<StartSessionResult> {
     const reset = options?.reset ?? false;
     const existingSession = await db.terminalSession.findUnique({
@@ -311,6 +315,23 @@ export const sessionService = {
         code: "INTERNAL_SERVER_ERROR",
         message: "Session container is not running.",
       });
+    }
+
+    if (options?.gitBranch) {
+      try {
+        await dockerService.exec(agentContainer, [
+          "git",
+          "-C",
+          "/workspace",
+          "checkout",
+          options.gitBranch,
+        ]);
+      } catch (error) {
+        console.warn(
+          `[session] git checkout "${options.gitBranch}" failed:`,
+          error instanceof Error ? error.message : error,
+        );
+      }
     }
 
     const ingressContainerName = await prepareIngressContainer(
