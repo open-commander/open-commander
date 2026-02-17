@@ -1,0 +1,161 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
+type PresenceEntry = {
+  userId: string;
+  sessionId: string;
+  status: "active" | "viewing" | "inactive";
+  user: {
+    id: string;
+    name: string;
+    image: string | null;
+    avatarImageUrl: string | null;
+  };
+};
+
+type SessionPresenceAvatarsProps = {
+  sessionId: string;
+  presences: PresenceEntry[];
+};
+
+const borderColorMap: Record<PresenceEntry["status"], string> = {
+  active: "border-purple-500",
+  viewing: "border-emerald-500",
+  inactive: "border-red-500",
+};
+
+const ENTER_MS = 500;
+const LEAVE_MS = 300;
+
+type AnimState = { kind: "entering" | "leaving"; entry: PresenceEntry };
+
+/**
+ * Stacked avatar indicators showing which users are present in a session.
+ * Avatars animate in (spin + bounce) when arriving and out (spin + shrink) when departing.
+ * No animation on initial mount.
+ */
+export function SessionPresenceAvatars({
+  sessionId,
+  presences,
+}: SessionPresenceAvatarsProps) {
+  const filtered = presences.filter((p) => p.sessionId === sessionId);
+  const currentMap = new Map(filtered.map((p) => [p.userId, p]));
+
+  const prevMapRef = useRef<Map<string, PresenceEntry> | null>(null);
+  const [anims, setAnims] = useState<Map<string, AnimState>>(new Map());
+  const enterTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const leaveTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+
+  // Detect entering/leaving by comparing previous vs current user sets.
+  // Skips the very first render (prevMapRef is null) so mount doesn't animate.
+  useEffect(() => {
+    const prev = prevMapRef.current;
+    prevMapRef.current = currentMap;
+
+    if (prev === null) return;
+
+    const next = new Map<string, AnimState>();
+
+    // Entering: in current but not in prev
+    for (const [id, entry] of currentMap) {
+      if (!prev.has(id)) next.set(id, { kind: "entering", entry });
+    }
+
+    // Leaving: in prev but not in current
+    for (const [id, entry] of prev) {
+      if (!currentMap.has(id)) next.set(id, { kind: "leaving", entry });
+    }
+
+    if (next.size === 0) return;
+
+    setAnims(next);
+
+    // Clear entering animations
+    const hasEntering = [...next.values()].some((a) => a.kind === "entering");
+    if (hasEntering) {
+      clearTimeout(enterTimerRef.current);
+      enterTimerRef.current = setTimeout(() => {
+        setAnims((prev) => {
+          const cleaned = new Map(prev);
+          for (const [id, a] of cleaned) {
+            if (a.kind === "entering") cleaned.delete(id);
+          }
+          return cleaned;
+        });
+      }, ENTER_MS);
+    }
+
+    // Clear leaving animations
+    const hasLeaving = [...next.values()].some((a) => a.kind === "leaving");
+    if (hasLeaving) {
+      clearTimeout(leaveTimerRef.current);
+      leaveTimerRef.current = setTimeout(() => {
+        setAnims((prev) => {
+          const cleaned = new Map(prev);
+          for (const [id, a] of cleaned) {
+            if (a.kind === "leaving") cleaned.delete(id);
+          }
+          return cleaned;
+        });
+      }, LEAVE_MS);
+    }
+  });
+
+  // Cleanup timers on unmount
+  useEffect(() => {
+    return () => {
+      clearTimeout(enterTimerRef.current);
+      clearTimeout(leaveTimerRef.current);
+    };
+  }, []);
+
+  // Merge current entries + leaving entries (so they stay visible during exit animation)
+  const visible = new Map(currentMap);
+  for (const [id, a] of anims) {
+    if (a.kind === "leaving" && !visible.has(id)) {
+      visible.set(id, a.entry);
+    }
+  }
+
+  if (visible.size === 0) return null;
+
+  return (
+    <div className="flex -space-x-1.5">
+      {[...visible.entries()].map(([userId, p]) => {
+        const anim = anims.get(userId);
+
+        const initials = p.user.name
+          .split(" ")
+          .map((w) => w[0])
+          .join("")
+          .slice(0, 2)
+          .toUpperCase();
+        const src = p.user.avatarImageUrl ?? p.user.image ?? undefined;
+
+        let animationStyle: React.CSSProperties | undefined;
+        if (anim?.kind === "entering") {
+          animationStyle = {
+            animation: `presence-enter ${ENTER_MS}ms ease-out forwards`,
+          };
+        } else if (anim?.kind === "leaving") {
+          animationStyle = {
+            animation: `presence-leave ${LEAVE_MS}ms ease-in forwards`,
+          };
+        }
+
+        return (
+          <Avatar
+            key={userId}
+            className={`h-5 w-5 border-2 ${borderColorMap[p.status]}`}
+            style={animationStyle}
+          >
+            {src && <AvatarImage src={src} alt={p.user.name} />}
+            <AvatarFallback className="text-[8px]">{initials}</AvatarFallback>
+          </Avatar>
+        );
+      })}
+    </div>
+  );
+}

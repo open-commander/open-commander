@@ -88,3 +88,4 @@
 .react.dev
 .shadcn.com
 .gitbutler.com
+.prisma.sh

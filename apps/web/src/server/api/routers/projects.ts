@@ -139,4 +139,82 @@ export const projectRouter = createTRPCRouter({
         },
       });
     }),
+
+  forkSession: protectedProcedure
+    .input(
+      z.object({
+        projectId: projectIdSchema,
+        parentSessionId: z.string().min(1),
+        name: sessionNameSchema.optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const project = await ensureMyProject(
+        ctx.db,
+        input.projectId,
+        ctx.session.user.id,
+      );
+      const parent = await ctx.db.terminalSession.findFirst({
+        where: {
+          id: input.parentSessionId,
+          projectId: project.id,
+          userId: ctx.session.user.id,
+        },
+      });
+      if (!parent) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Parent session not found.",
+        });
+      }
+      return ctx.db.terminalSession.create({
+        data: {
+          name: input.name ?? `${parent.name} (fork)`,
+          user: { connect: { id: ctx.session.user.id } },
+          project: { connect: { id: project.id } },
+          parent: { connect: { id: parent.id } },
+          relationType: "fork",
+          status: "pending",
+        },
+      });
+    }),
+
+  stackSession: protectedProcedure
+    .input(
+      z.object({
+        projectId: projectIdSchema,
+        parentSessionId: z.string().min(1),
+        name: sessionNameSchema.optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const project = await ensureMyProject(
+        ctx.db,
+        input.projectId,
+        ctx.session.user.id,
+      );
+      const parent = await ctx.db.terminalSession.findFirst({
+        where: {
+          id: input.parentSessionId,
+          projectId: project.id,
+          userId: ctx.session.user.id,
+        },
+      });
+      if (!parent) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Parent session not found.",
+        });
+      }
+      return ctx.db.terminalSession.create({
+        data: {
+          name: input.name ?? `${parent.name} (stack)`,
+          user: { connect: { id: ctx.session.user.id } },
+          project: { connect: { id: project.id } },
+          parent: { connect: { id: parent.id } },
+          relationType: "stack",
+          status: "pending",
+        },
+      });
+    }),
 });

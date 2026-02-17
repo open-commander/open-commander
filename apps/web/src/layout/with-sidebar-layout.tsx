@@ -11,6 +11,7 @@ import {
   useProject,
 } from "@/components/projects";
 import Squares from "@/components/squares";
+import { usePresenceTracker } from "@/hooks/use-presence-tracker";
 import type { AuthUserType } from "@/server/auth";
 
 type WithSidebarLayoutProps = {
@@ -37,6 +38,8 @@ function LayoutInner({
     selectedSessionId,
     setSelectedProjectId,
   } = useProject();
+
+  usePresenceTracker(selectedSessionId);
 
   const showInlineTerminal = Boolean(selectedProjectId && selectedSessionId);
 

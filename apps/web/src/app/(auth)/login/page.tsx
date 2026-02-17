@@ -92,7 +92,7 @@ export default function LoginPage() {
   useEffect(() => {
     if (!isAuthDisabled) return;
     router.replace("/dashboard");
-  }, [isAuthDisabled, router]);
+  }, [router]);
 
   useEffect(() => {
     if (step !== "otp") return;

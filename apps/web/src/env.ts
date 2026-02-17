@@ -54,7 +54,10 @@ export const env = createEnv({
       .string()
       .default("false")
       .transform((input) => input === "true"),
-    NEXT_PUBLIC_DISABLE_AUTH: z.coerce.boolean().default(false),
+    NEXT_PUBLIC_DISABLE_AUTH: z
+      .string()
+      .default("false")
+      .transform((input) => input === "true"),
   },
   runtimeEnv: {
     TTYD_CONTAINER_NAME: process.env.TTYD_CONTAINER_NAME,

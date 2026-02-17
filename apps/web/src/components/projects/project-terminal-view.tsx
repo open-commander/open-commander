@@ -5,6 +5,8 @@ import { useCallback, useRef, useState } from "react";
 import { TerminalPane } from "@/components/terminal";
 import type { TerminalStatus } from "@/components/terminal/types";
 import { Button } from "@/components/ui/button";
+import { buildCliCommand } from "@/lib/agent-cli-flags";
+import type { AgentId } from "@/lib/agent-preferences";
 import { api } from "@/trpc/react";
 import { useProject } from "./project-context";
 
@@ -118,7 +120,7 @@ export function ProjectTerminalView() {
   const isNew = isNewSession(selectedSessionId);
   const autoCommand =
     isNew && selectedProject?.defaultCliId
-      ? selectedProject.defaultCliId
+      ? buildCliCommand(selectedProject.defaultCliId as AgentId)
       : null;
 
   return (

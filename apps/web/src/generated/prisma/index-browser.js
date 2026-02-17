@@ -189,7 +189,9 @@ exports.Prisma.TerminalSessionScalarFieldEnum = {
   port: 'port',
   wsPath: 'wsPath',
   containerName: 'containerName',
-  projectId: 'projectId'
+  projectId: 'projectId',
+  parentId: 'parentId',
+  relationType: 'relationType'
 };
 
 exports.Prisma.ProjectScalarFieldEnum = {
@@ -280,6 +282,13 @@ exports.Prisma.ApiCallLogScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.SessionPresenceScalarFieldEnum = {
+  userId: 'userId',
+  sessionId: 'sessionId',
+  status: 'status',
+  lastSeen: 'lastSeen'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -312,6 +321,11 @@ exports.TerminalSessionStatus = exports.$Enums.TerminalSessionStatus = {
   stopped: 'stopped'
 };
 
+exports.SessionRelationType = exports.$Enums.SessionRelationType = {
+  fork: 'fork',
+  stack: 'stack'
+};
+
 exports.AgentProvider = exports.$Enums.AgentProvider = {
   opencode: 'opencode',
   claude: 'claude',
@@ -339,6 +353,12 @@ exports.TaskExecutionStatus = exports.$Enums.TaskExecutionStatus = {
   needs_input: 'needs_input'
 };
 
+exports.PresenceStatus = exports.$Enums.PresenceStatus = {
+  active: 'active',
+  viewing: 'viewing',
+  inactive: 'inactive'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Session: 'Session',
@@ -351,7 +371,8 @@ exports.Prisma.ModelName = {
   TaskExecution: 'TaskExecution',
   ApiClient: 'ApiClient',
   ApiSecret: 'ApiSecret',
-  ApiCallLog: 'ApiCallLog'
+  ApiCallLog: 'ApiCallLog',
+  SessionPresence: 'SessionPresence'
 };
 
 /**
