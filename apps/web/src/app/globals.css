@@ -113,6 +113,37 @@ button {
   }
 }
 
+/* Presence avatar: entering (spin + scale up with bounce) */
+@keyframes presence-enter {
+  0% {
+    opacity: 0;
+    transform: scale(0) rotate(-180deg);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.35) rotate(0deg);
+  }
+  80% {
+    transform: scale(0.95) rotate(0deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+/* Presence avatar: leaving (spin + shrink out) */
+@keyframes presence-leave {
+  0% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0) rotate(180deg);
+  }
+}
+
 /* React Bits StarBorder: terminal window – container must fill space (override inline-block) */
 .star-border-container.terminal-window-border {
   display: flex !important;

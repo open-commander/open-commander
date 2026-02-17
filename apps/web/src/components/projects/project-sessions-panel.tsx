@@ -17,9 +17,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { env } from "@/env";
 import { api } from "@/trpc/react";
 import { ConfirmDeleteProjectModal } from "./confirm-delete-project-modal";
 import { useProject } from "./project-context";
+import { SessionPresenceAvatars } from "./session-presence-avatars";
 
 type MenuState = {
   id: string;
@@ -58,11 +60,20 @@ export function ProjectSessionsPanel() {
   );
   const sessions = sessionsQuery.data ?? [];
 
+  const presenceEnabled =
+    !env.NEXT_PUBLIC_DISABLE_AUTH && Boolean(selectedProjectId) && isPanelOpen;
+  const presenceQuery = api.presence.listByProject.useQuery(
+    { projectId: selectedProjectId ?? "" },
+    { enabled: presenceEnabled, refetchInterval: 5000 },
+  );
+  const presences = presenceQuery.data ?? [];
+
   const createSessionMutation = api.project.createSession.useMutation({
     onSuccess: (session) => {
       void utils.project.listSessions.invalidate({
         projectId: selectedProjectId ?? "",
       });
+      void utils.terminal.ingressStatus.invalidate();
       markSessionCreated(session.id);
       setSelectedSessionId(session.id);
     },
@@ -73,6 +84,7 @@ export function ProjectSessionsPanel() {
       void utils.project.listSessions.invalidate({
         projectId: selectedProjectId ?? "",
       });
+      void utils.terminal.ingressStatus.invalidate();
       if (selectedSessionId === variables.id) {
         setSelectedSessionId(null);
       }
@@ -397,6 +409,12 @@ export function ProjectSessionsPanel() {
                       aria-hidden
                     />
                     <span className="truncate">{session.name}</span>
+                    <span className="ml-auto">
+                      <SessionPresenceAvatars
+                        sessionId={session.id}
+                        presences={presences}
+                      />
+                    </span>
                   </button>
                   <button
                     type="button"

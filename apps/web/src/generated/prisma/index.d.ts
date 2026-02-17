@@ -256,6 +256,11 @@ export type ApiSecret = $Result.DefaultSelection<Prisma.$ApiSecretPayload>
  * 
  */
 export type ApiCallLog = $Result.DefaultSelection<Prisma.$ApiCallLogPayload>
+/**
+ * Model SessionPresence
+ * 
+ */
+export type SessionPresence = $Result.DefaultSelection<Prisma.$SessionPresencePayload>
 
 /**
  * Enums
@@ -309,6 +314,15 @@ export const TaskExecutionStatus: {
 
 export type TaskExecutionStatus = (typeof TaskExecutionStatus)[keyof typeof TaskExecutionStatus]
 
+
+export const PresenceStatus: {
+  active: 'active',
+  viewing: 'viewing',
+  inactive: 'inactive'
+};
+
+export type PresenceStatus = (typeof PresenceStatus)[keyof typeof PresenceStatus]
+
 }
 
 export type TerminalSessionStatus = $Enums.TerminalSessionStatus
@@ -330,6 +344,10 @@ export const TaskSource: typeof $Enums.TaskSource
 export type TaskExecutionStatus = $Enums.TaskExecutionStatus
 
 export const TaskExecutionStatus: typeof $Enums.TaskExecutionStatus
+
+export type PresenceStatus = $Enums.PresenceStatus
+
+export const PresenceStatus: typeof $Enums.PresenceStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -567,6 +585,16 @@ export class PrismaClient<
     * ```
     */
   get apiCallLog(): Prisma.ApiCallLogDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.sessionPresence`: Exposes CRUD operations for the **SessionPresence** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SessionPresences
+    * const sessionPresences = await prisma.sessionPresence.findMany()
+    * ```
+    */
+  get sessionPresence(): Prisma.SessionPresenceDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1012,7 +1040,8 @@ export namespace Prisma {
     TaskExecution: 'TaskExecution',
     ApiClient: 'ApiClient',
     ApiSecret: 'ApiSecret',
-    ApiCallLog: 'ApiCallLog'
+    ApiCallLog: 'ApiCallLog',
+    SessionPresence: 'SessionPresence'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1028,7 +1057,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "session" | "account" | "verification" | "terminalSession" | "project" | "userPreferences" | "task" | "taskExecution" | "apiClient" | "apiSecret" | "apiCallLog"
+      modelProps: "user" | "session" | "account" | "verification" | "terminalSession" | "project" | "userPreferences" | "task" | "taskExecution" | "apiClient" | "apiSecret" | "apiCallLog" | "sessionPresence"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1920,6 +1949,80 @@ export namespace Prisma {
           }
         }
       }
+      SessionPresence: {
+        payload: Prisma.$SessionPresencePayload<ExtArgs>
+        fields: Prisma.SessionPresenceFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SessionPresenceFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SessionPresencePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SessionPresenceFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SessionPresencePayload>
+          }
+          findFirst: {
+            args: Prisma.SessionPresenceFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SessionPresencePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SessionPresenceFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SessionPresencePayload>
+          }
+          findMany: {
+            args: Prisma.SessionPresenceFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SessionPresencePayload>[]
+          }
+          create: {
+            args: Prisma.SessionPresenceCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SessionPresencePayload>
+          }
+          createMany: {
+            args: Prisma.SessionPresenceCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SessionPresenceCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SessionPresencePayload>[]
+          }
+          delete: {
+            args: Prisma.SessionPresenceDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SessionPresencePayload>
+          }
+          update: {
+            args: Prisma.SessionPresenceUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SessionPresencePayload>
+          }
+          deleteMany: {
+            args: Prisma.SessionPresenceDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SessionPresenceUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SessionPresenceUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SessionPresencePayload>[]
+          }
+          upsert: {
+            args: Prisma.SessionPresenceUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SessionPresencePayload>
+          }
+          aggregate: {
+            args: Prisma.SessionPresenceAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSessionPresence>
+          }
+          groupBy: {
+            args: Prisma.SessionPresenceGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SessionPresenceGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SessionPresenceCountArgs<ExtArgs>
+            result: $Utils.Optional<SessionPresenceCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2040,6 +2143,7 @@ export namespace Prisma {
     apiClient?: ApiClientOmit
     apiSecret?: ApiSecretOmit
     apiCallLog?: ApiCallLogOmit
+    sessionPresence?: SessionPresenceOmit
   }
 
   /* Types for Logging */
@@ -2188,6 +2292,37 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountProjectsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProjectWhereInput
+  }
+
+
+  /**
+   * Count Type TerminalSessionCountOutputType
+   */
+
+  export type TerminalSessionCountOutputType = {
+    presences: number
+  }
+
+  export type TerminalSessionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    presences?: boolean | TerminalSessionCountOutputTypeCountPresencesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * TerminalSessionCountOutputType without action
+   */
+  export type TerminalSessionCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TerminalSessionCountOutputType
+     */
+    select?: TerminalSessionCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * TerminalSessionCountOutputType without action
+   */
+  export type TerminalSessionCountOutputTypeCountPresencesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SessionPresenceWhereInput
   }
 
 
@@ -2580,6 +2715,7 @@ export namespace Prisma {
     tasks?: boolean | User$tasksArgs<ExtArgs>
     apiClients?: boolean | User$apiClientsArgs<ExtArgs>
     projects?: boolean | User$projectsArgs<ExtArgs>
+    sessionPresence?: boolean | User$sessionPresenceArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -2658,6 +2794,7 @@ export namespace Prisma {
     tasks?: boolean | User$tasksArgs<ExtArgs>
     apiClients?: boolean | User$apiClientsArgs<ExtArgs>
     projects?: boolean | User$projectsArgs<ExtArgs>
+    sessionPresence?: boolean | User$sessionPresenceArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2673,6 +2810,7 @@ export namespace Prisma {
       tasks: Prisma.$TaskPayload<ExtArgs>[]
       apiClients: Prisma.$ApiClientPayload<ExtArgs>[]
       projects: Prisma.$ProjectPayload<ExtArgs>[]
+      sessionPresence: Prisma.$SessionPresencePayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3095,6 +3233,7 @@ export namespace Prisma {
     tasks<T extends User$tasksArgs<ExtArgs> = {}>(args?: Subset<T, User$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     apiClients<T extends User$apiClientsArgs<ExtArgs> = {}>(args?: Subset<T, User$apiClientsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApiClientPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     projects<T extends User$projectsArgs<ExtArgs> = {}>(args?: Subset<T, User$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    sessionPresence<T extends User$sessionPresenceArgs<ExtArgs> = {}>(args?: Subset<T, User$sessionPresenceArgs<ExtArgs>>): Prisma__SessionPresenceClient<$Result.GetResult<Prisma.$SessionPresencePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3691,6 +3830,25 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ProjectScalarFieldEnum | ProjectScalarFieldEnum[]
+  }
+
+  /**
+   * User.sessionPresence
+   */
+  export type User$sessionPresenceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SessionPresence
+     */
+    select?: SessionPresenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SessionPresence
+     */
+    omit?: SessionPresenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SessionPresenceInclude<ExtArgs> | null
+    where?: SessionPresenceWhereInput
   }
 
   /**
@@ -7232,6 +7390,8 @@ export namespace Prisma {
     projectId?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     project?: boolean | TerminalSession$projectArgs<ExtArgs>
+    presences?: boolean | TerminalSession$presencesArgs<ExtArgs>
+    _count?: boolean | TerminalSessionCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["terminalSession"]>
 
   export type TerminalSessionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -7281,6 +7441,8 @@ export namespace Prisma {
   export type TerminalSessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     project?: boolean | TerminalSession$projectArgs<ExtArgs>
+    presences?: boolean | TerminalSession$presencesArgs<ExtArgs>
+    _count?: boolean | TerminalSessionCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type TerminalSessionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -7296,6 +7458,7 @@ export namespace Prisma {
     objects: {
       user: Prisma.$UserPayload<ExtArgs>
       project: Prisma.$ProjectPayload<ExtArgs> | null
+      presences: Prisma.$SessionPresencePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -7704,6 +7867,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     project<T extends TerminalSession$projectArgs<ExtArgs> = {}>(args?: Subset<T, TerminalSession$projectArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    presences<T extends TerminalSession$presencesArgs<ExtArgs> = {}>(args?: Subset<T, TerminalSession$presencesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionPresencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8155,6 +8319,30 @@ export namespace Prisma {
      */
     include?: ProjectInclude<ExtArgs> | null
     where?: ProjectWhereInput
+  }
+
+  /**
+   * TerminalSession.presences
+   */
+  export type TerminalSession$presencesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SessionPresence
+     */
+    select?: SessionPresenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SessionPresence
+     */
+    omit?: SessionPresenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SessionPresenceInclude<ExtArgs> | null
+    where?: SessionPresenceWhereInput
+    orderBy?: SessionPresenceOrderByWithRelationInput | SessionPresenceOrderByWithRelationInput[]
+    cursor?: SessionPresenceWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SessionPresenceScalarFieldEnum | SessionPresenceScalarFieldEnum[]
   }
 
   /**
@@ -16184,6 +16372,1059 @@ export namespace Prisma {
 
 
   /**
+   * Model SessionPresence
+   */
+
+  export type AggregateSessionPresence = {
+    _count: SessionPresenceCountAggregateOutputType | null
+    _min: SessionPresenceMinAggregateOutputType | null
+    _max: SessionPresenceMaxAggregateOutputType | null
+  }
+
+  export type SessionPresenceMinAggregateOutputType = {
+    userId: string | null
+    sessionId: string | null
+    status: $Enums.PresenceStatus | null
+    lastSeen: Date | null
+  }
+
+  export type SessionPresenceMaxAggregateOutputType = {
+    userId: string | null
+    sessionId: string | null
+    status: $Enums.PresenceStatus | null
+    lastSeen: Date | null
+  }
+
+  export type SessionPresenceCountAggregateOutputType = {
+    userId: number
+    sessionId: number
+    status: number
+    lastSeen: number
+    _all: number
+  }
+
+
+  export type SessionPresenceMinAggregateInputType = {
+    userId?: true
+    sessionId?: true
+    status?: true
+    lastSeen?: true
+  }
+
+  export type SessionPresenceMaxAggregateInputType = {
+    userId?: true
+    sessionId?: true
+    status?: true
+    lastSeen?: true
+  }
+
+  export type SessionPresenceCountAggregateInputType = {
+    userId?: true
+    sessionId?: true
+    status?: true
+    lastSeen?: true
+    _all?: true
+  }
+
+  export type SessionPresenceAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SessionPresence to aggregate.
+     */
+    where?: SessionPresenceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SessionPresences to fetch.
+     */
+    orderBy?: SessionPresenceOrderByWithRelationInput | SessionPresenceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SessionPresenceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SessionPresences from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SessionPresences.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SessionPresences
+    **/
+    _count?: true | SessionPresenceCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SessionPresenceMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SessionPresenceMaxAggregateInputType
+  }
+
+  export type GetSessionPresenceAggregateType<T extends SessionPresenceAggregateArgs> = {
+        [P in keyof T & keyof AggregateSessionPresence]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSessionPresence[P]>
+      : GetScalarType<T[P], AggregateSessionPresence[P]>
+  }
+
+
+
+
+  export type SessionPresenceGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SessionPresenceWhereInput
+    orderBy?: SessionPresenceOrderByWithAggregationInput | SessionPresenceOrderByWithAggregationInput[]
+    by: SessionPresenceScalarFieldEnum[] | SessionPresenceScalarFieldEnum
+    having?: SessionPresenceScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SessionPresenceCountAggregateInputType | true
+    _min?: SessionPresenceMinAggregateInputType
+    _max?: SessionPresenceMaxAggregateInputType
+  }
+
+  export type SessionPresenceGroupByOutputType = {
+    userId: string
+    sessionId: string
+    status: $Enums.PresenceStatus
+    lastSeen: Date
+    _count: SessionPresenceCountAggregateOutputType | null
+    _min: SessionPresenceMinAggregateOutputType | null
+    _max: SessionPresenceMaxAggregateOutputType | null
+  }
+
+  type GetSessionPresenceGroupByPayload<T extends SessionPresenceGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SessionPresenceGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SessionPresenceGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SessionPresenceGroupByOutputType[P]>
+            : GetScalarType<T[P], SessionPresenceGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SessionPresenceSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    userId?: boolean
+    sessionId?: boolean
+    status?: boolean
+    lastSeen?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    session?: boolean | TerminalSessionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["sessionPresence"]>
+
+  export type SessionPresenceSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    userId?: boolean
+    sessionId?: boolean
+    status?: boolean
+    lastSeen?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    session?: boolean | TerminalSessionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["sessionPresence"]>
+
+  export type SessionPresenceSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    userId?: boolean
+    sessionId?: boolean
+    status?: boolean
+    lastSeen?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    session?: boolean | TerminalSessionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["sessionPresence"]>
+
+  export type SessionPresenceSelectScalar = {
+    userId?: boolean
+    sessionId?: boolean
+    status?: boolean
+    lastSeen?: boolean
+  }
+
+  export type SessionPresenceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"userId" | "sessionId" | "status" | "lastSeen", ExtArgs["result"]["sessionPresence"]>
+  export type SessionPresenceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    session?: boolean | TerminalSessionDefaultArgs<ExtArgs>
+  }
+  export type SessionPresenceIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    session?: boolean | TerminalSessionDefaultArgs<ExtArgs>
+  }
+  export type SessionPresenceIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    session?: boolean | TerminalSessionDefaultArgs<ExtArgs>
+  }
+
+  export type $SessionPresencePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SessionPresence"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      session: Prisma.$TerminalSessionPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      userId: string
+      sessionId: string
+      status: $Enums.PresenceStatus
+      lastSeen: Date
+    }, ExtArgs["result"]["sessionPresence"]>
+    composites: {}
+  }
+
+  type SessionPresenceGetPayload<S extends boolean | null | undefined | SessionPresenceDefaultArgs> = $Result.GetResult<Prisma.$SessionPresencePayload, S>
+
+  type SessionPresenceCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SessionPresenceFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SessionPresenceCountAggregateInputType | true
+    }
+
+  export interface SessionPresenceDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SessionPresence'], meta: { name: 'SessionPresence' } }
+    /**
+     * Find zero or one SessionPresence that matches the filter.
+     * @param {SessionPresenceFindUniqueArgs} args - Arguments to find a SessionPresence
+     * @example
+     * // Get one SessionPresence
+     * const sessionPresence = await prisma.sessionPresence.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SessionPresenceFindUniqueArgs>(args: SelectSubset<T, SessionPresenceFindUniqueArgs<ExtArgs>>): Prisma__SessionPresenceClient<$Result.GetResult<Prisma.$SessionPresencePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SessionPresence that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SessionPresenceFindUniqueOrThrowArgs} args - Arguments to find a SessionPresence
+     * @example
+     * // Get one SessionPresence
+     * const sessionPresence = await prisma.sessionPresence.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SessionPresenceFindUniqueOrThrowArgs>(args: SelectSubset<T, SessionPresenceFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SessionPresenceClient<$Result.GetResult<Prisma.$SessionPresencePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SessionPresence that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SessionPresenceFindFirstArgs} args - Arguments to find a SessionPresence
+     * @example
+     * // Get one SessionPresence
+     * const sessionPresence = await prisma.sessionPresence.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SessionPresenceFindFirstArgs>(args?: SelectSubset<T, SessionPresenceFindFirstArgs<ExtArgs>>): Prisma__SessionPresenceClient<$Result.GetResult<Prisma.$SessionPresencePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SessionPresence that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SessionPresenceFindFirstOrThrowArgs} args - Arguments to find a SessionPresence
+     * @example
+     * // Get one SessionPresence
+     * const sessionPresence = await prisma.sessionPresence.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SessionPresenceFindFirstOrThrowArgs>(args?: SelectSubset<T, SessionPresenceFindFirstOrThrowArgs<ExtArgs>>): Prisma__SessionPresenceClient<$Result.GetResult<Prisma.$SessionPresencePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SessionPresences that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SessionPresenceFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SessionPresences
+     * const sessionPresences = await prisma.sessionPresence.findMany()
+     * 
+     * // Get first 10 SessionPresences
+     * const sessionPresences = await prisma.sessionPresence.findMany({ take: 10 })
+     * 
+     * // Only select the `userId`
+     * const sessionPresenceWithUserIdOnly = await prisma.sessionPresence.findMany({ select: { userId: true } })
+     * 
+     */
+    findMany<T extends SessionPresenceFindManyArgs>(args?: SelectSubset<T, SessionPresenceFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionPresencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SessionPresence.
+     * @param {SessionPresenceCreateArgs} args - Arguments to create a SessionPresence.
+     * @example
+     * // Create one SessionPresence
+     * const SessionPresence = await prisma.sessionPresence.create({
+     *   data: {
+     *     // ... data to create a SessionPresence
+     *   }
+     * })
+     * 
+     */
+    create<T extends SessionPresenceCreateArgs>(args: SelectSubset<T, SessionPresenceCreateArgs<ExtArgs>>): Prisma__SessionPresenceClient<$Result.GetResult<Prisma.$SessionPresencePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SessionPresences.
+     * @param {SessionPresenceCreateManyArgs} args - Arguments to create many SessionPresences.
+     * @example
+     * // Create many SessionPresences
+     * const sessionPresence = await prisma.sessionPresence.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SessionPresenceCreateManyArgs>(args?: SelectSubset<T, SessionPresenceCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SessionPresences and returns the data saved in the database.
+     * @param {SessionPresenceCreateManyAndReturnArgs} args - Arguments to create many SessionPresences.
+     * @example
+     * // Create many SessionPresences
+     * const sessionPresence = await prisma.sessionPresence.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SessionPresences and only return the `userId`
+     * const sessionPresenceWithUserIdOnly = await prisma.sessionPresence.createManyAndReturn({
+     *   select: { userId: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SessionPresenceCreateManyAndReturnArgs>(args?: SelectSubset<T, SessionPresenceCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionPresencePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a SessionPresence.
+     * @param {SessionPresenceDeleteArgs} args - Arguments to delete one SessionPresence.
+     * @example
+     * // Delete one SessionPresence
+     * const SessionPresence = await prisma.sessionPresence.delete({
+     *   where: {
+     *     // ... filter to delete one SessionPresence
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SessionPresenceDeleteArgs>(args: SelectSubset<T, SessionPresenceDeleteArgs<ExtArgs>>): Prisma__SessionPresenceClient<$Result.GetResult<Prisma.$SessionPresencePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SessionPresence.
+     * @param {SessionPresenceUpdateArgs} args - Arguments to update one SessionPresence.
+     * @example
+     * // Update one SessionPresence
+     * const sessionPresence = await prisma.sessionPresence.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SessionPresenceUpdateArgs>(args: SelectSubset<T, SessionPresenceUpdateArgs<ExtArgs>>): Prisma__SessionPresenceClient<$Result.GetResult<Prisma.$SessionPresencePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SessionPresences.
+     * @param {SessionPresenceDeleteManyArgs} args - Arguments to filter SessionPresences to delete.
+     * @example
+     * // Delete a few SessionPresences
+     * const { count } = await prisma.sessionPresence.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SessionPresenceDeleteManyArgs>(args?: SelectSubset<T, SessionPresenceDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SessionPresences.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SessionPresenceUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SessionPresences
+     * const sessionPresence = await prisma.sessionPresence.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SessionPresenceUpdateManyArgs>(args: SelectSubset<T, SessionPresenceUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SessionPresences and returns the data updated in the database.
+     * @param {SessionPresenceUpdateManyAndReturnArgs} args - Arguments to update many SessionPresences.
+     * @example
+     * // Update many SessionPresences
+     * const sessionPresence = await prisma.sessionPresence.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more SessionPresences and only return the `userId`
+     * const sessionPresenceWithUserIdOnly = await prisma.sessionPresence.updateManyAndReturn({
+     *   select: { userId: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SessionPresenceUpdateManyAndReturnArgs>(args: SelectSubset<T, SessionPresenceUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionPresencePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one SessionPresence.
+     * @param {SessionPresenceUpsertArgs} args - Arguments to update or create a SessionPresence.
+     * @example
+     * // Update or create a SessionPresence
+     * const sessionPresence = await prisma.sessionPresence.upsert({
+     *   create: {
+     *     // ... data to create a SessionPresence
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SessionPresence we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SessionPresenceUpsertArgs>(args: SelectSubset<T, SessionPresenceUpsertArgs<ExtArgs>>): Prisma__SessionPresenceClient<$Result.GetResult<Prisma.$SessionPresencePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SessionPresences.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SessionPresenceCountArgs} args - Arguments to filter SessionPresences to count.
+     * @example
+     * // Count the number of SessionPresences
+     * const count = await prisma.sessionPresence.count({
+     *   where: {
+     *     // ... the filter for the SessionPresences we want to count
+     *   }
+     * })
+    **/
+    count<T extends SessionPresenceCountArgs>(
+      args?: Subset<T, SessionPresenceCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SessionPresenceCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SessionPresence.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SessionPresenceAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SessionPresenceAggregateArgs>(args: Subset<T, SessionPresenceAggregateArgs>): Prisma.PrismaPromise<GetSessionPresenceAggregateType<T>>
+
+    /**
+     * Group by SessionPresence.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SessionPresenceGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SessionPresenceGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SessionPresenceGroupByArgs['orderBy'] }
+        : { orderBy?: SessionPresenceGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SessionPresenceGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSessionPresenceGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SessionPresence model
+   */
+  readonly fields: SessionPresenceFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SessionPresence.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SessionPresenceClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    session<T extends TerminalSessionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TerminalSessionDefaultArgs<ExtArgs>>): Prisma__TerminalSessionClient<$Result.GetResult<Prisma.$TerminalSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SessionPresence model
+   */
+  interface SessionPresenceFieldRefs {
+    readonly userId: FieldRef<"SessionPresence", 'String'>
+    readonly sessionId: FieldRef<"SessionPresence", 'String'>
+    readonly status: FieldRef<"SessionPresence", 'PresenceStatus'>
+    readonly lastSeen: FieldRef<"SessionPresence", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SessionPresence findUnique
+   */
+  export type SessionPresenceFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SessionPresence
+     */
+    select?: SessionPresenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SessionPresence
+     */
+    omit?: SessionPresenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SessionPresenceInclude<ExtArgs> | null
+    /**
+     * Filter, which SessionPresence to fetch.
+     */
+    where: SessionPresenceWhereUniqueInput
+  }
+
+  /**
+   * SessionPresence findUniqueOrThrow
+   */
+  export type SessionPresenceFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SessionPresence
+     */
+    select?: SessionPresenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SessionPresence
+     */
+    omit?: SessionPresenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SessionPresenceInclude<ExtArgs> | null
+    /**
+     * Filter, which SessionPresence to fetch.
+     */
+    where: SessionPresenceWhereUniqueInput
+  }
+
+  /**
+   * SessionPresence findFirst
+   */
+  export type SessionPresenceFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SessionPresence
+     */
+    select?: SessionPresenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SessionPresence
+     */
+    omit?: SessionPresenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SessionPresenceInclude<ExtArgs> | null
+    /**
+     * Filter, which SessionPresence to fetch.
+     */
+    where?: SessionPresenceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SessionPresences to fetch.
+     */
+    orderBy?: SessionPresenceOrderByWithRelationInput | SessionPresenceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SessionPresences.
+     */
+    cursor?: SessionPresenceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SessionPresences from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SessionPresences.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SessionPresences.
+     */
+    distinct?: SessionPresenceScalarFieldEnum | SessionPresenceScalarFieldEnum[]
+  }
+
+  /**
+   * SessionPresence findFirstOrThrow
+   */
+  export type SessionPresenceFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SessionPresence
+     */
+    select?: SessionPresenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SessionPresence
+     */
+    omit?: SessionPresenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SessionPresenceInclude<ExtArgs> | null
+    /**
+     * Filter, which SessionPresence to fetch.
+     */
+    where?: SessionPresenceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SessionPresences to fetch.
+     */
+    orderBy?: SessionPresenceOrderByWithRelationInput | SessionPresenceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SessionPresences.
+     */
+    cursor?: SessionPresenceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SessionPresences from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SessionPresences.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SessionPresences.
+     */
+    distinct?: SessionPresenceScalarFieldEnum | SessionPresenceScalarFieldEnum[]
+  }
+
+  /**
+   * SessionPresence findMany
+   */
+  export type SessionPresenceFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SessionPresence
+     */
+    select?: SessionPresenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SessionPresence
+     */
+    omit?: SessionPresenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SessionPresenceInclude<ExtArgs> | null
+    /**
+     * Filter, which SessionPresences to fetch.
+     */
+    where?: SessionPresenceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SessionPresences to fetch.
+     */
+    orderBy?: SessionPresenceOrderByWithRelationInput | SessionPresenceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SessionPresences.
+     */
+    cursor?: SessionPresenceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SessionPresences from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SessionPresences.
+     */
+    skip?: number
+    distinct?: SessionPresenceScalarFieldEnum | SessionPresenceScalarFieldEnum[]
+  }
+
+  /**
+   * SessionPresence create
+   */
+  export type SessionPresenceCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SessionPresence
+     */
+    select?: SessionPresenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SessionPresence
+     */
+    omit?: SessionPresenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SessionPresenceInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SessionPresence.
+     */
+    data: XOR<SessionPresenceCreateInput, SessionPresenceUncheckedCreateInput>
+  }
+
+  /**
+   * SessionPresence createMany
+   */
+  export type SessionPresenceCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SessionPresences.
+     */
+    data: SessionPresenceCreateManyInput | SessionPresenceCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SessionPresence createManyAndReturn
+   */
+  export type SessionPresenceCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SessionPresence
+     */
+    select?: SessionPresenceSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SessionPresence
+     */
+    omit?: SessionPresenceOmit<ExtArgs> | null
+    /**
+     * The data used to create many SessionPresences.
+     */
+    data: SessionPresenceCreateManyInput | SessionPresenceCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SessionPresenceIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SessionPresence update
+   */
+  export type SessionPresenceUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SessionPresence
+     */
+    select?: SessionPresenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SessionPresence
+     */
+    omit?: SessionPresenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SessionPresenceInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SessionPresence.
+     */
+    data: XOR<SessionPresenceUpdateInput, SessionPresenceUncheckedUpdateInput>
+    /**
+     * Choose, which SessionPresence to update.
+     */
+    where: SessionPresenceWhereUniqueInput
+  }
+
+  /**
+   * SessionPresence updateMany
+   */
+  export type SessionPresenceUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SessionPresences.
+     */
+    data: XOR<SessionPresenceUpdateManyMutationInput, SessionPresenceUncheckedUpdateManyInput>
+    /**
+     * Filter which SessionPresences to update
+     */
+    where?: SessionPresenceWhereInput
+    /**
+     * Limit how many SessionPresences to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SessionPresence updateManyAndReturn
+   */
+  export type SessionPresenceUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SessionPresence
+     */
+    select?: SessionPresenceSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SessionPresence
+     */
+    omit?: SessionPresenceOmit<ExtArgs> | null
+    /**
+     * The data used to update SessionPresences.
+     */
+    data: XOR<SessionPresenceUpdateManyMutationInput, SessionPresenceUncheckedUpdateManyInput>
+    /**
+     * Filter which SessionPresences to update
+     */
+    where?: SessionPresenceWhereInput
+    /**
+     * Limit how many SessionPresences to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SessionPresenceIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SessionPresence upsert
+   */
+  export type SessionPresenceUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SessionPresence
+     */
+    select?: SessionPresenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SessionPresence
+     */
+    omit?: SessionPresenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SessionPresenceInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SessionPresence to update in case it exists.
+     */
+    where: SessionPresenceWhereUniqueInput
+    /**
+     * In case the SessionPresence found by the `where` argument doesn't exist, create a new SessionPresence with this data.
+     */
+    create: XOR<SessionPresenceCreateInput, SessionPresenceUncheckedCreateInput>
+    /**
+     * In case the SessionPresence was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SessionPresenceUpdateInput, SessionPresenceUncheckedUpdateInput>
+  }
+
+  /**
+   * SessionPresence delete
+   */
+  export type SessionPresenceDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SessionPresence
+     */
+    select?: SessionPresenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SessionPresence
+     */
+    omit?: SessionPresenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SessionPresenceInclude<ExtArgs> | null
+    /**
+     * Filter which SessionPresence to delete.
+     */
+    where: SessionPresenceWhereUniqueInput
+  }
+
+  /**
+   * SessionPresence deleteMany
+   */
+  export type SessionPresenceDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SessionPresences to delete
+     */
+    where?: SessionPresenceWhereInput
+    /**
+     * Limit how many SessionPresences to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SessionPresence without action
+   */
+  export type SessionPresenceDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SessionPresence
+     */
+    select?: SessionPresenceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SessionPresence
+     */
+    omit?: SessionPresenceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SessionPresenceInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -16393,6 +17634,16 @@ export namespace Prisma {
   export type ApiCallLogScalarFieldEnum = (typeof ApiCallLogScalarFieldEnum)[keyof typeof ApiCallLogScalarFieldEnum]
 
 
+  export const SessionPresenceScalarFieldEnum: {
+    userId: 'userId',
+    sessionId: 'sessionId',
+    status: 'status',
+    lastSeen: 'lastSeen'
+  };
+
+  export type SessionPresenceScalarFieldEnum = (typeof SessionPresenceScalarFieldEnum)[keyof typeof SessionPresenceScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -16573,6 +17824,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'PresenceStatus'
+   */
+  export type EnumPresenceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PresenceStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'PresenceStatus[]'
+   */
+  export type ListEnumPresenceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PresenceStatus[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -16619,6 +17884,7 @@ export namespace Prisma {
     tasks?: TaskListRelationFilter
     apiClients?: ApiClientListRelationFilter
     projects?: ProjectListRelationFilter
+    sessionPresence?: XOR<SessionPresenceNullableScalarRelationFilter, SessionPresenceWhereInput> | null
   }
 
   export type UserOrderByWithRelationInput = {
@@ -16648,6 +17914,7 @@ export namespace Prisma {
     tasks?: TaskOrderByRelationAggregateInput
     apiClients?: ApiClientOrderByRelationAggregateInput
     projects?: ProjectOrderByRelationAggregateInput
+    sessionPresence?: SessionPresenceOrderByWithRelationInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -16680,6 +17947,7 @@ export namespace Prisma {
     tasks?: TaskListRelationFilter
     apiClients?: ApiClientListRelationFilter
     projects?: ProjectListRelationFilter
+    sessionPresence?: XOR<SessionPresenceNullableScalarRelationFilter, SessionPresenceWhereInput> | null
   }, "id" | "email" | "username">
 
   export type UserOrderByWithAggregationInput = {
@@ -16975,6 +18243,7 @@ export namespace Prisma {
     projectId?: StringNullableFilter<"TerminalSession"> | string | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     project?: XOR<ProjectNullableScalarRelationFilter, ProjectWhereInput> | null
+    presences?: SessionPresenceListRelationFilter
   }
 
   export type TerminalSessionOrderByWithRelationInput = {
@@ -16990,6 +18259,7 @@ export namespace Prisma {
     projectId?: SortOrderInput | SortOrder
     user?: UserOrderByWithRelationInput
     project?: ProjectOrderByWithRelationInput
+    presences?: SessionPresenceOrderByRelationAggregateInput
   }
 
   export type TerminalSessionWhereUniqueInput = Prisma.AtLeast<{
@@ -17008,6 +18278,7 @@ export namespace Prisma {
     projectId?: StringNullableFilter<"TerminalSession"> | string | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     project?: XOR<ProjectNullableScalarRelationFilter, ProjectWhereInput> | null
+    presences?: SessionPresenceListRelationFilter
   }, "id">
 
   export type TerminalSessionOrderByWithAggregationInput = {
@@ -17605,6 +18876,59 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"ApiCallLog"> | Date | string
   }
 
+  export type SessionPresenceWhereInput = {
+    AND?: SessionPresenceWhereInput | SessionPresenceWhereInput[]
+    OR?: SessionPresenceWhereInput[]
+    NOT?: SessionPresenceWhereInput | SessionPresenceWhereInput[]
+    userId?: StringFilter<"SessionPresence"> | string
+    sessionId?: StringFilter<"SessionPresence"> | string
+    status?: EnumPresenceStatusFilter<"SessionPresence"> | $Enums.PresenceStatus
+    lastSeen?: DateTimeFilter<"SessionPresence"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    session?: XOR<TerminalSessionScalarRelationFilter, TerminalSessionWhereInput>
+  }
+
+  export type SessionPresenceOrderByWithRelationInput = {
+    userId?: SortOrder
+    sessionId?: SortOrder
+    status?: SortOrder
+    lastSeen?: SortOrder
+    user?: UserOrderByWithRelationInput
+    session?: TerminalSessionOrderByWithRelationInput
+  }
+
+  export type SessionPresenceWhereUniqueInput = Prisma.AtLeast<{
+    userId?: string
+    AND?: SessionPresenceWhereInput | SessionPresenceWhereInput[]
+    OR?: SessionPresenceWhereInput[]
+    NOT?: SessionPresenceWhereInput | SessionPresenceWhereInput[]
+    sessionId?: StringFilter<"SessionPresence"> | string
+    status?: EnumPresenceStatusFilter<"SessionPresence"> | $Enums.PresenceStatus
+    lastSeen?: DateTimeFilter<"SessionPresence"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    session?: XOR<TerminalSessionScalarRelationFilter, TerminalSessionWhereInput>
+  }, "userId">
+
+  export type SessionPresenceOrderByWithAggregationInput = {
+    userId?: SortOrder
+    sessionId?: SortOrder
+    status?: SortOrder
+    lastSeen?: SortOrder
+    _count?: SessionPresenceCountOrderByAggregateInput
+    _max?: SessionPresenceMaxOrderByAggregateInput
+    _min?: SessionPresenceMinOrderByAggregateInput
+  }
+
+  export type SessionPresenceScalarWhereWithAggregatesInput = {
+    AND?: SessionPresenceScalarWhereWithAggregatesInput | SessionPresenceScalarWhereWithAggregatesInput[]
+    OR?: SessionPresenceScalarWhereWithAggregatesInput[]
+    NOT?: SessionPresenceScalarWhereWithAggregatesInput | SessionPresenceScalarWhereWithAggregatesInput[]
+    userId?: StringWithAggregatesFilter<"SessionPresence"> | string
+    sessionId?: StringWithAggregatesFilter<"SessionPresence"> | string
+    status?: EnumPresenceStatusWithAggregatesFilter<"SessionPresence"> | $Enums.PresenceStatus
+    lastSeen?: DateTimeWithAggregatesFilter<"SessionPresence"> | Date | string
+  }
+
   export type UserCreateInput = {
     id: string
     createdAt?: Date | string
@@ -17632,6 +18956,7 @@ export namespace Prisma {
     tasks?: TaskCreateNestedManyWithoutUserInput
     apiClients?: ApiClientCreateNestedManyWithoutUserInput
     projects?: ProjectCreateNestedManyWithoutUserInput
+    sessionPresence?: SessionPresenceCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -17661,6 +18986,7 @@ export namespace Prisma {
     tasks?: TaskUncheckedCreateNestedManyWithoutUserInput
     apiClients?: ApiClientUncheckedCreateNestedManyWithoutUserInput
     projects?: ProjectUncheckedCreateNestedManyWithoutUserInput
+    sessionPresence?: SessionPresenceUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -17690,6 +19016,7 @@ export namespace Prisma {
     tasks?: TaskUpdateManyWithoutUserNestedInput
     apiClients?: ApiClientUpdateManyWithoutUserNestedInput
     projects?: ProjectUpdateManyWithoutUserNestedInput
+    sessionPresence?: SessionPresenceUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -17719,6 +19046,7 @@ export namespace Prisma {
     tasks?: TaskUncheckedUpdateManyWithoutUserNestedInput
     apiClients?: ApiClientUncheckedUpdateManyWithoutUserNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutUserNestedInput
+    sessionPresence?: SessionPresenceUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -18055,6 +19383,7 @@ export namespace Prisma {
     containerName?: string | null
     user: UserCreateNestedOneWithoutTerminalSessionsInput
     project?: ProjectCreateNestedOneWithoutSessionsInput
+    presences?: SessionPresenceCreateNestedManyWithoutSessionInput
   }
 
   export type TerminalSessionUncheckedCreateInput = {
@@ -18068,6 +19397,7 @@ export namespace Prisma {
     wsPath?: string | null
     containerName?: string | null
     projectId?: string | null
+    presences?: SessionPresenceUncheckedCreateNestedManyWithoutSessionInput
   }
 
   export type TerminalSessionUpdateInput = {
@@ -18081,6 +19411,7 @@ export namespace Prisma {
     containerName?: NullableStringFieldUpdateOperationsInput | string | null
     user?: UserUpdateOneRequiredWithoutTerminalSessionsNestedInput
     project?: ProjectUpdateOneWithoutSessionsNestedInput
+    presences?: SessionPresenceUpdateManyWithoutSessionNestedInput
   }
 
   export type TerminalSessionUncheckedUpdateInput = {
@@ -18094,6 +19425,7 @@ export namespace Prisma {
     wsPath?: NullableStringFieldUpdateOperationsInput | string | null
     containerName?: NullableStringFieldUpdateOperationsInput | string | null
     projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    presences?: SessionPresenceUncheckedUpdateManyWithoutSessionNestedInput
   }
 
   export type TerminalSessionCreateManyInput = {
@@ -18758,6 +20090,53 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type SessionPresenceCreateInput = {
+    status?: $Enums.PresenceStatus
+    lastSeen?: Date | string
+    user: UserCreateNestedOneWithoutSessionPresenceInput
+    session: TerminalSessionCreateNestedOneWithoutPresencesInput
+  }
+
+  export type SessionPresenceUncheckedCreateInput = {
+    userId: string
+    sessionId: string
+    status?: $Enums.PresenceStatus
+    lastSeen?: Date | string
+  }
+
+  export type SessionPresenceUpdateInput = {
+    status?: EnumPresenceStatusFieldUpdateOperationsInput | $Enums.PresenceStatus
+    lastSeen?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutSessionPresenceNestedInput
+    session?: TerminalSessionUpdateOneRequiredWithoutPresencesNestedInput
+  }
+
+  export type SessionPresenceUncheckedUpdateInput = {
+    userId?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    status?: EnumPresenceStatusFieldUpdateOperationsInput | $Enums.PresenceStatus
+    lastSeen?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SessionPresenceCreateManyInput = {
+    userId: string
+    sessionId: string
+    status?: $Enums.PresenceStatus
+    lastSeen?: Date | string
+  }
+
+  export type SessionPresenceUpdateManyMutationInput = {
+    status?: EnumPresenceStatusFieldUpdateOperationsInput | $Enums.PresenceStatus
+    lastSeen?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SessionPresenceUncheckedUpdateManyInput = {
+    userId?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    status?: EnumPresenceStatusFieldUpdateOperationsInput | $Enums.PresenceStatus
+    lastSeen?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -18854,6 +20233,11 @@ export namespace Prisma {
     every?: ProjectWhereInput
     some?: ProjectWhereInput
     none?: ProjectWhereInput
+  }
+
+  export type SessionPresenceNullableScalarRelationFilter = {
+    is?: SessionPresenceWhereInput | null
+    isNot?: SessionPresenceWhereInput | null
   }
 
   export type SortOrderInput = {
@@ -19160,6 +20544,16 @@ export namespace Prisma {
   export type ProjectNullableScalarRelationFilter = {
     is?: ProjectWhereInput | null
     isNot?: ProjectWhereInput | null
+  }
+
+  export type SessionPresenceListRelationFilter = {
+    every?: SessionPresenceWhereInput
+    some?: SessionPresenceWhereInput
+    none?: SessionPresenceWhereInput
+  }
+
+  export type SessionPresenceOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type TerminalSessionCountOrderByAggregateInput = {
@@ -19714,6 +21108,49 @@ export namespace Prisma {
     _max?: NestedIntFilter<$PrismaModel>
   }
 
+  export type EnumPresenceStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.PresenceStatus | EnumPresenceStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PresenceStatus[] | ListEnumPresenceStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PresenceStatus[] | ListEnumPresenceStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPresenceStatusFilter<$PrismaModel> | $Enums.PresenceStatus
+  }
+
+  export type TerminalSessionScalarRelationFilter = {
+    is?: TerminalSessionWhereInput
+    isNot?: TerminalSessionWhereInput
+  }
+
+  export type SessionPresenceCountOrderByAggregateInput = {
+    userId?: SortOrder
+    sessionId?: SortOrder
+    status?: SortOrder
+    lastSeen?: SortOrder
+  }
+
+  export type SessionPresenceMaxOrderByAggregateInput = {
+    userId?: SortOrder
+    sessionId?: SortOrder
+    status?: SortOrder
+    lastSeen?: SortOrder
+  }
+
+  export type SessionPresenceMinOrderByAggregateInput = {
+    userId?: SortOrder
+    sessionId?: SortOrder
+    status?: SortOrder
+    lastSeen?: SortOrder
+  }
+
+  export type EnumPresenceStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PresenceStatus | EnumPresenceStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PresenceStatus[] | ListEnumPresenceStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PresenceStatus[] | ListEnumPresenceStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPresenceStatusWithAggregatesFilter<$PrismaModel> | $Enums.PresenceStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPresenceStatusFilter<$PrismaModel>
+    _max?: NestedEnumPresenceStatusFilter<$PrismaModel>
+  }
+
   export type UserPreferencesCreateNestedOneWithoutUserInput = {
     create?: XOR<UserPreferencesCreateWithoutUserInput, UserPreferencesUncheckedCreateWithoutUserInput>
     connectOrCreate?: UserPreferencesCreateOrConnectWithoutUserInput
@@ -19762,6 +21199,12 @@ export namespace Prisma {
     connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
   }
 
+  export type SessionPresenceCreateNestedOneWithoutUserInput = {
+    create?: XOR<SessionPresenceCreateWithoutUserInput, SessionPresenceUncheckedCreateWithoutUserInput>
+    connectOrCreate?: SessionPresenceCreateOrConnectWithoutUserInput
+    connect?: SessionPresenceWhereUniqueInput
+  }
+
   export type UserPreferencesUncheckedCreateNestedOneWithoutUserInput = {
     create?: XOR<UserPreferencesCreateWithoutUserInput, UserPreferencesUncheckedCreateWithoutUserInput>
     connectOrCreate?: UserPreferencesCreateOrConnectWithoutUserInput
@@ -19808,6 +21251,12 @@ export namespace Prisma {
     connectOrCreate?: ProjectCreateOrConnectWithoutUserInput | ProjectCreateOrConnectWithoutUserInput[]
     createMany?: ProjectCreateManyUserInputEnvelope
     connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+  }
+
+  export type SessionPresenceUncheckedCreateNestedOneWithoutUserInput = {
+    create?: XOR<SessionPresenceCreateWithoutUserInput, SessionPresenceUncheckedCreateWithoutUserInput>
+    connectOrCreate?: SessionPresenceCreateOrConnectWithoutUserInput
+    connect?: SessionPresenceWhereUniqueInput
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -19924,6 +21373,16 @@ export namespace Prisma {
     deleteMany?: ProjectScalarWhereInput | ProjectScalarWhereInput[]
   }
 
+  export type SessionPresenceUpdateOneWithoutUserNestedInput = {
+    create?: XOR<SessionPresenceCreateWithoutUserInput, SessionPresenceUncheckedCreateWithoutUserInput>
+    connectOrCreate?: SessionPresenceCreateOrConnectWithoutUserInput
+    upsert?: SessionPresenceUpsertWithoutUserInput
+    disconnect?: SessionPresenceWhereInput | boolean
+    delete?: SessionPresenceWhereInput | boolean
+    connect?: SessionPresenceWhereUniqueInput
+    update?: XOR<XOR<SessionPresenceUpdateToOneWithWhereWithoutUserInput, SessionPresenceUpdateWithoutUserInput>, SessionPresenceUncheckedUpdateWithoutUserInput>
+  }
+
   export type UserPreferencesUncheckedUpdateOneWithoutUserNestedInput = {
     create?: XOR<UserPreferencesCreateWithoutUserInput, UserPreferencesUncheckedCreateWithoutUserInput>
     connectOrCreate?: UserPreferencesCreateOrConnectWithoutUserInput
@@ -20018,6 +21477,16 @@ export namespace Prisma {
     deleteMany?: ProjectScalarWhereInput | ProjectScalarWhereInput[]
   }
 
+  export type SessionPresenceUncheckedUpdateOneWithoutUserNestedInput = {
+    create?: XOR<SessionPresenceCreateWithoutUserInput, SessionPresenceUncheckedCreateWithoutUserInput>
+    connectOrCreate?: SessionPresenceCreateOrConnectWithoutUserInput
+    upsert?: SessionPresenceUpsertWithoutUserInput
+    disconnect?: SessionPresenceWhereInput | boolean
+    delete?: SessionPresenceWhereInput | boolean
+    connect?: SessionPresenceWhereUniqueInput
+    update?: XOR<XOR<SessionPresenceUpdateToOneWithWhereWithoutUserInput, SessionPresenceUpdateWithoutUserInput>, SessionPresenceUncheckedUpdateWithoutUserInput>
+  }
+
   export type UserCreateNestedOneWithoutSessionsInput = {
     create?: XOR<UserCreateWithoutSessionsInput, UserUncheckedCreateWithoutSessionsInput>
     connectOrCreate?: UserCreateOrConnectWithoutSessionsInput
@@ -20058,6 +21527,20 @@ export namespace Prisma {
     connect?: ProjectWhereUniqueInput
   }
 
+  export type SessionPresenceCreateNestedManyWithoutSessionInput = {
+    create?: XOR<SessionPresenceCreateWithoutSessionInput, SessionPresenceUncheckedCreateWithoutSessionInput> | SessionPresenceCreateWithoutSessionInput[] | SessionPresenceUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: SessionPresenceCreateOrConnectWithoutSessionInput | SessionPresenceCreateOrConnectWithoutSessionInput[]
+    createMany?: SessionPresenceCreateManySessionInputEnvelope
+    connect?: SessionPresenceWhereUniqueInput | SessionPresenceWhereUniqueInput[]
+  }
+
+  export type SessionPresenceUncheckedCreateNestedManyWithoutSessionInput = {
+    create?: XOR<SessionPresenceCreateWithoutSessionInput, SessionPresenceUncheckedCreateWithoutSessionInput> | SessionPresenceCreateWithoutSessionInput[] | SessionPresenceUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: SessionPresenceCreateOrConnectWithoutSessionInput | SessionPresenceCreateOrConnectWithoutSessionInput[]
+    createMany?: SessionPresenceCreateManySessionInputEnvelope
+    connect?: SessionPresenceWhereUniqueInput | SessionPresenceWhereUniqueInput[]
+  }
+
   export type EnumTerminalSessionStatusFieldUpdateOperationsInput = {
     set?: $Enums.TerminalSessionStatus
   }
@@ -20086,6 +21569,34 @@ export namespace Prisma {
     delete?: ProjectWhereInput | boolean
     connect?: ProjectWhereUniqueInput
     update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutSessionsInput, ProjectUpdateWithoutSessionsInput>, ProjectUncheckedUpdateWithoutSessionsInput>
+  }
+
+  export type SessionPresenceUpdateManyWithoutSessionNestedInput = {
+    create?: XOR<SessionPresenceCreateWithoutSessionInput, SessionPresenceUncheckedCreateWithoutSessionInput> | SessionPresenceCreateWithoutSessionInput[] | SessionPresenceUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: SessionPresenceCreateOrConnectWithoutSessionInput | SessionPresenceCreateOrConnectWithoutSessionInput[]
+    upsert?: SessionPresenceUpsertWithWhereUniqueWithoutSessionInput | SessionPresenceUpsertWithWhereUniqueWithoutSessionInput[]
+    createMany?: SessionPresenceCreateManySessionInputEnvelope
+    set?: SessionPresenceWhereUniqueInput | SessionPresenceWhereUniqueInput[]
+    disconnect?: SessionPresenceWhereUniqueInput | SessionPresenceWhereUniqueInput[]
+    delete?: SessionPresenceWhereUniqueInput | SessionPresenceWhereUniqueInput[]
+    connect?: SessionPresenceWhereUniqueInput | SessionPresenceWhereUniqueInput[]
+    update?: SessionPresenceUpdateWithWhereUniqueWithoutSessionInput | SessionPresenceUpdateWithWhereUniqueWithoutSessionInput[]
+    updateMany?: SessionPresenceUpdateManyWithWhereWithoutSessionInput | SessionPresenceUpdateManyWithWhereWithoutSessionInput[]
+    deleteMany?: SessionPresenceScalarWhereInput | SessionPresenceScalarWhereInput[]
+  }
+
+  export type SessionPresenceUncheckedUpdateManyWithoutSessionNestedInput = {
+    create?: XOR<SessionPresenceCreateWithoutSessionInput, SessionPresenceUncheckedCreateWithoutSessionInput> | SessionPresenceCreateWithoutSessionInput[] | SessionPresenceUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: SessionPresenceCreateOrConnectWithoutSessionInput | SessionPresenceCreateOrConnectWithoutSessionInput[]
+    upsert?: SessionPresenceUpsertWithWhereUniqueWithoutSessionInput | SessionPresenceUpsertWithWhereUniqueWithoutSessionInput[]
+    createMany?: SessionPresenceCreateManySessionInputEnvelope
+    set?: SessionPresenceWhereUniqueInput | SessionPresenceWhereUniqueInput[]
+    disconnect?: SessionPresenceWhereUniqueInput | SessionPresenceWhereUniqueInput[]
+    delete?: SessionPresenceWhereUniqueInput | SessionPresenceWhereUniqueInput[]
+    connect?: SessionPresenceWhereUniqueInput | SessionPresenceWhereUniqueInput[]
+    update?: SessionPresenceUpdateWithWhereUniqueWithoutSessionInput | SessionPresenceUpdateWithWhereUniqueWithoutSessionInput[]
+    updateMany?: SessionPresenceUpdateManyWithWhereWithoutSessionInput | SessionPresenceUpdateManyWithWhereWithoutSessionInput[]
+    deleteMany?: SessionPresenceScalarWhereInput | SessionPresenceScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutProjectsInput = {
@@ -20380,6 +21891,38 @@ export namespace Prisma {
     upsert?: ApiClientUpsertWithoutCallLogsInput
     connect?: ApiClientWhereUniqueInput
     update?: XOR<XOR<ApiClientUpdateToOneWithWhereWithoutCallLogsInput, ApiClientUpdateWithoutCallLogsInput>, ApiClientUncheckedUpdateWithoutCallLogsInput>
+  }
+
+  export type UserCreateNestedOneWithoutSessionPresenceInput = {
+    create?: XOR<UserCreateWithoutSessionPresenceInput, UserUncheckedCreateWithoutSessionPresenceInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSessionPresenceInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type TerminalSessionCreateNestedOneWithoutPresencesInput = {
+    create?: XOR<TerminalSessionCreateWithoutPresencesInput, TerminalSessionUncheckedCreateWithoutPresencesInput>
+    connectOrCreate?: TerminalSessionCreateOrConnectWithoutPresencesInput
+    connect?: TerminalSessionWhereUniqueInput
+  }
+
+  export type EnumPresenceStatusFieldUpdateOperationsInput = {
+    set?: $Enums.PresenceStatus
+  }
+
+  export type UserUpdateOneRequiredWithoutSessionPresenceNestedInput = {
+    create?: XOR<UserCreateWithoutSessionPresenceInput, UserUncheckedCreateWithoutSessionPresenceInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSessionPresenceInput
+    upsert?: UserUpsertWithoutSessionPresenceInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSessionPresenceInput, UserUpdateWithoutSessionPresenceInput>, UserUncheckedUpdateWithoutSessionPresenceInput>
+  }
+
+  export type TerminalSessionUpdateOneRequiredWithoutPresencesNestedInput = {
+    create?: XOR<TerminalSessionCreateWithoutPresencesInput, TerminalSessionUncheckedCreateWithoutPresencesInput>
+    connectOrCreate?: TerminalSessionCreateOrConnectWithoutPresencesInput
+    upsert?: TerminalSessionUpsertWithoutPresencesInput
+    connect?: TerminalSessionWhereUniqueInput
+    update?: XOR<XOR<TerminalSessionUpdateToOneWithWhereWithoutPresencesInput, TerminalSessionUpdateWithoutPresencesInput>, TerminalSessionUncheckedUpdateWithoutPresencesInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -20708,6 +22251,23 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
+  export type NestedEnumPresenceStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.PresenceStatus | EnumPresenceStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PresenceStatus[] | ListEnumPresenceStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PresenceStatus[] | ListEnumPresenceStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPresenceStatusFilter<$PrismaModel> | $Enums.PresenceStatus
+  }
+
+  export type NestedEnumPresenceStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PresenceStatus | EnumPresenceStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PresenceStatus[] | ListEnumPresenceStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PresenceStatus[] | ListEnumPresenceStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPresenceStatusWithAggregatesFilter<$PrismaModel> | $Enums.PresenceStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPresenceStatusFilter<$PrismaModel>
+    _max?: NestedEnumPresenceStatusFilter<$PrismaModel>
+  }
+
   export type UserPreferencesCreateWithoutUserInput = {
     id?: string
     agents?:PrismaJson.UserPreferencesAgents | NullableJsonNullValueInput
@@ -20809,6 +22369,7 @@ export namespace Prisma {
     wsPath?: string | null
     containerName?: string | null
     project?: ProjectCreateNestedOneWithoutSessionsInput
+    presences?: SessionPresenceCreateNestedManyWithoutSessionInput
   }
 
   export type TerminalSessionUncheckedCreateWithoutUserInput = {
@@ -20821,6 +22382,7 @@ export namespace Prisma {
     wsPath?: string | null
     containerName?: string | null
     projectId?: string | null
+    presences?: SessionPresenceUncheckedCreateNestedManyWithoutSessionInput
   }
 
   export type TerminalSessionCreateOrConnectWithoutUserInput = {
@@ -20931,6 +22493,23 @@ export namespace Prisma {
   export type ProjectCreateManyUserInputEnvelope = {
     data: ProjectCreateManyUserInput | ProjectCreateManyUserInput[]
     skipDuplicates?: boolean
+  }
+
+  export type SessionPresenceCreateWithoutUserInput = {
+    status?: $Enums.PresenceStatus
+    lastSeen?: Date | string
+    session: TerminalSessionCreateNestedOneWithoutPresencesInput
+  }
+
+  export type SessionPresenceUncheckedCreateWithoutUserInput = {
+    sessionId: string
+    status?: $Enums.PresenceStatus
+    lastSeen?: Date | string
+  }
+
+  export type SessionPresenceCreateOrConnectWithoutUserInput = {
+    where: SessionPresenceWhereUniqueInput
+    create: XOR<SessionPresenceCreateWithoutUserInput, SessionPresenceUncheckedCreateWithoutUserInput>
   }
 
   export type UserPreferencesUpsertWithoutUserInput = {
@@ -21147,6 +22726,29 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Project"> | Date | string
   }
 
+  export type SessionPresenceUpsertWithoutUserInput = {
+    update: XOR<SessionPresenceUpdateWithoutUserInput, SessionPresenceUncheckedUpdateWithoutUserInput>
+    create: XOR<SessionPresenceCreateWithoutUserInput, SessionPresenceUncheckedCreateWithoutUserInput>
+    where?: SessionPresenceWhereInput
+  }
+
+  export type SessionPresenceUpdateToOneWithWhereWithoutUserInput = {
+    where?: SessionPresenceWhereInput
+    data: XOR<SessionPresenceUpdateWithoutUserInput, SessionPresenceUncheckedUpdateWithoutUserInput>
+  }
+
+  export type SessionPresenceUpdateWithoutUserInput = {
+    status?: EnumPresenceStatusFieldUpdateOperationsInput | $Enums.PresenceStatus
+    lastSeen?: DateTimeFieldUpdateOperationsInput | Date | string
+    session?: TerminalSessionUpdateOneRequiredWithoutPresencesNestedInput
+  }
+
+  export type SessionPresenceUncheckedUpdateWithoutUserInput = {
+    sessionId?: StringFieldUpdateOperationsInput | string
+    status?: EnumPresenceStatusFieldUpdateOperationsInput | $Enums.PresenceStatus
+    lastSeen?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type UserCreateWithoutSessionsInput = {
     id: string
     createdAt?: Date | string
@@ -21173,6 +22775,7 @@ export namespace Prisma {
     tasks?: TaskCreateNestedManyWithoutUserInput
     apiClients?: ApiClientCreateNestedManyWithoutUserInput
     projects?: ProjectCreateNestedManyWithoutUserInput
+    sessionPresence?: SessionPresenceCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSessionsInput = {
@@ -21201,6 +22804,7 @@ export namespace Prisma {
     tasks?: TaskUncheckedCreateNestedManyWithoutUserInput
     apiClients?: ApiClientUncheckedCreateNestedManyWithoutUserInput
     projects?: ProjectUncheckedCreateNestedManyWithoutUserInput
+    sessionPresence?: SessionPresenceUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSessionsInput = {
@@ -21245,6 +22849,7 @@ export namespace Prisma {
     tasks?: TaskUpdateManyWithoutUserNestedInput
     apiClients?: ApiClientUpdateManyWithoutUserNestedInput
     projects?: ProjectUpdateManyWithoutUserNestedInput
+    sessionPresence?: SessionPresenceUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -21273,6 +22878,7 @@ export namespace Prisma {
     tasks?: TaskUncheckedUpdateManyWithoutUserNestedInput
     apiClients?: ApiClientUncheckedUpdateManyWithoutUserNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutUserNestedInput
+    sessionPresence?: SessionPresenceUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserCreateWithoutAccountsInput = {
@@ -21301,6 +22907,7 @@ export namespace Prisma {
     tasks?: TaskCreateNestedManyWithoutUserInput
     apiClients?: ApiClientCreateNestedManyWithoutUserInput
     projects?: ProjectCreateNestedManyWithoutUserInput
+    sessionPresence?: SessionPresenceCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAccountsInput = {
@@ -21329,6 +22936,7 @@ export namespace Prisma {
     tasks?: TaskUncheckedCreateNestedManyWithoutUserInput
     apiClients?: ApiClientUncheckedCreateNestedManyWithoutUserInput
     projects?: ProjectUncheckedCreateNestedManyWithoutUserInput
+    sessionPresence?: SessionPresenceUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAccountsInput = {
@@ -21373,6 +22981,7 @@ export namespace Prisma {
     tasks?: TaskUpdateManyWithoutUserNestedInput
     apiClients?: ApiClientUpdateManyWithoutUserNestedInput
     projects?: ProjectUpdateManyWithoutUserNestedInput
+    sessionPresence?: SessionPresenceUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -21401,6 +23010,7 @@ export namespace Prisma {
     tasks?: TaskUncheckedUpdateManyWithoutUserNestedInput
     apiClients?: ApiClientUncheckedUpdateManyWithoutUserNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutUserNestedInput
+    sessionPresence?: SessionPresenceUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserCreateWithoutTerminalSessionsInput = {
@@ -21429,6 +23039,7 @@ export namespace Prisma {
     tasks?: TaskCreateNestedManyWithoutUserInput
     apiClients?: ApiClientCreateNestedManyWithoutUserInput
     projects?: ProjectCreateNestedManyWithoutUserInput
+    sessionPresence?: SessionPresenceCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutTerminalSessionsInput = {
@@ -21457,6 +23068,7 @@ export namespace Prisma {
     tasks?: TaskUncheckedCreateNestedManyWithoutUserInput
     apiClients?: ApiClientUncheckedCreateNestedManyWithoutUserInput
     projects?: ProjectUncheckedCreateNestedManyWithoutUserInput
+    sessionPresence?: SessionPresenceUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutTerminalSessionsInput = {
@@ -21487,6 +23099,28 @@ export namespace Prisma {
   export type ProjectCreateOrConnectWithoutSessionsInput = {
     where: ProjectWhereUniqueInput
     create: XOR<ProjectCreateWithoutSessionsInput, ProjectUncheckedCreateWithoutSessionsInput>
+  }
+
+  export type SessionPresenceCreateWithoutSessionInput = {
+    status?: $Enums.PresenceStatus
+    lastSeen?: Date | string
+    user: UserCreateNestedOneWithoutSessionPresenceInput
+  }
+
+  export type SessionPresenceUncheckedCreateWithoutSessionInput = {
+    userId: string
+    status?: $Enums.PresenceStatus
+    lastSeen?: Date | string
+  }
+
+  export type SessionPresenceCreateOrConnectWithoutSessionInput = {
+    where: SessionPresenceWhereUniqueInput
+    create: XOR<SessionPresenceCreateWithoutSessionInput, SessionPresenceUncheckedCreateWithoutSessionInput>
+  }
+
+  export type SessionPresenceCreateManySessionInputEnvelope = {
+    data: SessionPresenceCreateManySessionInput | SessionPresenceCreateManySessionInput[]
+    skipDuplicates?: boolean
   }
 
   export type UserUpsertWithoutTerminalSessionsInput = {
@@ -21526,6 +23160,7 @@ export namespace Prisma {
     tasks?: TaskUpdateManyWithoutUserNestedInput
     apiClients?: ApiClientUpdateManyWithoutUserNestedInput
     projects?: ProjectUpdateManyWithoutUserNestedInput
+    sessionPresence?: SessionPresenceUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTerminalSessionsInput = {
@@ -21554,6 +23189,7 @@ export namespace Prisma {
     tasks?: TaskUncheckedUpdateManyWithoutUserNestedInput
     apiClients?: ApiClientUncheckedUpdateManyWithoutUserNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutUserNestedInput
+    sessionPresence?: SessionPresenceUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type ProjectUpsertWithoutSessionsInput = {
@@ -21587,6 +23223,32 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type SessionPresenceUpsertWithWhereUniqueWithoutSessionInput = {
+    where: SessionPresenceWhereUniqueInput
+    update: XOR<SessionPresenceUpdateWithoutSessionInput, SessionPresenceUncheckedUpdateWithoutSessionInput>
+    create: XOR<SessionPresenceCreateWithoutSessionInput, SessionPresenceUncheckedCreateWithoutSessionInput>
+  }
+
+  export type SessionPresenceUpdateWithWhereUniqueWithoutSessionInput = {
+    where: SessionPresenceWhereUniqueInput
+    data: XOR<SessionPresenceUpdateWithoutSessionInput, SessionPresenceUncheckedUpdateWithoutSessionInput>
+  }
+
+  export type SessionPresenceUpdateManyWithWhereWithoutSessionInput = {
+    where: SessionPresenceScalarWhereInput
+    data: XOR<SessionPresenceUpdateManyMutationInput, SessionPresenceUncheckedUpdateManyWithoutSessionInput>
+  }
+
+  export type SessionPresenceScalarWhereInput = {
+    AND?: SessionPresenceScalarWhereInput | SessionPresenceScalarWhereInput[]
+    OR?: SessionPresenceScalarWhereInput[]
+    NOT?: SessionPresenceScalarWhereInput | SessionPresenceScalarWhereInput[]
+    userId?: StringFilter<"SessionPresence"> | string
+    sessionId?: StringFilter<"SessionPresence"> | string
+    status?: EnumPresenceStatusFilter<"SessionPresence"> | $Enums.PresenceStatus
+    lastSeen?: DateTimeFilter<"SessionPresence"> | Date | string
+  }
+
   export type UserCreateWithoutProjectsInput = {
     id: string
     createdAt?: Date | string
@@ -21613,6 +23275,7 @@ export namespace Prisma {
     terminalSessions?: TerminalSessionCreateNestedManyWithoutUserInput
     tasks?: TaskCreateNestedManyWithoutUserInput
     apiClients?: ApiClientCreateNestedManyWithoutUserInput
+    sessionPresence?: SessionPresenceCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutProjectsInput = {
@@ -21641,6 +23304,7 @@ export namespace Prisma {
     terminalSessions?: TerminalSessionUncheckedCreateNestedManyWithoutUserInput
     tasks?: TaskUncheckedCreateNestedManyWithoutUserInput
     apiClients?: ApiClientUncheckedCreateNestedManyWithoutUserInput
+    sessionPresence?: SessionPresenceUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutProjectsInput = {
@@ -21658,6 +23322,7 @@ export namespace Prisma {
     wsPath?: string | null
     containerName?: string | null
     user: UserCreateNestedOneWithoutTerminalSessionsInput
+    presences?: SessionPresenceCreateNestedManyWithoutSessionInput
   }
 
   export type TerminalSessionUncheckedCreateWithoutProjectInput = {
@@ -21670,6 +23335,7 @@ export namespace Prisma {
     port?: number | null
     wsPath?: string | null
     containerName?: string | null
+    presences?: SessionPresenceUncheckedCreateNestedManyWithoutSessionInput
   }
 
   export type TerminalSessionCreateOrConnectWithoutProjectInput = {
@@ -21719,6 +23385,7 @@ export namespace Prisma {
     terminalSessions?: TerminalSessionUpdateManyWithoutUserNestedInput
     tasks?: TaskUpdateManyWithoutUserNestedInput
     apiClients?: ApiClientUpdateManyWithoutUserNestedInput
+    sessionPresence?: SessionPresenceUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProjectsInput = {
@@ -21747,6 +23414,7 @@ export namespace Prisma {
     terminalSessions?: TerminalSessionUncheckedUpdateManyWithoutUserNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutUserNestedInput
     apiClients?: ApiClientUncheckedUpdateManyWithoutUserNestedInput
+    sessionPresence?: SessionPresenceUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type TerminalSessionUpsertWithWhereUniqueWithoutProjectInput = {
@@ -21791,6 +23459,7 @@ export namespace Prisma {
     tasks?: TaskCreateNestedManyWithoutUserInput
     apiClients?: ApiClientCreateNestedManyWithoutUserInput
     projects?: ProjectCreateNestedManyWithoutUserInput
+    sessionPresence?: SessionPresenceCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutPreferencesInput = {
@@ -21819,6 +23488,7 @@ export namespace Prisma {
     tasks?: TaskUncheckedCreateNestedManyWithoutUserInput
     apiClients?: ApiClientUncheckedCreateNestedManyWithoutUserInput
     projects?: ProjectUncheckedCreateNestedManyWithoutUserInput
+    sessionPresence?: SessionPresenceUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutPreferencesInput = {
@@ -21863,6 +23533,7 @@ export namespace Prisma {
     tasks?: TaskUpdateManyWithoutUserNestedInput
     apiClients?: ApiClientUpdateManyWithoutUserNestedInput
     projects?: ProjectUpdateManyWithoutUserNestedInput
+    sessionPresence?: SessionPresenceUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPreferencesInput = {
@@ -21891,6 +23562,7 @@ export namespace Prisma {
     tasks?: TaskUncheckedUpdateManyWithoutUserNestedInput
     apiClients?: ApiClientUncheckedUpdateManyWithoutUserNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutUserNestedInput
+    sessionPresence?: SessionPresenceUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserCreateWithoutTasksInput = {
@@ -21919,6 +23591,7 @@ export namespace Prisma {
     terminalSessions?: TerminalSessionCreateNestedManyWithoutUserInput
     apiClients?: ApiClientCreateNestedManyWithoutUserInput
     projects?: ProjectCreateNestedManyWithoutUserInput
+    sessionPresence?: SessionPresenceCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutTasksInput = {
@@ -21947,6 +23620,7 @@ export namespace Prisma {
     terminalSessions?: TerminalSessionUncheckedCreateNestedManyWithoutUserInput
     apiClients?: ApiClientUncheckedCreateNestedManyWithoutUserInput
     projects?: ProjectUncheckedCreateNestedManyWithoutUserInput
+    sessionPresence?: SessionPresenceUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutTasksInput = {
@@ -22043,6 +23717,7 @@ export namespace Prisma {
     terminalSessions?: TerminalSessionUpdateManyWithoutUserNestedInput
     apiClients?: ApiClientUpdateManyWithoutUserNestedInput
     projects?: ProjectUpdateManyWithoutUserNestedInput
+    sessionPresence?: SessionPresenceUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTasksInput = {
@@ -22071,6 +23746,7 @@ export namespace Prisma {
     terminalSessions?: TerminalSessionUncheckedUpdateManyWithoutUserNestedInput
     apiClients?: ApiClientUncheckedUpdateManyWithoutUserNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutUserNestedInput
+    sessionPresence?: SessionPresenceUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type TaskExecutionUpsertWithWhereUniqueWithoutTaskInput = {
@@ -22216,6 +23892,7 @@ export namespace Prisma {
     terminalSessions?: TerminalSessionCreateNestedManyWithoutUserInput
     tasks?: TaskCreateNestedManyWithoutUserInput
     projects?: ProjectCreateNestedManyWithoutUserInput
+    sessionPresence?: SessionPresenceCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutApiClientsInput = {
@@ -22244,6 +23921,7 @@ export namespace Prisma {
     terminalSessions?: TerminalSessionUncheckedCreateNestedManyWithoutUserInput
     tasks?: TaskUncheckedCreateNestedManyWithoutUserInput
     projects?: ProjectUncheckedCreateNestedManyWithoutUserInput
+    sessionPresence?: SessionPresenceUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutApiClientsInput = {
@@ -22352,6 +24030,7 @@ export namespace Prisma {
     terminalSessions?: TerminalSessionUpdateManyWithoutUserNestedInput
     tasks?: TaskUpdateManyWithoutUserNestedInput
     projects?: ProjectUpdateManyWithoutUserNestedInput
+    sessionPresence?: SessionPresenceUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutApiClientsInput = {
@@ -22380,6 +24059,7 @@ export namespace Prisma {
     terminalSessions?: TerminalSessionUncheckedUpdateManyWithoutUserNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutUserNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutUserNestedInput
+    sessionPresence?: SessionPresenceUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type ApiSecretUpsertWithWhereUniqueWithoutClientInput = {
@@ -22556,6 +24236,206 @@ export namespace Prisma {
     secrets?: ApiSecretUncheckedUpdateManyWithoutClientNestedInput
   }
 
+  export type UserCreateWithoutSessionPresenceInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string | null
+    name: string
+    email: string
+    emailVerified: boolean
+    image?: string | null
+    bio?: string | null
+    avatarImageUrl?: string | null
+    coverImageUrl?: string | null
+    avatarImageUTKey?: string | null
+    coverImageUTKey?: string | null
+    timezone?: string | null
+    role?: string
+    banReason?: string | null
+    banExpires?: Date | string | null
+    banned?: boolean
+    username?: string | null
+    displayUsername?: string | null
+    preferences?: UserPreferencesCreateNestedOneWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    terminalSessions?: TerminalSessionCreateNestedManyWithoutUserInput
+    tasks?: TaskCreateNestedManyWithoutUserInput
+    apiClients?: ApiClientCreateNestedManyWithoutUserInput
+    projects?: ProjectCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutSessionPresenceInput = {
+    id: string
+    createdAt?: Date | string
+    updatedAt?: Date | string | null
+    name: string
+    email: string
+    emailVerified: boolean
+    image?: string | null
+    bio?: string | null
+    avatarImageUrl?: string | null
+    coverImageUrl?: string | null
+    avatarImageUTKey?: string | null
+    coverImageUTKey?: string | null
+    timezone?: string | null
+    role?: string
+    banReason?: string | null
+    banExpires?: Date | string | null
+    banned?: boolean
+    username?: string | null
+    displayUsername?: string | null
+    preferences?: UserPreferencesUncheckedCreateNestedOneWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    terminalSessions?: TerminalSessionUncheckedCreateNestedManyWithoutUserInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutUserInput
+    apiClients?: ApiClientUncheckedCreateNestedManyWithoutUserInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutSessionPresenceInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutSessionPresenceInput, UserUncheckedCreateWithoutSessionPresenceInput>
+  }
+
+  export type TerminalSessionCreateWithoutPresencesInput = {
+    id?: string
+    name: string
+    status?: $Enums.TerminalSessionStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    port?: number | null
+    wsPath?: string | null
+    containerName?: string | null
+    user: UserCreateNestedOneWithoutTerminalSessionsInput
+    project?: ProjectCreateNestedOneWithoutSessionsInput
+  }
+
+  export type TerminalSessionUncheckedCreateWithoutPresencesInput = {
+    id?: string
+    name: string
+    userId: string
+    status?: $Enums.TerminalSessionStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    port?: number | null
+    wsPath?: string | null
+    containerName?: string | null
+    projectId?: string | null
+  }
+
+  export type TerminalSessionCreateOrConnectWithoutPresencesInput = {
+    where: TerminalSessionWhereUniqueInput
+    create: XOR<TerminalSessionCreateWithoutPresencesInput, TerminalSessionUncheckedCreateWithoutPresencesInput>
+  }
+
+  export type UserUpsertWithoutSessionPresenceInput = {
+    update: XOR<UserUpdateWithoutSessionPresenceInput, UserUncheckedUpdateWithoutSessionPresenceInput>
+    create: XOR<UserCreateWithoutSessionPresenceInput, UserUncheckedCreateWithoutSessionPresenceInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutSessionPresenceInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutSessionPresenceInput, UserUncheckedUpdateWithoutSessionPresenceInput>
+  }
+
+  export type UserUpdateWithoutSessionPresenceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    coverImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarImageUTKey?: NullableStringFieldUpdateOperationsInput | string | null
+    coverImageUTKey?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    banReason?: NullableStringFieldUpdateOperationsInput | string | null
+    banExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    preferences?: UserPreferencesUpdateOneWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    terminalSessions?: TerminalSessionUpdateManyWithoutUserNestedInput
+    tasks?: TaskUpdateManyWithoutUserNestedInput
+    apiClients?: ApiClientUpdateManyWithoutUserNestedInput
+    projects?: ProjectUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutSessionPresenceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    coverImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarImageUTKey?: NullableStringFieldUpdateOperationsInput | string | null
+    coverImageUTKey?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    banReason?: NullableStringFieldUpdateOperationsInput | string | null
+    banExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    displayUsername?: NullableStringFieldUpdateOperationsInput | string | null
+    preferences?: UserPreferencesUncheckedUpdateOneWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    terminalSessions?: TerminalSessionUncheckedUpdateManyWithoutUserNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutUserNestedInput
+    apiClients?: ApiClientUncheckedUpdateManyWithoutUserNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type TerminalSessionUpsertWithoutPresencesInput = {
+    update: XOR<TerminalSessionUpdateWithoutPresencesInput, TerminalSessionUncheckedUpdateWithoutPresencesInput>
+    create: XOR<TerminalSessionCreateWithoutPresencesInput, TerminalSessionUncheckedCreateWithoutPresencesInput>
+    where?: TerminalSessionWhereInput
+  }
+
+  export type TerminalSessionUpdateToOneWithWhereWithoutPresencesInput = {
+    where?: TerminalSessionWhereInput
+    data: XOR<TerminalSessionUpdateWithoutPresencesInput, TerminalSessionUncheckedUpdateWithoutPresencesInput>
+  }
+
+  export type TerminalSessionUpdateWithoutPresencesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    status?: EnumTerminalSessionStatusFieldUpdateOperationsInput | $Enums.TerminalSessionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    port?: NullableIntFieldUpdateOperationsInput | number | null
+    wsPath?: NullableStringFieldUpdateOperationsInput | string | null
+    containerName?: NullableStringFieldUpdateOperationsInput | string | null
+    user?: UserUpdateOneRequiredWithoutTerminalSessionsNestedInput
+    project?: ProjectUpdateOneWithoutSessionsNestedInput
+  }
+
+  export type TerminalSessionUncheckedUpdateWithoutPresencesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    status?: EnumTerminalSessionStatusFieldUpdateOperationsInput | $Enums.TerminalSessionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    port?: NullableIntFieldUpdateOperationsInput | number | null
+    wsPath?: NullableStringFieldUpdateOperationsInput | string | null
+    containerName?: NullableStringFieldUpdateOperationsInput | string | null
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type SessionCreateManyUserInput = {
     id: string
     expiresAt: Date | string
@@ -22713,6 +24593,7 @@ export namespace Prisma {
     wsPath?: NullableStringFieldUpdateOperationsInput | string | null
     containerName?: NullableStringFieldUpdateOperationsInput | string | null
     project?: ProjectUpdateOneWithoutSessionsNestedInput
+    presences?: SessionPresenceUpdateManyWithoutSessionNestedInput
   }
 
   export type TerminalSessionUncheckedUpdateWithoutUserInput = {
@@ -22725,6 +24606,7 @@ export namespace Prisma {
     wsPath?: NullableStringFieldUpdateOperationsInput | string | null
     containerName?: NullableStringFieldUpdateOperationsInput | string | null
     projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    presences?: SessionPresenceUncheckedUpdateManyWithoutSessionNestedInput
   }
 
   export type TerminalSessionUncheckedUpdateManyWithoutUserInput = {
@@ -22840,6 +24722,30 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type SessionPresenceCreateManySessionInput = {
+    userId: string
+    status?: $Enums.PresenceStatus
+    lastSeen?: Date | string
+  }
+
+  export type SessionPresenceUpdateWithoutSessionInput = {
+    status?: EnumPresenceStatusFieldUpdateOperationsInput | $Enums.PresenceStatus
+    lastSeen?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutSessionPresenceNestedInput
+  }
+
+  export type SessionPresenceUncheckedUpdateWithoutSessionInput = {
+    userId?: StringFieldUpdateOperationsInput | string
+    status?: EnumPresenceStatusFieldUpdateOperationsInput | $Enums.PresenceStatus
+    lastSeen?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SessionPresenceUncheckedUpdateManyWithoutSessionInput = {
+    userId?: StringFieldUpdateOperationsInput | string
+    status?: EnumPresenceStatusFieldUpdateOperationsInput | $Enums.PresenceStatus
+    lastSeen?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type TerminalSessionCreateManyProjectInput = {
     id?: string
     name: string
@@ -22862,6 +24768,7 @@ export namespace Prisma {
     wsPath?: NullableStringFieldUpdateOperationsInput | string | null
     containerName?: NullableStringFieldUpdateOperationsInput | string | null
     user?: UserUpdateOneRequiredWithoutTerminalSessionsNestedInput
+    presences?: SessionPresenceUpdateManyWithoutSessionNestedInput
   }
 
   export type TerminalSessionUncheckedUpdateWithoutProjectInput = {
@@ -22874,6 +24781,7 @@ export namespace Prisma {
     port?: NullableIntFieldUpdateOperationsInput | number | null
     wsPath?: NullableStringFieldUpdateOperationsInput | string | null
     containerName?: NullableStringFieldUpdateOperationsInput | string | null
+    presences?: SessionPresenceUncheckedUpdateManyWithoutSessionNestedInput
   }
 
   export type TerminalSessionUncheckedUpdateManyWithoutProjectInput = {

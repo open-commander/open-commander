@@ -89,7 +89,8 @@ export function TerminalPane({
 
   const setTerminalNode = useCallback((node: HTMLDivElement | null) => {
     containerRef.current = node;
-    setTerminalHost(node);
+    if (!node) return;
+    setTerminalHost((current) => (current === node ? current : node));
   }, []);
 
   useEffect(() => {

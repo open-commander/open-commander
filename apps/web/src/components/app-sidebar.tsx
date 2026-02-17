@@ -21,6 +21,7 @@ import {
 } from "react";
 import { useProject } from "@/components/projects/project-context";
 import { ProjectIcon } from "@/components/projects/project-icon";
+import { SessionPresenceAvatars } from "@/components/projects/session-presence-avatars";
 import { useShortcuts } from "@/components/shortcuts";
 import {
   Tooltip,
@@ -28,6 +29,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { env } from "@/env";
 import { api } from "@/trpc/react";
 
 const navButtonBase =
@@ -119,6 +121,14 @@ export function AppSidebar() {
     { enabled: Boolean(expandedProjectId), refetchInterval: 5000 },
   );
   const mobileSessions = sessionsQuery.data ?? [];
+
+  const mobilePresenceEnabled =
+    !env.NEXT_PUBLIC_DISABLE_AUTH && Boolean(expandedProjectId);
+  const mobilePresenceQuery = api.presence.listByProject.useQuery(
+    { projectId: expandedProjectId ?? "" },
+    { enabled: mobilePresenceEnabled, refetchInterval: 5000 },
+  );
+  const mobilePresences = mobilePresenceQuery.data ?? [];
 
   const createSessionMutation = api.project.createSession.useMutation({
     onSuccess: (session) => {
@@ -295,6 +305,12 @@ export function AppSidebar() {
                                   />
                                   <span className="truncate">
                                     {session.name}
+                                  </span>
+                                  <span className="ml-auto">
+                                    <SessionPresenceAvatars
+                                      sessionId={session.id}
+                                      presences={mobilePresences}
+                                    />
                                   </span>
                                 </button>
                               );

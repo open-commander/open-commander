@@ -280,6 +280,13 @@ exports.Prisma.ApiCallLogScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.SessionPresenceScalarFieldEnum = {
+  userId: 'userId',
+  sessionId: 'sessionId',
+  status: 'status',
+  lastSeen: 'lastSeen'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -339,6 +346,12 @@ exports.TaskExecutionStatus = exports.$Enums.TaskExecutionStatus = {
   needs_input: 'needs_input'
 };
 
+exports.PresenceStatus = exports.$Enums.PresenceStatus = {
+  active: 'active',
+  viewing: 'viewing',
+  inactive: 'inactive'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Session: 'Session',
@@ -351,7 +364,8 @@ exports.Prisma.ModelName = {
   TaskExecution: 'TaskExecution',
   ApiClient: 'ApiClient',
   ApiSecret: 'ApiSecret',
-  ApiCallLog: 'ApiCallLog'
+  ApiCallLog: 'ApiCallLog',
+  SessionPresence: 'SessionPresence'
 };
 
 /**
