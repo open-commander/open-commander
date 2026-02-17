@@ -200,6 +200,36 @@ export const terminalRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       await ensureMySession(input.id, ctx.session.user.id);
+
+      // Collect all descendant sessions recursively
+      const descendants: string[] = [];
+      const collectDescendants = async (parentId: string) => {
+        const children = await ctx.db.terminalSession.findMany({
+          where: { parentId, userId: ctx.session.user.id },
+          select: { id: true },
+        });
+        for (const child of children) {
+          descendants.push(child.id);
+          await collectDescendants(child.id);
+        }
+      };
+      await collectDescendants(input.id);
+
+      // Stop and clean up all descendants
+      await Promise.allSettled(
+        descendants.map(async (id) => {
+          await sessionService.stop(id).catch(() => {});
+          await portProxyService.removeAll(id).catch(() => {});
+        }),
+      );
+      if (descendants.length > 0) {
+        await ctx.db.terminalSession.updateMany({
+          where: { id: { in: descendants }, userId: ctx.session.user.id },
+          data: { status: "stopped" },
+        });
+      }
+
+      // Stop and clean up the target session
       const stopResult = await sessionService.stop(input.id);
       await ctx.db.terminalSession.update({
         where: { id: input.id, userId: ctx.session.user.id },

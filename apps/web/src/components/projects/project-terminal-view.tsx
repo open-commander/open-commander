@@ -5,9 +5,9 @@ import { useCallback, useRef, useState } from "react";
 import { TerminalPane } from "@/components/terminal";
 import type { TerminalStatus } from "@/components/terminal/types";
 import { Button } from "@/components/ui/button";
-import { api } from "@/trpc/react";
 import { buildCliCommand } from "@/lib/agent-cli-flags";
 import type { AgentId } from "@/lib/agent-preferences";
+import { api } from "@/trpc/react";
 import { useProject } from "./project-context";
 
 const EMPTY_STATE = {

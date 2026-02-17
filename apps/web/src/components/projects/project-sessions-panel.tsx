@@ -2,6 +2,8 @@
 
 import {
   AlertTriangle,
+  GitFork,
+  Layers,
   Loader2,
   MoreVertical,
   Pencil,
@@ -18,8 +20,10 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { env } from "@/env";
+import { buildSessionTree } from "@/lib/session-tree";
 import { api } from "@/trpc/react";
 import { ConfirmDeleteProjectModal } from "./confirm-delete-project-modal";
+import { ConfirmRemoveSessionModal } from "./confirm-remove-session-modal";
 import { useProject } from "./project-context";
 import { SessionPresenceAvatars } from "./session-presence-avatars";
 
@@ -79,6 +83,28 @@ export function ProjectSessionsPanel() {
     },
   });
 
+  const forkSessionMutation = api.project.forkSession.useMutation({
+    onSuccess: (session) => {
+      void utils.project.listSessions.invalidate({
+        projectId: selectedProjectId ?? "",
+      });
+      void utils.terminal.ingressStatus.invalidate();
+      markSessionCreated(session.id);
+      setSelectedSessionId(session.id);
+    },
+  });
+
+  const stackSessionMutation = api.project.stackSession.useMutation({
+    onSuccess: (session) => {
+      void utils.project.listSessions.invalidate({
+        projectId: selectedProjectId ?? "",
+      });
+      void utils.terminal.ingressStatus.invalidate();
+      markSessionCreated(session.id);
+      setSelectedSessionId(session.id);
+    },
+  });
+
   const removeSessionMutation = api.terminal.removeSession.useMutation({
     onSuccess: (_result, variables) => {
       void utils.project.listSessions.invalidate({
@@ -114,6 +140,11 @@ export function ProjectSessionsPanel() {
 
   const [sessionMenu, setSessionMenu] = useState<MenuState>(null);
   const [projectMenu, setProjectMenu] = useState<MenuState>(null);
+  const [removeConfirm, setRemoveConfirm] = useState<{
+    id: string;
+    name: string;
+    childCount: number;
+  } | null>(null);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const sessionMenuRef = useRef<HTMLDivElement>(null);
   const projectMenuRef = useRef<HTMLDivElement>(null);
@@ -168,12 +199,69 @@ export function ProjectSessionsPanel() {
     [updateNameMutation],
   );
 
+  const countDescendants = useCallback(
+    (sessionId: string): number => {
+      let count = 0;
+      const walk = (parentId: string) => {
+        for (const s of sessions) {
+          if (s.parentId === parentId) {
+            count++;
+            walk(s.id);
+          }
+        }
+      };
+      walk(sessionId);
+      return count;
+    },
+    [sessions],
+  );
+
   const handleRemove = useCallback(
     (sessionId: string) => {
       setSessionMenu(null);
-      removeSessionMutation.mutate({ id: sessionId });
+      const childCount = countDescendants(sessionId);
+      if (childCount > 0) {
+        const session = sessions.find((s) => s.id === sessionId);
+        setRemoveConfirm({
+          id: sessionId,
+          name: session?.name ?? "Session",
+          childCount,
+        });
+      } else {
+        removeSessionMutation.mutate({ id: sessionId });
+      }
     },
-    [removeSessionMutation],
+    [sessions, countDescendants, removeSessionMutation],
+  );
+
+  const confirmRemoveSession = useCallback(() => {
+    if (!removeConfirm) return;
+    removeSessionMutation.mutate({ id: removeConfirm.id });
+    setRemoveConfirm(null);
+  }, [removeConfirm, removeSessionMutation]);
+
+  const handleFork = useCallback(
+    (sessionId: string) => {
+      setSessionMenu(null);
+      if (!selectedProjectId) return;
+      forkSessionMutation.mutate({
+        projectId: selectedProjectId,
+        parentSessionId: sessionId,
+      });
+    },
+    [selectedProjectId, forkSessionMutation],
+  );
+
+  const handleStack = useCallback(
+    (sessionId: string) => {
+      setSessionMenu(null);
+      if (!selectedProjectId) return;
+      stackSessionMutation.mutate({
+        projectId: selectedProjectId,
+        parentSessionId: sessionId,
+      });
+    },
+    [selectedProjectId, stackSessionMutation],
   );
 
   const handleRenameProject = useCallback(() => {
@@ -386,17 +474,91 @@ export function ProjectSessionsPanel() {
               Loading...
             </div>
           ) : (
-            sessions.map((session) => {
+            buildSessionTree(sessions).map((node) => {
+              const {
+                session,
+                depth,
+                relationType,
+                isLastChild,
+                connectorColumns,
+              } = node;
               const isActive = session.id === selectedSessionId;
               return (
                 <div
                   key={session.id}
-                  className={`group cursor-pointer relative flex items-center gap-2 rounded-lg px-2.5 text-sm transition ${
+                  className={`group cursor-pointer relative flex items-center gap-0 rounded-lg px-2.5 text-sm transition ${
                     isActive
                       ? "bg-emerald-400/15 text-emerald-200"
                       : "text-slate-300 hover:bg-white/5 hover:text-slate-100"
                   }`}
+                  style={{ paddingLeft: `${depth * 20 + 10}px` }}
                 >
+                  {/* Downward line from parent dot to children */}
+                  {node.hasChildren && (
+                    <span
+                      className="pointer-events-none absolute"
+                      style={{
+                        left: `${depth * 20 + 14}px`,
+                        top: "50%",
+                        bottom: "-4px",
+                      }}
+                      aria-hidden
+                    >
+                      <span className="absolute left-0 top-0 h-full w-px bg-slate-600" />
+                    </span>
+                  )}
+                  {/* Ancestor continuation lines */}
+                  {connectorColumns.map((col) => (
+                    <span
+                      key={col}
+                      className="pointer-events-none absolute"
+                      style={{
+                        left: `${col * 20 + 14}px`,
+                        top: "-4px",
+                        bottom: "-4px",
+                      }}
+                      aria-hidden
+                    >
+                      <span className="absolute left-0 top-0 h-full w-px bg-slate-600" />
+                    </span>
+                  ))}
+                  {/* Fork connector — vertical bar through the dot */}
+                  {relationType === "fork" && (
+                    <span
+                      className="pointer-events-none absolute bottom-0"
+                      style={{ left: `${depth * 20 + 14}px`, top: "-4px" }}
+                      aria-hidden
+                    >
+                      <span
+                        className="absolute left-0 top-0 w-px bg-slate-600"
+                        style={{
+                          height: isLastChild ? "calc(50% + 2px)" : "100%",
+                        }}
+                      />
+                    </span>
+                  )}
+                  {/* Stack connector — L-shape from parent column */}
+                  {relationType === "stack" && (
+                    <span
+                      className="pointer-events-none absolute bottom-0"
+                      style={{
+                        left: `${(depth - 1) * 20 + 14}px`,
+                        top: "-4px",
+                      }}
+                      aria-hidden
+                    >
+                      <span
+                        className="absolute left-0 top-0 w-px bg-slate-600"
+                        style={{
+                          height: isLastChild ? "calc(50% + 2px)" : "100%",
+                        }}
+                      />
+                      <span
+                        className="absolute left-0 h-px w-4 bg-slate-600"
+                        style={{ top: "calc(50% + 2px)" }}
+                      />
+                    </span>
+                  )}
                   <button
                     type="button"
                     className="flex min-w-0 flex-1 cursor-pointer items-center gap-2 text-left py-3"
@@ -405,36 +567,68 @@ export function ProjectSessionsPanel() {
                     }}
                   >
                     <span
-                      className={`h-2 w-2 shrink-0 rounded-full ${statusColor(session.status)}`}
+                      className={`relative z-10 h-2 w-2 shrink-0 rounded-full ${statusColor(session.status)}`}
                       aria-hidden
                     />
                     <span className="truncate">{session.name}</span>
-                    <span className="ml-auto">
+                    <span className="ml-auto group-hover:hidden">
                       <SessionPresenceAvatars
                         sessionId={session.id}
                         presences={presences}
                       />
                     </span>
                   </button>
-                  <button
-                    type="button"
-                    className="flex h-6 w-6 shrink-0 cursor-pointer items-center justify-center rounded text-slate-500 opacity-0 transition hover:bg-white/10 hover:text-slate-300 group-hover:opacity-100"
-                    aria-label="Session options"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSessionMenu({
-                        id: session.id,
-                        x: e.clientX,
-                        y: e.clientY,
-                      });
-                    }}
-                  >
-                    <MoreVertical
-                      className="h-3.5 w-3.5"
-                      strokeWidth={1.6}
-                      aria-hidden
-                    />
-                  </button>
+                  <div className="flex shrink-0 items-center gap-0.5 opacity-0 transition group-hover:opacity-100">
+                    <button
+                      type="button"
+                      className="flex h-6 w-6 cursor-pointer items-center justify-center rounded text-slate-500 hover:bg-white/10 hover:text-slate-300"
+                      aria-label="Stack session"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleStack(session.id);
+                      }}
+                    >
+                      <Layers
+                        className="h-3 w-3"
+                        strokeWidth={1.6}
+                        aria-hidden
+                      />
+                    </button>
+                    <button
+                      type="button"
+                      className="flex h-6 w-6 cursor-pointer items-center justify-center rounded text-slate-500 hover:bg-white/10 hover:text-slate-300"
+                      aria-label="Fork session"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleFork(session.id);
+                      }}
+                    >
+                      <GitFork
+                        className="h-3 w-3"
+                        strokeWidth={1.6}
+                        aria-hidden
+                      />
+                    </button>
+                    <button
+                      type="button"
+                      className="flex h-6 w-6 cursor-pointer items-center justify-center rounded text-slate-500 hover:bg-white/10 hover:text-slate-300"
+                      aria-label="Session options"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSessionMenu({
+                          id: session.id,
+                          x: e.clientX,
+                          y: e.clientY,
+                        });
+                      }}
+                    >
+                      <MoreVertical
+                        className="h-3.5 w-3.5"
+                        strokeWidth={1.6}
+                        aria-hidden
+                      />
+                    </button>
+                  </div>
                 </div>
               );
             })
@@ -468,6 +662,22 @@ export function ProjectSessionsPanel() {
           >
             <Pencil className="h-3.5 w-3.5" strokeWidth={1.6} aria-hidden />
             Rename
+          </button>
+          <button
+            type="button"
+            className="flex w-full items-center gap-2 px-3 py-1.5 text-left text-sm text-slate-200 transition hover:bg-white/10"
+            onClick={() => handleFork(sessionMenu.id)}
+          >
+            <GitFork className="h-3.5 w-3.5" strokeWidth={1.6} aria-hidden />
+            Fork
+          </button>
+          <button
+            type="button"
+            className="flex w-full items-center gap-2 px-3 py-1.5 text-left text-sm text-slate-200 transition hover:bg-white/10"
+            onClick={() => handleStack(sessionMenu.id)}
+          >
+            <Layers className="h-3.5 w-3.5" strokeWidth={1.6} aria-hidden />
+            Stack
           </button>
           <button
             type="button"
@@ -512,6 +722,14 @@ export function ProjectSessionsPanel() {
         projectName={project?.name ?? ""}
         onClose={() => setDeleteConfirmOpen(false)}
         onConfirm={confirmDeleteProject}
+      />
+
+      <ConfirmRemoveSessionModal
+        open={removeConfirm !== null}
+        sessionName={removeConfirm?.name ?? ""}
+        childCount={removeConfirm?.childCount ?? 0}
+        onClose={() => setRemoveConfirm(null)}
+        onConfirm={confirmRemoveSession}
       />
     </>
   );

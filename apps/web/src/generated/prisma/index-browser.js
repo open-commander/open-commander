@@ -189,7 +189,9 @@ exports.Prisma.TerminalSessionScalarFieldEnum = {
   port: 'port',
   wsPath: 'wsPath',
   containerName: 'containerName',
-  projectId: 'projectId'
+  projectId: 'projectId',
+  parentId: 'parentId',
+  relationType: 'relationType'
 };
 
 exports.Prisma.ProjectScalarFieldEnum = {
@@ -317,6 +319,11 @@ exports.TerminalSessionStatus = exports.$Enums.TerminalSessionStatus = {
   starting: 'starting',
   running: 'running',
   stopped: 'stopped'
+};
+
+exports.SessionRelationType = exports.$Enums.SessionRelationType = {
+  fork: 'fork',
+  stack: 'stack'
 };
 
 exports.AgentProvider = exports.$Enums.AgentProvider = {

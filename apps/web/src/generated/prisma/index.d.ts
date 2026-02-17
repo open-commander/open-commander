@@ -276,6 +276,14 @@ export namespace $Enums {
 export type TerminalSessionStatus = (typeof TerminalSessionStatus)[keyof typeof TerminalSessionStatus]
 
 
+export const SessionRelationType: {
+  fork: 'fork',
+  stack: 'stack'
+};
+
+export type SessionRelationType = (typeof SessionRelationType)[keyof typeof SessionRelationType]
+
+
 export const AgentProvider: {
   opencode: 'opencode',
   claude: 'claude',
@@ -328,6 +336,10 @@ export type PresenceStatus = (typeof PresenceStatus)[keyof typeof PresenceStatus
 export type TerminalSessionStatus = $Enums.TerminalSessionStatus
 
 export const TerminalSessionStatus: typeof $Enums.TerminalSessionStatus
+
+export type SessionRelationType = $Enums.SessionRelationType
+
+export const SessionRelationType: typeof $Enums.SessionRelationType
 
 export type AgentProvider = $Enums.AgentProvider
 
@@ -2300,10 +2312,12 @@ export namespace Prisma {
    */
 
   export type TerminalSessionCountOutputType = {
+    children: number
     presences: number
   }
 
   export type TerminalSessionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    children?: boolean | TerminalSessionCountOutputTypeCountChildrenArgs
     presences?: boolean | TerminalSessionCountOutputTypeCountPresencesArgs
   }
 
@@ -2316,6 +2330,13 @@ export namespace Prisma {
      * Select specific fields to fetch from the TerminalSessionCountOutputType
      */
     select?: TerminalSessionCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * TerminalSessionCountOutputType without action
+   */
+  export type TerminalSessionCountOutputTypeCountChildrenArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TerminalSessionWhereInput
   }
 
   /**
@@ -7181,6 +7202,8 @@ export namespace Prisma {
     wsPath: string | null
     containerName: string | null
     projectId: string | null
+    parentId: string | null
+    relationType: $Enums.SessionRelationType | null
   }
 
   export type TerminalSessionMaxAggregateOutputType = {
@@ -7194,6 +7217,8 @@ export namespace Prisma {
     wsPath: string | null
     containerName: string | null
     projectId: string | null
+    parentId: string | null
+    relationType: $Enums.SessionRelationType | null
   }
 
   export type TerminalSessionCountAggregateOutputType = {
@@ -7207,6 +7232,8 @@ export namespace Prisma {
     wsPath: number
     containerName: number
     projectId: number
+    parentId: number
+    relationType: number
     _all: number
   }
 
@@ -7230,6 +7257,8 @@ export namespace Prisma {
     wsPath?: true
     containerName?: true
     projectId?: true
+    parentId?: true
+    relationType?: true
   }
 
   export type TerminalSessionMaxAggregateInputType = {
@@ -7243,6 +7272,8 @@ export namespace Prisma {
     wsPath?: true
     containerName?: true
     projectId?: true
+    parentId?: true
+    relationType?: true
   }
 
   export type TerminalSessionCountAggregateInputType = {
@@ -7256,6 +7287,8 @@ export namespace Prisma {
     wsPath?: true
     containerName?: true
     projectId?: true
+    parentId?: true
+    relationType?: true
     _all?: true
   }
 
@@ -7356,6 +7389,8 @@ export namespace Prisma {
     wsPath: string | null
     containerName: string | null
     projectId: string | null
+    parentId: string | null
+    relationType: $Enums.SessionRelationType | null
     _count: TerminalSessionCountAggregateOutputType | null
     _avg: TerminalSessionAvgAggregateOutputType | null
     _sum: TerminalSessionSumAggregateOutputType | null
@@ -7388,8 +7423,12 @@ export namespace Prisma {
     wsPath?: boolean
     containerName?: boolean
     projectId?: boolean
+    parentId?: boolean
+    relationType?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     project?: boolean | TerminalSession$projectArgs<ExtArgs>
+    parent?: boolean | TerminalSession$parentArgs<ExtArgs>
+    children?: boolean | TerminalSession$childrenArgs<ExtArgs>
     presences?: boolean | TerminalSession$presencesArgs<ExtArgs>
     _count?: boolean | TerminalSessionCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["terminalSession"]>
@@ -7405,8 +7444,11 @@ export namespace Prisma {
     wsPath?: boolean
     containerName?: boolean
     projectId?: boolean
+    parentId?: boolean
+    relationType?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     project?: boolean | TerminalSession$projectArgs<ExtArgs>
+    parent?: boolean | TerminalSession$parentArgs<ExtArgs>
   }, ExtArgs["result"]["terminalSession"]>
 
   export type TerminalSessionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -7420,8 +7462,11 @@ export namespace Prisma {
     wsPath?: boolean
     containerName?: boolean
     projectId?: boolean
+    parentId?: boolean
+    relationType?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     project?: boolean | TerminalSession$projectArgs<ExtArgs>
+    parent?: boolean | TerminalSession$parentArgs<ExtArgs>
   }, ExtArgs["result"]["terminalSession"]>
 
   export type TerminalSessionSelectScalar = {
@@ -7435,22 +7480,28 @@ export namespace Prisma {
     wsPath?: boolean
     containerName?: boolean
     projectId?: boolean
+    parentId?: boolean
+    relationType?: boolean
   }
 
-  export type TerminalSessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "userId" | "status" | "createdAt" | "updatedAt" | "port" | "wsPath" | "containerName" | "projectId", ExtArgs["result"]["terminalSession"]>
+  export type TerminalSessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "userId" | "status" | "createdAt" | "updatedAt" | "port" | "wsPath" | "containerName" | "projectId" | "parentId" | "relationType", ExtArgs["result"]["terminalSession"]>
   export type TerminalSessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     project?: boolean | TerminalSession$projectArgs<ExtArgs>
+    parent?: boolean | TerminalSession$parentArgs<ExtArgs>
+    children?: boolean | TerminalSession$childrenArgs<ExtArgs>
     presences?: boolean | TerminalSession$presencesArgs<ExtArgs>
     _count?: boolean | TerminalSessionCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type TerminalSessionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     project?: boolean | TerminalSession$projectArgs<ExtArgs>
+    parent?: boolean | TerminalSession$parentArgs<ExtArgs>
   }
   export type TerminalSessionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     project?: boolean | TerminalSession$projectArgs<ExtArgs>
+    parent?: boolean | TerminalSession$parentArgs<ExtArgs>
   }
 
   export type $TerminalSessionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7458,6 +7509,8 @@ export namespace Prisma {
     objects: {
       user: Prisma.$UserPayload<ExtArgs>
       project: Prisma.$ProjectPayload<ExtArgs> | null
+      parent: Prisma.$TerminalSessionPayload<ExtArgs> | null
+      children: Prisma.$TerminalSessionPayload<ExtArgs>[]
       presences: Prisma.$SessionPresencePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -7471,6 +7524,8 @@ export namespace Prisma {
       wsPath: string | null
       containerName: string | null
       projectId: string | null
+      parentId: string | null
+      relationType: $Enums.SessionRelationType | null
     }, ExtArgs["result"]["terminalSession"]>
     composites: {}
   }
@@ -7867,6 +7922,8 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     project<T extends TerminalSession$projectArgs<ExtArgs> = {}>(args?: Subset<T, TerminalSession$projectArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    parent<T extends TerminalSession$parentArgs<ExtArgs> = {}>(args?: Subset<T, TerminalSession$parentArgs<ExtArgs>>): Prisma__TerminalSessionClient<$Result.GetResult<Prisma.$TerminalSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    children<T extends TerminalSession$childrenArgs<ExtArgs> = {}>(args?: Subset<T, TerminalSession$childrenArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TerminalSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     presences<T extends TerminalSession$presencesArgs<ExtArgs> = {}>(args?: Subset<T, TerminalSession$presencesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionPresencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -7907,6 +7964,8 @@ export namespace Prisma {
     readonly wsPath: FieldRef<"TerminalSession", 'String'>
     readonly containerName: FieldRef<"TerminalSession", 'String'>
     readonly projectId: FieldRef<"TerminalSession", 'String'>
+    readonly parentId: FieldRef<"TerminalSession", 'String'>
+    readonly relationType: FieldRef<"TerminalSession", 'SessionRelationType'>
   }
     
 
@@ -8319,6 +8378,49 @@ export namespace Prisma {
      */
     include?: ProjectInclude<ExtArgs> | null
     where?: ProjectWhereInput
+  }
+
+  /**
+   * TerminalSession.parent
+   */
+  export type TerminalSession$parentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TerminalSession
+     */
+    select?: TerminalSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TerminalSession
+     */
+    omit?: TerminalSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TerminalSessionInclude<ExtArgs> | null
+    where?: TerminalSessionWhereInput
+  }
+
+  /**
+   * TerminalSession.children
+   */
+  export type TerminalSession$childrenArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TerminalSession
+     */
+    select?: TerminalSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TerminalSession
+     */
+    omit?: TerminalSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TerminalSessionInclude<ExtArgs> | null
+    where?: TerminalSessionWhereInput
+    orderBy?: TerminalSessionOrderByWithRelationInput | TerminalSessionOrderByWithRelationInput[]
+    cursor?: TerminalSessionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TerminalSessionScalarFieldEnum | TerminalSessionScalarFieldEnum[]
   }
 
   /**
@@ -17519,7 +17621,9 @@ export namespace Prisma {
     port: 'port',
     wsPath: 'wsPath',
     containerName: 'containerName',
-    projectId: 'projectId'
+    projectId: 'projectId',
+    parentId: 'parentId',
+    relationType: 'relationType'
   };
 
   export type TerminalSessionScalarFieldEnum = (typeof TerminalSessionScalarFieldEnum)[keyof typeof TerminalSessionScalarFieldEnum]
@@ -17750,6 +17854,20 @@ export namespace Prisma {
    * Reference to a field of type 'Int[]'
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'SessionRelationType'
+   */
+  export type EnumSessionRelationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SessionRelationType'>
+    
+
+
+  /**
+   * Reference to a field of type 'SessionRelationType[]'
+   */
+  export type ListEnumSessionRelationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SessionRelationType[]'>
     
 
 
@@ -18241,8 +18359,12 @@ export namespace Prisma {
     wsPath?: StringNullableFilter<"TerminalSession"> | string | null
     containerName?: StringNullableFilter<"TerminalSession"> | string | null
     projectId?: StringNullableFilter<"TerminalSession"> | string | null
+    parentId?: StringNullableFilter<"TerminalSession"> | string | null
+    relationType?: EnumSessionRelationTypeNullableFilter<"TerminalSession"> | $Enums.SessionRelationType | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     project?: XOR<ProjectNullableScalarRelationFilter, ProjectWhereInput> | null
+    parent?: XOR<TerminalSessionNullableScalarRelationFilter, TerminalSessionWhereInput> | null
+    children?: TerminalSessionListRelationFilter
     presences?: SessionPresenceListRelationFilter
   }
 
@@ -18257,8 +18379,12 @@ export namespace Prisma {
     wsPath?: SortOrderInput | SortOrder
     containerName?: SortOrderInput | SortOrder
     projectId?: SortOrderInput | SortOrder
+    parentId?: SortOrderInput | SortOrder
+    relationType?: SortOrderInput | SortOrder
     user?: UserOrderByWithRelationInput
     project?: ProjectOrderByWithRelationInput
+    parent?: TerminalSessionOrderByWithRelationInput
+    children?: TerminalSessionOrderByRelationAggregateInput
     presences?: SessionPresenceOrderByRelationAggregateInput
   }
 
@@ -18276,8 +18402,12 @@ export namespace Prisma {
     wsPath?: StringNullableFilter<"TerminalSession"> | string | null
     containerName?: StringNullableFilter<"TerminalSession"> | string | null
     projectId?: StringNullableFilter<"TerminalSession"> | string | null
+    parentId?: StringNullableFilter<"TerminalSession"> | string | null
+    relationType?: EnumSessionRelationTypeNullableFilter<"TerminalSession"> | $Enums.SessionRelationType | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     project?: XOR<ProjectNullableScalarRelationFilter, ProjectWhereInput> | null
+    parent?: XOR<TerminalSessionNullableScalarRelationFilter, TerminalSessionWhereInput> | null
+    children?: TerminalSessionListRelationFilter
     presences?: SessionPresenceListRelationFilter
   }, "id">
 
@@ -18292,6 +18422,8 @@ export namespace Prisma {
     wsPath?: SortOrderInput | SortOrder
     containerName?: SortOrderInput | SortOrder
     projectId?: SortOrderInput | SortOrder
+    parentId?: SortOrderInput | SortOrder
+    relationType?: SortOrderInput | SortOrder
     _count?: TerminalSessionCountOrderByAggregateInput
     _avg?: TerminalSessionAvgOrderByAggregateInput
     _max?: TerminalSessionMaxOrderByAggregateInput
@@ -18313,6 +18445,8 @@ export namespace Prisma {
     wsPath?: StringNullableWithAggregatesFilter<"TerminalSession"> | string | null
     containerName?: StringNullableWithAggregatesFilter<"TerminalSession"> | string | null
     projectId?: StringNullableWithAggregatesFilter<"TerminalSession"> | string | null
+    parentId?: StringNullableWithAggregatesFilter<"TerminalSession"> | string | null
+    relationType?: EnumSessionRelationTypeNullableWithAggregatesFilter<"TerminalSession"> | $Enums.SessionRelationType | null
   }
 
   export type ProjectWhereInput = {
@@ -19381,8 +19515,11 @@ export namespace Prisma {
     port?: number | null
     wsPath?: string | null
     containerName?: string | null
+    relationType?: $Enums.SessionRelationType | null
     user: UserCreateNestedOneWithoutTerminalSessionsInput
     project?: ProjectCreateNestedOneWithoutSessionsInput
+    parent?: TerminalSessionCreateNestedOneWithoutChildrenInput
+    children?: TerminalSessionCreateNestedManyWithoutParentInput
     presences?: SessionPresenceCreateNestedManyWithoutSessionInput
   }
 
@@ -19397,6 +19534,9 @@ export namespace Prisma {
     wsPath?: string | null
     containerName?: string | null
     projectId?: string | null
+    parentId?: string | null
+    relationType?: $Enums.SessionRelationType | null
+    children?: TerminalSessionUncheckedCreateNestedManyWithoutParentInput
     presences?: SessionPresenceUncheckedCreateNestedManyWithoutSessionInput
   }
 
@@ -19409,8 +19549,11 @@ export namespace Prisma {
     port?: NullableIntFieldUpdateOperationsInput | number | null
     wsPath?: NullableStringFieldUpdateOperationsInput | string | null
     containerName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationType?: NullableEnumSessionRelationTypeFieldUpdateOperationsInput | $Enums.SessionRelationType | null
     user?: UserUpdateOneRequiredWithoutTerminalSessionsNestedInput
     project?: ProjectUpdateOneWithoutSessionsNestedInput
+    parent?: TerminalSessionUpdateOneWithoutChildrenNestedInput
+    children?: TerminalSessionUpdateManyWithoutParentNestedInput
     presences?: SessionPresenceUpdateManyWithoutSessionNestedInput
   }
 
@@ -19425,6 +19568,9 @@ export namespace Prisma {
     wsPath?: NullableStringFieldUpdateOperationsInput | string | null
     containerName?: NullableStringFieldUpdateOperationsInput | string | null
     projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    relationType?: NullableEnumSessionRelationTypeFieldUpdateOperationsInput | $Enums.SessionRelationType | null
+    children?: TerminalSessionUncheckedUpdateManyWithoutParentNestedInput
     presences?: SessionPresenceUncheckedUpdateManyWithoutSessionNestedInput
   }
 
@@ -19439,6 +19585,8 @@ export namespace Prisma {
     wsPath?: string | null
     containerName?: string | null
     projectId?: string | null
+    parentId?: string | null
+    relationType?: $Enums.SessionRelationType | null
   }
 
   export type TerminalSessionUpdateManyMutationInput = {
@@ -19450,6 +19598,7 @@ export namespace Prisma {
     port?: NullableIntFieldUpdateOperationsInput | number | null
     wsPath?: NullableStringFieldUpdateOperationsInput | string | null
     containerName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationType?: NullableEnumSessionRelationTypeFieldUpdateOperationsInput | $Enums.SessionRelationType | null
   }
 
   export type TerminalSessionUncheckedUpdateManyInput = {
@@ -19463,6 +19612,8 @@ export namespace Prisma {
     wsPath?: NullableStringFieldUpdateOperationsInput | string | null
     containerName?: NullableStringFieldUpdateOperationsInput | string | null
     projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    relationType?: NullableEnumSessionRelationTypeFieldUpdateOperationsInput | $Enums.SessionRelationType | null
   }
 
   export type ProjectCreateInput = {
@@ -20541,9 +20692,21 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
+  export type EnumSessionRelationTypeNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.SessionRelationType | EnumSessionRelationTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.SessionRelationType[] | ListEnumSessionRelationTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.SessionRelationType[] | ListEnumSessionRelationTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumSessionRelationTypeNullableFilter<$PrismaModel> | $Enums.SessionRelationType | null
+  }
+
   export type ProjectNullableScalarRelationFilter = {
     is?: ProjectWhereInput | null
     isNot?: ProjectWhereInput | null
+  }
+
+  export type TerminalSessionNullableScalarRelationFilter = {
+    is?: TerminalSessionWhereInput | null
+    isNot?: TerminalSessionWhereInput | null
   }
 
   export type SessionPresenceListRelationFilter = {
@@ -20567,6 +20730,8 @@ export namespace Prisma {
     wsPath?: SortOrder
     containerName?: SortOrder
     projectId?: SortOrder
+    parentId?: SortOrder
+    relationType?: SortOrder
   }
 
   export type TerminalSessionAvgOrderByAggregateInput = {
@@ -20584,6 +20749,8 @@ export namespace Prisma {
     wsPath?: SortOrder
     containerName?: SortOrder
     projectId?: SortOrder
+    parentId?: SortOrder
+    relationType?: SortOrder
   }
 
   export type TerminalSessionMinOrderByAggregateInput = {
@@ -20597,6 +20764,8 @@ export namespace Prisma {
     wsPath?: SortOrder
     containerName?: SortOrder
     projectId?: SortOrder
+    parentId?: SortOrder
+    relationType?: SortOrder
   }
 
   export type TerminalSessionSumOrderByAggregateInput = {
@@ -20627,6 +20796,16 @@ export namespace Prisma {
     _sum?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedIntNullableFilter<$PrismaModel>
     _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type EnumSessionRelationTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SessionRelationType | EnumSessionRelationTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.SessionRelationType[] | ListEnumSessionRelationTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.SessionRelationType[] | ListEnumSessionRelationTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumSessionRelationTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.SessionRelationType | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumSessionRelationTypeNullableFilter<$PrismaModel>
+    _max?: NestedEnumSessionRelationTypeNullableFilter<$PrismaModel>
   }
 
   export type EnumAgentProviderNullableFilter<$PrismaModel = never> = {
@@ -21527,11 +21706,31 @@ export namespace Prisma {
     connect?: ProjectWhereUniqueInput
   }
 
+  export type TerminalSessionCreateNestedOneWithoutChildrenInput = {
+    create?: XOR<TerminalSessionCreateWithoutChildrenInput, TerminalSessionUncheckedCreateWithoutChildrenInput>
+    connectOrCreate?: TerminalSessionCreateOrConnectWithoutChildrenInput
+    connect?: TerminalSessionWhereUniqueInput
+  }
+
+  export type TerminalSessionCreateNestedManyWithoutParentInput = {
+    create?: XOR<TerminalSessionCreateWithoutParentInput, TerminalSessionUncheckedCreateWithoutParentInput> | TerminalSessionCreateWithoutParentInput[] | TerminalSessionUncheckedCreateWithoutParentInput[]
+    connectOrCreate?: TerminalSessionCreateOrConnectWithoutParentInput | TerminalSessionCreateOrConnectWithoutParentInput[]
+    createMany?: TerminalSessionCreateManyParentInputEnvelope
+    connect?: TerminalSessionWhereUniqueInput | TerminalSessionWhereUniqueInput[]
+  }
+
   export type SessionPresenceCreateNestedManyWithoutSessionInput = {
     create?: XOR<SessionPresenceCreateWithoutSessionInput, SessionPresenceUncheckedCreateWithoutSessionInput> | SessionPresenceCreateWithoutSessionInput[] | SessionPresenceUncheckedCreateWithoutSessionInput[]
     connectOrCreate?: SessionPresenceCreateOrConnectWithoutSessionInput | SessionPresenceCreateOrConnectWithoutSessionInput[]
     createMany?: SessionPresenceCreateManySessionInputEnvelope
     connect?: SessionPresenceWhereUniqueInput | SessionPresenceWhereUniqueInput[]
+  }
+
+  export type TerminalSessionUncheckedCreateNestedManyWithoutParentInput = {
+    create?: XOR<TerminalSessionCreateWithoutParentInput, TerminalSessionUncheckedCreateWithoutParentInput> | TerminalSessionCreateWithoutParentInput[] | TerminalSessionUncheckedCreateWithoutParentInput[]
+    connectOrCreate?: TerminalSessionCreateOrConnectWithoutParentInput | TerminalSessionCreateOrConnectWithoutParentInput[]
+    createMany?: TerminalSessionCreateManyParentInputEnvelope
+    connect?: TerminalSessionWhereUniqueInput | TerminalSessionWhereUniqueInput[]
   }
 
   export type SessionPresenceUncheckedCreateNestedManyWithoutSessionInput = {
@@ -21553,6 +21752,10 @@ export namespace Prisma {
     divide?: number
   }
 
+  export type NullableEnumSessionRelationTypeFieldUpdateOperationsInput = {
+    set?: $Enums.SessionRelationType | null
+  }
+
   export type UserUpdateOneRequiredWithoutTerminalSessionsNestedInput = {
     create?: XOR<UserCreateWithoutTerminalSessionsInput, UserUncheckedCreateWithoutTerminalSessionsInput>
     connectOrCreate?: UserCreateOrConnectWithoutTerminalSessionsInput
@@ -21571,6 +21774,30 @@ export namespace Prisma {
     update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutSessionsInput, ProjectUpdateWithoutSessionsInput>, ProjectUncheckedUpdateWithoutSessionsInput>
   }
 
+  export type TerminalSessionUpdateOneWithoutChildrenNestedInput = {
+    create?: XOR<TerminalSessionCreateWithoutChildrenInput, TerminalSessionUncheckedCreateWithoutChildrenInput>
+    connectOrCreate?: TerminalSessionCreateOrConnectWithoutChildrenInput
+    upsert?: TerminalSessionUpsertWithoutChildrenInput
+    disconnect?: TerminalSessionWhereInput | boolean
+    delete?: TerminalSessionWhereInput | boolean
+    connect?: TerminalSessionWhereUniqueInput
+    update?: XOR<XOR<TerminalSessionUpdateToOneWithWhereWithoutChildrenInput, TerminalSessionUpdateWithoutChildrenInput>, TerminalSessionUncheckedUpdateWithoutChildrenInput>
+  }
+
+  export type TerminalSessionUpdateManyWithoutParentNestedInput = {
+    create?: XOR<TerminalSessionCreateWithoutParentInput, TerminalSessionUncheckedCreateWithoutParentInput> | TerminalSessionCreateWithoutParentInput[] | TerminalSessionUncheckedCreateWithoutParentInput[]
+    connectOrCreate?: TerminalSessionCreateOrConnectWithoutParentInput | TerminalSessionCreateOrConnectWithoutParentInput[]
+    upsert?: TerminalSessionUpsertWithWhereUniqueWithoutParentInput | TerminalSessionUpsertWithWhereUniqueWithoutParentInput[]
+    createMany?: TerminalSessionCreateManyParentInputEnvelope
+    set?: TerminalSessionWhereUniqueInput | TerminalSessionWhereUniqueInput[]
+    disconnect?: TerminalSessionWhereUniqueInput | TerminalSessionWhereUniqueInput[]
+    delete?: TerminalSessionWhereUniqueInput | TerminalSessionWhereUniqueInput[]
+    connect?: TerminalSessionWhereUniqueInput | TerminalSessionWhereUniqueInput[]
+    update?: TerminalSessionUpdateWithWhereUniqueWithoutParentInput | TerminalSessionUpdateWithWhereUniqueWithoutParentInput[]
+    updateMany?: TerminalSessionUpdateManyWithWhereWithoutParentInput | TerminalSessionUpdateManyWithWhereWithoutParentInput[]
+    deleteMany?: TerminalSessionScalarWhereInput | TerminalSessionScalarWhereInput[]
+  }
+
   export type SessionPresenceUpdateManyWithoutSessionNestedInput = {
     create?: XOR<SessionPresenceCreateWithoutSessionInput, SessionPresenceUncheckedCreateWithoutSessionInput> | SessionPresenceCreateWithoutSessionInput[] | SessionPresenceUncheckedCreateWithoutSessionInput[]
     connectOrCreate?: SessionPresenceCreateOrConnectWithoutSessionInput | SessionPresenceCreateOrConnectWithoutSessionInput[]
@@ -21583,6 +21810,20 @@ export namespace Prisma {
     update?: SessionPresenceUpdateWithWhereUniqueWithoutSessionInput | SessionPresenceUpdateWithWhereUniqueWithoutSessionInput[]
     updateMany?: SessionPresenceUpdateManyWithWhereWithoutSessionInput | SessionPresenceUpdateManyWithWhereWithoutSessionInput[]
     deleteMany?: SessionPresenceScalarWhereInput | SessionPresenceScalarWhereInput[]
+  }
+
+  export type TerminalSessionUncheckedUpdateManyWithoutParentNestedInput = {
+    create?: XOR<TerminalSessionCreateWithoutParentInput, TerminalSessionUncheckedCreateWithoutParentInput> | TerminalSessionCreateWithoutParentInput[] | TerminalSessionUncheckedCreateWithoutParentInput[]
+    connectOrCreate?: TerminalSessionCreateOrConnectWithoutParentInput | TerminalSessionCreateOrConnectWithoutParentInput[]
+    upsert?: TerminalSessionUpsertWithWhereUniqueWithoutParentInput | TerminalSessionUpsertWithWhereUniqueWithoutParentInput[]
+    createMany?: TerminalSessionCreateManyParentInputEnvelope
+    set?: TerminalSessionWhereUniqueInput | TerminalSessionWhereUniqueInput[]
+    disconnect?: TerminalSessionWhereUniqueInput | TerminalSessionWhereUniqueInput[]
+    delete?: TerminalSessionWhereUniqueInput | TerminalSessionWhereUniqueInput[]
+    connect?: TerminalSessionWhereUniqueInput | TerminalSessionWhereUniqueInput[]
+    update?: TerminalSessionUpdateWithWhereUniqueWithoutParentInput | TerminalSessionUpdateWithWhereUniqueWithoutParentInput[]
+    updateMany?: TerminalSessionUpdateManyWithWhereWithoutParentInput | TerminalSessionUpdateManyWithWhereWithoutParentInput[]
+    deleteMany?: TerminalSessionScalarWhereInput | TerminalSessionScalarWhereInput[]
   }
 
   export type SessionPresenceUncheckedUpdateManyWithoutSessionNestedInput = {
@@ -22079,6 +22320,13 @@ export namespace Prisma {
     not?: NestedEnumTerminalSessionStatusFilter<$PrismaModel> | $Enums.TerminalSessionStatus
   }
 
+  export type NestedEnumSessionRelationTypeNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.SessionRelationType | EnumSessionRelationTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.SessionRelationType[] | ListEnumSessionRelationTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.SessionRelationType[] | ListEnumSessionRelationTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumSessionRelationTypeNullableFilter<$PrismaModel> | $Enums.SessionRelationType | null
+  }
+
   export type NestedEnumTerminalSessionStatusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.TerminalSessionStatus | EnumTerminalSessionStatusFieldRefInput<$PrismaModel>
     in?: $Enums.TerminalSessionStatus[] | ListEnumTerminalSessionStatusFieldRefInput<$PrismaModel>
@@ -22114,6 +22362,16 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedEnumSessionRelationTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SessionRelationType | EnumSessionRelationTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.SessionRelationType[] | ListEnumSessionRelationTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.SessionRelationType[] | ListEnumSessionRelationTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumSessionRelationTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.SessionRelationType | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumSessionRelationTypeNullableFilter<$PrismaModel>
+    _max?: NestedEnumSessionRelationTypeNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumAgentProviderNullableFilter<$PrismaModel = never> = {
@@ -22368,7 +22626,10 @@ export namespace Prisma {
     port?: number | null
     wsPath?: string | null
     containerName?: string | null
+    relationType?: $Enums.SessionRelationType | null
     project?: ProjectCreateNestedOneWithoutSessionsInput
+    parent?: TerminalSessionCreateNestedOneWithoutChildrenInput
+    children?: TerminalSessionCreateNestedManyWithoutParentInput
     presences?: SessionPresenceCreateNestedManyWithoutSessionInput
   }
 
@@ -22382,6 +22643,9 @@ export namespace Prisma {
     wsPath?: string | null
     containerName?: string | null
     projectId?: string | null
+    parentId?: string | null
+    relationType?: $Enums.SessionRelationType | null
+    children?: TerminalSessionUncheckedCreateNestedManyWithoutParentInput
     presences?: SessionPresenceUncheckedCreateNestedManyWithoutSessionInput
   }
 
@@ -22633,6 +22897,8 @@ export namespace Prisma {
     wsPath?: StringNullableFilter<"TerminalSession"> | string | null
     containerName?: StringNullableFilter<"TerminalSession"> | string | null
     projectId?: StringNullableFilter<"TerminalSession"> | string | null
+    parentId?: StringNullableFilter<"TerminalSession"> | string | null
+    relationType?: EnumSessionRelationTypeNullableFilter<"TerminalSession"> | $Enums.SessionRelationType | null
   }
 
   export type TaskUpsertWithWhereUniqueWithoutUserInput = {
@@ -23101,6 +23367,85 @@ export namespace Prisma {
     create: XOR<ProjectCreateWithoutSessionsInput, ProjectUncheckedCreateWithoutSessionsInput>
   }
 
+  export type TerminalSessionCreateWithoutChildrenInput = {
+    id?: string
+    name: string
+    status?: $Enums.TerminalSessionStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    port?: number | null
+    wsPath?: string | null
+    containerName?: string | null
+    relationType?: $Enums.SessionRelationType | null
+    user: UserCreateNestedOneWithoutTerminalSessionsInput
+    project?: ProjectCreateNestedOneWithoutSessionsInput
+    parent?: TerminalSessionCreateNestedOneWithoutChildrenInput
+    presences?: SessionPresenceCreateNestedManyWithoutSessionInput
+  }
+
+  export type TerminalSessionUncheckedCreateWithoutChildrenInput = {
+    id?: string
+    name: string
+    userId: string
+    status?: $Enums.TerminalSessionStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    port?: number | null
+    wsPath?: string | null
+    containerName?: string | null
+    projectId?: string | null
+    parentId?: string | null
+    relationType?: $Enums.SessionRelationType | null
+    presences?: SessionPresenceUncheckedCreateNestedManyWithoutSessionInput
+  }
+
+  export type TerminalSessionCreateOrConnectWithoutChildrenInput = {
+    where: TerminalSessionWhereUniqueInput
+    create: XOR<TerminalSessionCreateWithoutChildrenInput, TerminalSessionUncheckedCreateWithoutChildrenInput>
+  }
+
+  export type TerminalSessionCreateWithoutParentInput = {
+    id?: string
+    name: string
+    status?: $Enums.TerminalSessionStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    port?: number | null
+    wsPath?: string | null
+    containerName?: string | null
+    relationType?: $Enums.SessionRelationType | null
+    user: UserCreateNestedOneWithoutTerminalSessionsInput
+    project?: ProjectCreateNestedOneWithoutSessionsInput
+    children?: TerminalSessionCreateNestedManyWithoutParentInput
+    presences?: SessionPresenceCreateNestedManyWithoutSessionInput
+  }
+
+  export type TerminalSessionUncheckedCreateWithoutParentInput = {
+    id?: string
+    name: string
+    userId: string
+    status?: $Enums.TerminalSessionStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    port?: number | null
+    wsPath?: string | null
+    containerName?: string | null
+    projectId?: string | null
+    relationType?: $Enums.SessionRelationType | null
+    children?: TerminalSessionUncheckedCreateNestedManyWithoutParentInput
+    presences?: SessionPresenceUncheckedCreateNestedManyWithoutSessionInput
+  }
+
+  export type TerminalSessionCreateOrConnectWithoutParentInput = {
+    where: TerminalSessionWhereUniqueInput
+    create: XOR<TerminalSessionCreateWithoutParentInput, TerminalSessionUncheckedCreateWithoutParentInput>
+  }
+
+  export type TerminalSessionCreateManyParentInputEnvelope = {
+    data: TerminalSessionCreateManyParentInput | TerminalSessionCreateManyParentInput[]
+    skipDuplicates?: boolean
+  }
+
   export type SessionPresenceCreateWithoutSessionInput = {
     status?: $Enums.PresenceStatus
     lastSeen?: Date | string
@@ -23223,6 +23568,65 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type TerminalSessionUpsertWithoutChildrenInput = {
+    update: XOR<TerminalSessionUpdateWithoutChildrenInput, TerminalSessionUncheckedUpdateWithoutChildrenInput>
+    create: XOR<TerminalSessionCreateWithoutChildrenInput, TerminalSessionUncheckedCreateWithoutChildrenInput>
+    where?: TerminalSessionWhereInput
+  }
+
+  export type TerminalSessionUpdateToOneWithWhereWithoutChildrenInput = {
+    where?: TerminalSessionWhereInput
+    data: XOR<TerminalSessionUpdateWithoutChildrenInput, TerminalSessionUncheckedUpdateWithoutChildrenInput>
+  }
+
+  export type TerminalSessionUpdateWithoutChildrenInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    status?: EnumTerminalSessionStatusFieldUpdateOperationsInput | $Enums.TerminalSessionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    port?: NullableIntFieldUpdateOperationsInput | number | null
+    wsPath?: NullableStringFieldUpdateOperationsInput | string | null
+    containerName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationType?: NullableEnumSessionRelationTypeFieldUpdateOperationsInput | $Enums.SessionRelationType | null
+    user?: UserUpdateOneRequiredWithoutTerminalSessionsNestedInput
+    project?: ProjectUpdateOneWithoutSessionsNestedInput
+    parent?: TerminalSessionUpdateOneWithoutChildrenNestedInput
+    presences?: SessionPresenceUpdateManyWithoutSessionNestedInput
+  }
+
+  export type TerminalSessionUncheckedUpdateWithoutChildrenInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    status?: EnumTerminalSessionStatusFieldUpdateOperationsInput | $Enums.TerminalSessionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    port?: NullableIntFieldUpdateOperationsInput | number | null
+    wsPath?: NullableStringFieldUpdateOperationsInput | string | null
+    containerName?: NullableStringFieldUpdateOperationsInput | string | null
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    relationType?: NullableEnumSessionRelationTypeFieldUpdateOperationsInput | $Enums.SessionRelationType | null
+    presences?: SessionPresenceUncheckedUpdateManyWithoutSessionNestedInput
+  }
+
+  export type TerminalSessionUpsertWithWhereUniqueWithoutParentInput = {
+    where: TerminalSessionWhereUniqueInput
+    update: XOR<TerminalSessionUpdateWithoutParentInput, TerminalSessionUncheckedUpdateWithoutParentInput>
+    create: XOR<TerminalSessionCreateWithoutParentInput, TerminalSessionUncheckedCreateWithoutParentInput>
+  }
+
+  export type TerminalSessionUpdateWithWhereUniqueWithoutParentInput = {
+    where: TerminalSessionWhereUniqueInput
+    data: XOR<TerminalSessionUpdateWithoutParentInput, TerminalSessionUncheckedUpdateWithoutParentInput>
+  }
+
+  export type TerminalSessionUpdateManyWithWhereWithoutParentInput = {
+    where: TerminalSessionScalarWhereInput
+    data: XOR<TerminalSessionUpdateManyMutationInput, TerminalSessionUncheckedUpdateManyWithoutParentInput>
+  }
+
   export type SessionPresenceUpsertWithWhereUniqueWithoutSessionInput = {
     where: SessionPresenceWhereUniqueInput
     update: XOR<SessionPresenceUpdateWithoutSessionInput, SessionPresenceUncheckedUpdateWithoutSessionInput>
@@ -23321,7 +23725,10 @@ export namespace Prisma {
     port?: number | null
     wsPath?: string | null
     containerName?: string | null
+    relationType?: $Enums.SessionRelationType | null
     user: UserCreateNestedOneWithoutTerminalSessionsInput
+    parent?: TerminalSessionCreateNestedOneWithoutChildrenInput
+    children?: TerminalSessionCreateNestedManyWithoutParentInput
     presences?: SessionPresenceCreateNestedManyWithoutSessionInput
   }
 
@@ -23335,6 +23742,9 @@ export namespace Prisma {
     port?: number | null
     wsPath?: string | null
     containerName?: string | null
+    parentId?: string | null
+    relationType?: $Enums.SessionRelationType | null
+    children?: TerminalSessionUncheckedCreateNestedManyWithoutParentInput
     presences?: SessionPresenceUncheckedCreateNestedManyWithoutSessionInput
   }
 
@@ -24308,8 +24718,11 @@ export namespace Prisma {
     port?: number | null
     wsPath?: string | null
     containerName?: string | null
+    relationType?: $Enums.SessionRelationType | null
     user: UserCreateNestedOneWithoutTerminalSessionsInput
     project?: ProjectCreateNestedOneWithoutSessionsInput
+    parent?: TerminalSessionCreateNestedOneWithoutChildrenInput
+    children?: TerminalSessionCreateNestedManyWithoutParentInput
   }
 
   export type TerminalSessionUncheckedCreateWithoutPresencesInput = {
@@ -24323,6 +24736,9 @@ export namespace Prisma {
     wsPath?: string | null
     containerName?: string | null
     projectId?: string | null
+    parentId?: string | null
+    relationType?: $Enums.SessionRelationType | null
+    children?: TerminalSessionUncheckedCreateNestedManyWithoutParentInput
   }
 
   export type TerminalSessionCreateOrConnectWithoutPresencesInput = {
@@ -24419,8 +24835,11 @@ export namespace Prisma {
     port?: NullableIntFieldUpdateOperationsInput | number | null
     wsPath?: NullableStringFieldUpdateOperationsInput | string | null
     containerName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationType?: NullableEnumSessionRelationTypeFieldUpdateOperationsInput | $Enums.SessionRelationType | null
     user?: UserUpdateOneRequiredWithoutTerminalSessionsNestedInput
     project?: ProjectUpdateOneWithoutSessionsNestedInput
+    parent?: TerminalSessionUpdateOneWithoutChildrenNestedInput
+    children?: TerminalSessionUpdateManyWithoutParentNestedInput
   }
 
   export type TerminalSessionUncheckedUpdateWithoutPresencesInput = {
@@ -24434,6 +24853,9 @@ export namespace Prisma {
     wsPath?: NullableStringFieldUpdateOperationsInput | string | null
     containerName?: NullableStringFieldUpdateOperationsInput | string | null
     projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    relationType?: NullableEnumSessionRelationTypeFieldUpdateOperationsInput | $Enums.SessionRelationType | null
+    children?: TerminalSessionUncheckedUpdateManyWithoutParentNestedInput
   }
 
   export type SessionCreateManyUserInput = {
@@ -24472,6 +24894,8 @@ export namespace Prisma {
     wsPath?: string | null
     containerName?: string | null
     projectId?: string | null
+    parentId?: string | null
+    relationType?: $Enums.SessionRelationType | null
   }
 
   export type TaskCreateManyUserInput = {
@@ -24592,7 +25016,10 @@ export namespace Prisma {
     port?: NullableIntFieldUpdateOperationsInput | number | null
     wsPath?: NullableStringFieldUpdateOperationsInput | string | null
     containerName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationType?: NullableEnumSessionRelationTypeFieldUpdateOperationsInput | $Enums.SessionRelationType | null
     project?: ProjectUpdateOneWithoutSessionsNestedInput
+    parent?: TerminalSessionUpdateOneWithoutChildrenNestedInput
+    children?: TerminalSessionUpdateManyWithoutParentNestedInput
     presences?: SessionPresenceUpdateManyWithoutSessionNestedInput
   }
 
@@ -24606,6 +25033,9 @@ export namespace Prisma {
     wsPath?: NullableStringFieldUpdateOperationsInput | string | null
     containerName?: NullableStringFieldUpdateOperationsInput | string | null
     projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    relationType?: NullableEnumSessionRelationTypeFieldUpdateOperationsInput | $Enums.SessionRelationType | null
+    children?: TerminalSessionUncheckedUpdateManyWithoutParentNestedInput
     presences?: SessionPresenceUncheckedUpdateManyWithoutSessionNestedInput
   }
 
@@ -24619,6 +25049,8 @@ export namespace Prisma {
     wsPath?: NullableStringFieldUpdateOperationsInput | string | null
     containerName?: NullableStringFieldUpdateOperationsInput | string | null
     projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    relationType?: NullableEnumSessionRelationTypeFieldUpdateOperationsInput | $Enums.SessionRelationType | null
   }
 
   export type TaskUpdateWithoutUserInput = {
@@ -24722,10 +25154,70 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type TerminalSessionCreateManyParentInput = {
+    id?: string
+    name: string
+    userId: string
+    status?: $Enums.TerminalSessionStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    port?: number | null
+    wsPath?: string | null
+    containerName?: string | null
+    projectId?: string | null
+    relationType?: $Enums.SessionRelationType | null
+  }
+
   export type SessionPresenceCreateManySessionInput = {
     userId: string
     status?: $Enums.PresenceStatus
     lastSeen?: Date | string
+  }
+
+  export type TerminalSessionUpdateWithoutParentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    status?: EnumTerminalSessionStatusFieldUpdateOperationsInput | $Enums.TerminalSessionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    port?: NullableIntFieldUpdateOperationsInput | number | null
+    wsPath?: NullableStringFieldUpdateOperationsInput | string | null
+    containerName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationType?: NullableEnumSessionRelationTypeFieldUpdateOperationsInput | $Enums.SessionRelationType | null
+    user?: UserUpdateOneRequiredWithoutTerminalSessionsNestedInput
+    project?: ProjectUpdateOneWithoutSessionsNestedInput
+    children?: TerminalSessionUpdateManyWithoutParentNestedInput
+    presences?: SessionPresenceUpdateManyWithoutSessionNestedInput
+  }
+
+  export type TerminalSessionUncheckedUpdateWithoutParentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    status?: EnumTerminalSessionStatusFieldUpdateOperationsInput | $Enums.TerminalSessionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    port?: NullableIntFieldUpdateOperationsInput | number | null
+    wsPath?: NullableStringFieldUpdateOperationsInput | string | null
+    containerName?: NullableStringFieldUpdateOperationsInput | string | null
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    relationType?: NullableEnumSessionRelationTypeFieldUpdateOperationsInput | $Enums.SessionRelationType | null
+    children?: TerminalSessionUncheckedUpdateManyWithoutParentNestedInput
+    presences?: SessionPresenceUncheckedUpdateManyWithoutSessionNestedInput
+  }
+
+  export type TerminalSessionUncheckedUpdateManyWithoutParentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    status?: EnumTerminalSessionStatusFieldUpdateOperationsInput | $Enums.TerminalSessionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    port?: NullableIntFieldUpdateOperationsInput | number | null
+    wsPath?: NullableStringFieldUpdateOperationsInput | string | null
+    containerName?: NullableStringFieldUpdateOperationsInput | string | null
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    relationType?: NullableEnumSessionRelationTypeFieldUpdateOperationsInput | $Enums.SessionRelationType | null
   }
 
   export type SessionPresenceUpdateWithoutSessionInput = {
@@ -24756,6 +25248,8 @@ export namespace Prisma {
     port?: number | null
     wsPath?: string | null
     containerName?: string | null
+    parentId?: string | null
+    relationType?: $Enums.SessionRelationType | null
   }
 
   export type TerminalSessionUpdateWithoutProjectInput = {
@@ -24767,7 +25261,10 @@ export namespace Prisma {
     port?: NullableIntFieldUpdateOperationsInput | number | null
     wsPath?: NullableStringFieldUpdateOperationsInput | string | null
     containerName?: NullableStringFieldUpdateOperationsInput | string | null
+    relationType?: NullableEnumSessionRelationTypeFieldUpdateOperationsInput | $Enums.SessionRelationType | null
     user?: UserUpdateOneRequiredWithoutTerminalSessionsNestedInput
+    parent?: TerminalSessionUpdateOneWithoutChildrenNestedInput
+    children?: TerminalSessionUpdateManyWithoutParentNestedInput
     presences?: SessionPresenceUpdateManyWithoutSessionNestedInput
   }
 
@@ -24781,6 +25278,9 @@ export namespace Prisma {
     port?: NullableIntFieldUpdateOperationsInput | number | null
     wsPath?: NullableStringFieldUpdateOperationsInput | string | null
     containerName?: NullableStringFieldUpdateOperationsInput | string | null
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    relationType?: NullableEnumSessionRelationTypeFieldUpdateOperationsInput | $Enums.SessionRelationType | null
+    children?: TerminalSessionUncheckedUpdateManyWithoutParentNestedInput
     presences?: SessionPresenceUncheckedUpdateManyWithoutSessionNestedInput
   }
 
@@ -24794,6 +25294,8 @@ export namespace Prisma {
     port?: NullableIntFieldUpdateOperationsInput | number | null
     wsPath?: NullableStringFieldUpdateOperationsInput | string | null
     containerName?: NullableStringFieldUpdateOperationsInput | string | null
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    relationType?: NullableEnumSessionRelationTypeFieldUpdateOperationsInput | $Enums.SessionRelationType | null
   }
 
   export type TaskExecutionCreateManyTaskInput = {
