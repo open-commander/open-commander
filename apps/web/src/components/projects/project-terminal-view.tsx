@@ -30,6 +30,7 @@ export function ProjectTerminalView() {
     selectedSessionId,
     isNewSession,
     clearNewSession,
+    getSessionGitBranch,
   } = useProject();
   const utils = api.useUtils();
   const projectsQuery = api.project.list.useQuery();
@@ -132,6 +133,7 @@ export function ProjectTerminalView() {
         active
         resetToken={state.resetToken}
         workspaceSuffix={selectedProject?.folder ?? ""}
+        gitBranch={getSessionGitBranch(selectedSessionId)}
         wsUrl={state.wsUrl}
         errorMessage={state.errorMessage}
         autoCommand={autoCommand}

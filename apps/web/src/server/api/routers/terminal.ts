@@ -1,6 +1,8 @@
+import { execFile } from "node:child_process";
 import { promises as fs } from "node:fs";
 import { createServer } from "node:net";
 import path from "node:path";
+import { promisify } from "node:util";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { env } from "@/env";
@@ -10,6 +12,8 @@ import { sessionService } from "@/lib/docker/session.service";
 import { sessionContainerNames } from "@/lib/utils";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { db } from "@/server/db";
+
+const execAsync = promisify(execFile);
 
 const sessionIdSchema = z.string().min(1);
 const sessionNameSchema = z.string().trim().min(1).max(120);
@@ -147,6 +151,68 @@ export const terminalRouter = createTRPCRouter({
     }
   }),
 
+  listBranches: protectedProcedure
+    .input(z.object({ workspaceSuffix: workspaceSuffixSchema }))
+    .query(async ({ input }) => {
+      if (!workspaceRoot) {
+        return {
+          isGitRepo: false,
+          branches: [] as string[],
+          current: null as string | null,
+        };
+      }
+      const trimmed = (input.workspaceSuffix ?? "").trim();
+      const dir = trimmed
+        ? path.resolve(workspaceRoot, trimmed)
+        : workspaceRoot;
+      try {
+        const gitDir = path.join(dir, ".git");
+        const stat = await fs.stat(gitDir);
+        if (!stat.isDirectory()) {
+          return {
+            isGitRepo: false,
+            branches: [] as string[],
+            current: null as string | null,
+          };
+        }
+      } catch {
+        return {
+          isGitRepo: false,
+          branches: [] as string[],
+          current: null as string | null,
+        };
+      }
+      try {
+        const { stdout } = await execAsync(
+          "git",
+          ["branch", "-a", "--no-color"],
+          {
+            cwd: dir,
+            timeout: 5000,
+          },
+        );
+        const lines = stdout.split("\n").filter(Boolean);
+        let current: string | null = null;
+        const branches: string[] = [];
+        for (const line of lines) {
+          const trimmedLine = line.trim();
+          if (trimmedLine.includes("->")) continue;
+          const isCurrent = trimmedLine.startsWith("* ");
+          const name = isCurrent ? trimmedLine.slice(2).trim() : trimmedLine;
+          if (!name) continue;
+          branches.push(name);
+          if (isCurrent) current = name;
+        }
+        return { isGitRepo: true, branches, current };
+      } catch {
+        return {
+          isGitRepo: false,
+          branches: [] as string[],
+          current: null as string | null,
+        };
+      }
+    }),
+
   createSession: protectedProcedure
     .input(
       z.object({
@@ -182,6 +248,7 @@ export const terminalRouter = createTRPCRouter({
         sessionId: sessionIdSchema,
         reset: z.boolean().optional(),
         workspaceSuffix: workspaceSuffixSchema,
+        gitBranch: z.string().trim().max(250).optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -190,6 +257,7 @@ export const terminalRouter = createTRPCRouter({
       return sessionService.start(ctx.session.user.id, input.sessionId, {
         reset: input.reset,
         workspaceSuffix: input.workspaceSuffix,
+        gitBranch: input.gitBranch,
       });
     }),
   removeSession: protectedProcedure

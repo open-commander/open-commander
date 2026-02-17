@@ -15,6 +15,7 @@ export function TerminalPane({
   active,
   resetToken,
   workspaceSuffix,
+  gitBranch,
   className,
   wsUrl: _wsUrl,
   errorMessage,
@@ -467,6 +468,7 @@ export function TerminalPane({
         sessionId: sessionId ?? "",
         reset: options?.reset,
         workspaceSuffix,
+        gitBranch: gitBranch || undefined,
       });
       log(`startSession: backend ok ${JSON.stringify(data)}`);
       const protocol = window.location.protocol === "https:" ? "wss" : "ws";
@@ -742,6 +744,7 @@ export function TerminalPane({
     },
     [
       autoCommand,
+      gitBranch,
       log,
       onConnected,
       onContainerName,

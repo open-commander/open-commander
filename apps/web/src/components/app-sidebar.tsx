@@ -19,6 +19,7 @@ import {
   useMemo,
   useState,
 } from "react";
+import { BranchSelectorModal } from "@/components/projects/branch-selector-modal";
 import { useProject } from "@/components/projects/project-context";
 import { ProjectIcon } from "@/components/projects/project-icon";
 import { SessionPresenceAvatars } from "@/components/projects/session-presence-avatars";
@@ -30,6 +31,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { env } from "@/env";
+import { randomSessionName } from "@/lib/random-session-name";
 import { buildSessionTree } from "@/lib/session-tree";
 import { api } from "@/trpc/react";
 
@@ -105,7 +107,10 @@ export function AppSidebar() {
     setSelectedSessionId,
     setCreateModalOpen,
     markSessionCreated,
+    setSessionGitBranch,
   } = useProject();
+  const [mobileCreatePending, setMobileCreatePending] = useState(false);
+  const [mobileDefaultName, setMobileDefaultName] = useState("");
   const utils = api.useUtils();
   const activePage = pathname.startsWith("/settings") ? "settings" : null;
 
@@ -144,12 +149,25 @@ export function AppSidebar() {
 
   const handleMobileCreateSession = useCallback(() => {
     if (!expandedProjectId) return;
-    const count = mobileSessions.length + 1;
-    createSessionMutation.mutate({
-      projectId: expandedProjectId,
-      name: `Session ${count}`,
-    });
-  }, [expandedProjectId, mobileSessions.length, createSessionMutation]);
+    setMobileDefaultName(randomSessionName());
+    setMobileCreatePending(true);
+  }, [expandedProjectId]);
+
+  const handleMobileBranchConfirm = useCallback(
+    (sessionName: string, gitBranch: string) => {
+      if (!expandedProjectId) return;
+      createSessionMutation.mutate(
+        { projectId: expandedProjectId, name: sessionName },
+        {
+          onSuccess: (session) => {
+            if (gitBranch) setSessionGitBranch(session.id, gitBranch);
+          },
+        },
+      );
+      setMobileCreatePending(false);
+    },
+    [expandedProjectId, createSessionMutation, setSessionGitBranch],
+  );
 
   const handleProjectClick = (projectId: string) => {
     if (selectedProjectId === projectId) {
@@ -503,6 +521,21 @@ export function AppSidebar() {
           </div>
         </TooltipProvider>
       </aside>
+
+      <BranchSelectorModal
+        open={mobileCreatePending}
+        workspaceSuffix={
+          (
+            projects.find((p: { id: string }) => p.id === expandedProjectId) as
+              | { folder?: string }
+              | undefined
+          )?.folder ?? ""
+        }
+        title="Create session"
+        defaultName={mobileDefaultName}
+        onClose={() => setMobileCreatePending(false)}
+        onConfirm={handleMobileBranchConfirm}
+      />
     </>
   );
 }
