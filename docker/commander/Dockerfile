@@ -1,64 +1,38 @@
 # syntax=docker/dockerfile:1.7
-FROM oven/bun:1.3.3 AS base
+FROM docker:27-cli AS docker-cli
 
+FROM oven/bun:1.3.3 AS base
 WORKDIR /app
 ENV PATH=/app/node_modules/.bin:$PATH
 
-RUN set -eux; \
-  apt-get update; \
-  apt-get install -y ca-certificates curl gnupg git; \
-  install -m 0755 -d /etc/apt/keyrings; \
-  curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc; \
-  chmod a+r /etc/apt/keyrings/docker.asc; \
-  codename="$(. /etc/os-release && echo "${VERSION_CODENAME}")"; \
-  echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian ${codename} stable" \
-  > /etc/apt/sources.list.d/docker.list; \
-  apt-get update; \
-  apt-get install -y docker-ce-cli docker-buildx-plugin docker-compose-plugin; \
-  rm -rf /var/lib/apt/lists/*
+# Keep Docker CLI available for runtime commands.
+COPY --from=docker-cli /usr/local/bin/docker /usr/local/bin/docker
+COPY --from=docker-cli /usr/local/libexec/docker/cli-plugins /usr/local/libexec/docker/cli-plugins
 
 FROM base AS deps
-
 COPY package.json bun.lock ./
 COPY apps/web/package.json apps/web/package.json
 COPY packages packages
-RUN bun install --frozen-lockfile \
-  && mkdir -p /app/apps/web/node_modules
+RUN bun install --frozen-lockfile
 
-FROM base AS dev
-
+FROM deps AS dev
 ENV NODE_ENV=development
-WORKDIR /app
-
-COPY --from=deps /app/node_modules /app/node_modules
-COPY --from=deps /app/apps/web/node_modules /app/apps/web/node_modules
 COPY . .
-RUN rm -rf /app/apps/web/.next
-
 EXPOSE 3000
 CMD ["bun", "run", "--cwd", "/app/apps/web", "dev"]
 
-FROM base AS build
-
-WORKDIR /app
-
-COPY --from=deps /app/node_modules /app/node_modules
-COPY --from=deps /app/apps/web/node_modules /app/apps/web/node_modules
+FROM deps AS build
 COPY . .
-
-RUN rm -rf /app/apps/web/.next \
-  && bun run --cwd /app/apps/web build
+RUN bun run --cwd /app/apps/web build
 
 FROM base AS runner
-
 ENV NODE_ENV=production
-WORKDIR /app/apps/web
+WORKDIR /app
 
-COPY --from=build /app/apps/web/.next /app/apps/web/.next
-COPY --from=build /app/apps/web/public /app/apps/web/public
-COPY --from=build /app/apps/web/package.json /app/apps/web/package.json
-COPY --from=deps /app/node_modules /app/node_modules
-COPY --from=deps /app/apps/web/node_modules /app/apps/web/node_modules
+# Next.js standalone output for a lean runtime image.
+COPY --from=build /app/apps/web/.next/standalone ./
+COPY --from=build /app/apps/web/.next/static ./apps/web/.next/static
+COPY --from=build /app/apps/web/public ./apps/web/public
 
 EXPOSE 3000
-CMD ["bun", "run", "start"]
+CMD ["sh", "-c", "if [ -f /app/server.js ]; then bun /app/server.js; else bun /app/apps/web/server.js; fi"]
