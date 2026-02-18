@@ -1,0 +1,17 @@
+[variables]
+NIXPACKS_NO_MUSL = "1"
+
+[phases.setup]
+nixPkgs = ["bun"]
+
+[phases.install]
+cmds = ["bun install --frozen-lockfile"]
+
+[phases.build]
+cmds = [
+  "bun run --cwd apps/web db:generate",
+  "bun run --cwd apps/web build",
+]
+
+[start]
+cmd = "cd apps/web && bunx prisma migrate deploy && bun run db:seed && bun run start"
