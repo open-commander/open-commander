@@ -7,7 +7,7 @@ services:
     build:
       context: .
       dockerfile: docker/commander/Dockerfile
-      target: dev
+      target: runner
     container_name: open-commander
     ports:
       - "3000:3000"
@@ -26,6 +26,9 @@ services:
       - ./agents:/home/commander/agents
       - ${AGENT_WORKSPACE}:/workspace
       - /var/run/docker.sock:/var/run/docker.sock
+    links:
+      - postgres:postgres.local
+      - redis:redis.local
     depends_on:
       postgres:
         condition: service_healthy

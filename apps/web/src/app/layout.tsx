@@ -9,6 +9,9 @@ import { RootErrorFallback } from "@/components/root-error-page-fallback";
 import { ShortcutsProvider } from "@/components/shortcuts";
 import { TRPCReactProvider } from "@/trpc/react";
 
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
 const firaSans = Fira_Sans({
   variable: "--font-oc-sans",
   subsets: ["latin"],
