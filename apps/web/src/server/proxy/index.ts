@@ -1,5 +1,8 @@
-import { spawn } from "node:child_process";
+import { execFile, spawn } from "node:child_process";
 import net from "node:net";
+import { promisify } from "node:util";
+
+const execFileAsync = promisify(execFile);
 import websocketPlugin from "@fastify/websocket";
 import Fastify from "fastify";
 import { WebSocket } from "ws";
@@ -173,6 +176,49 @@ async function connectToContainerWs(
     });
 
     if (direct) return direct;
+
+    // --- Attempt 1.5: direct connection by container IP ---
+    // Hostname resolution fails in DinD mode because the commander process
+    // uses the outer Docker DNS, which doesn't know about containers inside
+    // the internal dockerd. The bridge network IPs are directly reachable
+    // from the commander process's network namespace, so we resolve the IP
+    // via `docker inspect` and connect straight to it.
+    try {
+      const { stdout } = await execFileAsync("docker", [
+        "inspect",
+        "-f",
+        "{{range .NetworkSettings.Networks}}{{.IPAddress}}\n{{end}}",
+        containerName,
+      ]);
+      const containerIp = stdout
+        .split("\n")
+        .map((l) => l.trim())
+        .find((l) => l.length > 0);
+      if (containerIp) {
+        const byIp = await new Promise<WebSocket | null>((resolve) => {
+          const ws = new WebSocket(
+            `ws://${containerIp}:${ttydPort}/ws`,
+            protocols,
+          );
+          ws.binaryType = "nodebuffer";
+          const timer = setTimeout(() => {
+            ws.terminate();
+            resolve(null);
+          }, 1500);
+          ws.once("open", () => {
+            clearTimeout(timer);
+            resolve(ws);
+          });
+          ws.once("error", () => {
+            clearTimeout(timer);
+            resolve(null);
+          });
+        });
+        if (byIp) return byIp;
+      }
+    } catch {
+      // docker inspect failed — fall through to exec bridge
+    }
 
     // --- Attempt 2: docker exec nc bridge ---
     const bridge = await createDockerExecBridge(containerName, ttydPort);
